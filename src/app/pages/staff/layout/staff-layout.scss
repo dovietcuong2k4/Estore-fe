@@ -1,0 +1,80 @@
+.staff-layout {
+  display: flex; min-height: 100vh; background: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif;
+}
+
+.staff-sidebar {
+  width: 280px; background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+  
+  &__header { padding: 2rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+  &__footer { margin-top: auto; padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+}
+
+.staff-logo {
+  display: flex; align-items: center; gap: 0.75rem; text-decoration: none;
+  &__icon { font-size: 1.75rem; }
+  &__text { font-size: 1.25rem; font-weight: 800; color: #fff; letter-spacing: -0.025em; }
+}
+
+.staff-nav {
+  padding: 2rem 1rem; display: flex; flex-direction: column; gap: 2rem; overflow-y: auto;
+  
+  &__group { display: flex; flex-direction: column; gap: 0.5rem; }
+  
+  &__label { color: #64748b; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; padding: 0 0.75rem; letter-spacing: 0.1em; }
+  
+  &__link {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1rem; color: #94a3b8;
+    text-decoration: none; border-radius: 12px; font-size: 0.95rem; font-weight: 500; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    .icon { font-size: 1.25rem; }
+    
+    &:hover { background: rgba(255, 255, 255, 0.05); color: #fff; transform: translateX(4px); }
+    &.active { 
+      background: linear-gradient(135deg, #3b82f6, #2563eb); 
+      color: #fff; 
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+  }
+}
+
+.staff-user {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; padding: 0 0.5rem;
+  &__avatar { 
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; 
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; font-weight: 700; border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  &__name { color: #fff; font-size: 0.95rem; font-weight: 600; }
+  &__role { color: #64748b; font-size: 0.8rem; }
+}
+
+.btn-store {
+  display: block; text-align: center; padding: 0.875rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px;
+  color: #cad1d9; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;
+  &:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+}
+
+.staff-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.staff-header {
+  height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem;
+  background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  
+  &__search input {
+    width: 360px; padding: 0.75rem 1.25rem; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px; color: #fff; outline: none; transition: all 0.2s;
+    &:focus { border-color: #3b82f6; background: rgba(30, 41, 59, 0.8); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+  }
+  
+  &__actions { display: flex; gap: 1rem; }
+  .action-btn { 
+    background: rgba(255, 255, 255, 0.05); border: none; width: 42px; height: 42px; 
+    border-radius: 12px; cursor: pointer; color: #fff; transition: all 0.2s; 
+    &:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); } 
+  }
+}
+
+.staff-content { padding: 2.5rem; overflow-y: auto; flex: 1; background: #0b0f1a; }

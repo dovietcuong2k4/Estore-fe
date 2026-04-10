@@ -1,6 +1,6 @@
 import { Product } from './product.model';
 
-export type OrderStatus = 'CREATED' | 'PENDING' | 'SHIPPING' | 'DELIVERED' | 'CANCELLED';
+export type OrderStatus = 'CREATED' | 'PENDING' | 'PREPARING' | 'SHIPPING' | 'DELIVERED' | 'CANCELLED';
 
 export interface OrderItem {
   id: number;

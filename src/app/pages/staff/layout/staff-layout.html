@@ -1,0 +1,57 @@
+<div class="staff-layout">
+  <aside class="staff-sidebar">
+    <div class="staff-sidebar__header">
+      <a routerLink="/" class="staff-logo">
+        <span class="staff-logo__icon">🛠️</span>
+        <span class="staff-logo__text">E-Store Staff</span>
+      </a>
+    </div>
+
+    <nav class="staff-nav">
+      <div class="staff-nav__group">
+        <span class="staff-nav__label">Overview</span>
+        <a routerLink="/staff/dashboard" routerLinkActive="active" class="staff-nav__link">
+          <span class="icon">📊</span> Dashboard
+        </a>
+      </div>
+
+      <div class="staff-nav__group">
+        <span class="staff-nav__label">Operations</span>
+        <a routerLink="/staff/orders" routerLinkActive="active" class="staff-nav__link">
+          <span class="icon">📦</span> Order Management
+        </a>
+        <a routerLink="/staff/products" routerLinkActive="active" class="staff-nav__link">
+          <span class="icon">🛍️</span> Product Management
+        </a>
+      </div>
+    </nav>
+
+    <div class="staff-sidebar__footer">
+      <div class="staff-user">
+        <div class="staff-user__avatar">
+          {{ auth.user()?.fullName?.charAt(0) }}
+        </div>
+        <div class="staff-user__info">
+          <div class="staff-user__name">{{ auth.user()?.fullName }}</div>
+          <div class="staff-user__role">Staff Role</div>
+        </div>
+      </div>
+      <a routerLink="/" class="btn-store">🏠 Back to Store</a>
+    </div>
+  </aside>
+
+  <main class="staff-main">
+    <div class="staff-header">
+      <div class="staff-header__search">
+        <input type="text" placeholder="Search for orders or products..." />
+      </div>
+      <div class="staff-header__actions">
+        <button class="action-btn">🔔</button>
+        <button class="action-btn">💬</button>
+      </div>
+    </div>
+    <div class="staff-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

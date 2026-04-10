@@ -1,0 +1,119 @@
+<div class="order-mgmt">
+  <div class="order-list-section">
+    <header class="page-header">
+      <h1 class="page-title">Order Management</h1>
+      <div class="status-filters">
+        <button [class.active]="selectedStatus() === 'ALL'" (click)="selectedStatus.set('ALL')">All</button>
+        <button [class.active]="selectedStatus() === 'CREATED'" (click)="selectedStatus.set('CREATED')">New</button>
+        <button [class.active]="selectedStatus() === 'PENDING'" (click)="selectedStatus.set('PENDING')">Confirmed</button>
+        <button [class.active]="selectedStatus() === 'PREPARING'" (click)="selectedStatus.set('PREPARING')">Preparing</button>
+      </div>
+    </header>
+
+    <div class="order-grid" *ngIf="filteredOrders().length > 0; else noOrders">
+      <div class="order-card" *ngFor="let order of filteredOrders()" [class.selected]="selectedOrder()?.id === order.id" (click)="selectOrder(order)">
+        <div class="order-card__header">
+          <span class="order-id">#{{ order.id }}</span>
+          <span class="order-date">{{ order.orderDate | date:'short' }}</span>
+        </div>
+        <div class="order-card__body">
+          <div class="customer-info">
+            <strong>{{ order.receiverName }}</strong>
+            <span>{{ order.receiverPhone }}</span>
+          </div>
+          <div class="order-total">{{ formatPrice(order.totalPrice || 0) }}</div>
+        </div>
+        <div class="order-card__footer">
+          <span class="status-badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+        </div>
+      </div>
+    </div>
+    <ng-template #noOrders>
+      <div class="empty-state">
+        <div class="empty-icon">📂</div>
+        <p>No orders found for the selected status.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="order-detail-section" [class.open]="selectedOrder()">
+    <div class="detail-placeholder" *ngIf="!selectedOrder()">
+      <div class="placeholder-icon">🔍</div>
+      <h3>Select an order to view details</h3>
+      <p>Manage order confirmation, preparation, and handover.</p>
+    </div>
+
+    <div class="detail-content" *ngIf="selectedOrder() as order">
+      <div class="detail-header">
+        <div class="header-main">
+          <h2>Order #{{ order.id }}</h2>
+          <span class="status-badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+        </div>
+        <button class="btn-close" (click)="selectedOrder.set(null)">×</button>
+      </div>
+
+      <div class="detail-body">
+        <section class="detail-section">
+          <h3>Customer Information</h3>
+          <div class="info-grid">
+            <div class="info-item"><label>Name:</label> <span>{{ order.receiverName }}</span></div>
+            <div class="info-item"><label>Phone:</label> <span>{{ order.receiverPhone }}</span></div>
+            <div class="info-item"><label>Address:</label> <span>{{ order.receiverAddress }}</span></div>
+            <div class="info-item" *ngIf="order.note"><label>Note:</label> <span>{{ order.note }}</span></div>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <h3>Order Items ({{ order.items.length }})</h3>
+          <div class="item-list">
+            <div class="order-item" *ngFor="let item of order.items">
+              <img [src]="item.product?.image" class="item-img">
+              <div class="item-info">
+                <div class="item-name">{{ item.product?.name }}</div>
+                <div class="item-meta">Qty: {{ item.quantity }} × {{ formatPrice(item.price) }}</div>
+              </div>
+              <div class="item-total">{{ formatPrice(item.price * item.quantity) }}</div>
+            </div>
+          </div>
+          <div class="order-summary">
+            <div class="summary-row"><span>Subtotal:</span> <span>{{ formatPrice(order.totalPrice || 0) }}</span></div>
+            <div class="summary-row"><span>Shipping:</span> <span class="free">Free</span></div>
+            <div class="summary-row total"><span>Total:</span> <span>{{ formatPrice(order.totalPrice || 0) }}</span></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="detail-footer">
+        <!-- CREATED -> Confirm -> PENDING -->
+        <button class="btn-action btn-confirm" *ngIf="order.status === 'CREATED'" (click)="confirmOrder(order.id)">
+          Confirm Order
+        </button>
+
+        <!-- PENDING -> Prepare -> PREPARING -->
+        <button class="btn-action btn-prepare" *ngIf="order.status === 'PENDING'" (click)="prepareOrder(order.id)">
+          Start Preparing
+        </button>
+
+        <!-- PREPARING -> Handover -> SHIPPING -->
+        <div class="handover-controls" *ngIf="order.status === 'PREPARING'">
+          <div class="form-group mb-4">
+            <label class="block text-sm font-medium text-slate-400 mb-2">Assign Shipper</label>
+            <select class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none focus:border-blue-500"
+                   [ngModel]="selectedShipperId()" (ngModelChange)="selectedShipperId.set($event)">
+              <option [value]="null">Select a shipper...</option>
+              <option *ngFor="let shipper of shippers()" [value]="shipper.id">
+                {{ shipper.fullName }}
+              </option>
+            </select>
+          </div>
+          <button class="btn-action btn-handover" (click)="handoverToShipper(order.id)">
+            Handover to Shipper
+          </button>
+        </div>
+        
+        <p class="action-hint" *ngIf="order.status === 'SHIPPING'">This order has been handed over to the shipper.</p>
+        <p class="action-hint" *ngIf="order.status === 'DELIVERED'">This order is completed.</p>
+      </div>
+    </div>
+  </div>
+</div>

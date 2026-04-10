@@ -1,0 +1,101 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h1 class="dashboard-title">Staff Dashboard</h1>
+    <p class="dashboard-subtitle">Monitor products and process orders efficiently.</p>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-card__icon icon--created">📦</div>
+      <div class="stat-card__content">
+        <span class="stat-card__label">New Orders</span>
+        <span class="stat-card__value">{{ orderStats().created }}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__icon icon--pending">⌛</div>
+      <div class="stat-card__content">
+        <span class="stat-card__label">Pending</span>
+        <span class="stat-card__value">{{ orderStats().pending }}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__icon icon--preparing">🛠️</div>
+      <div class="stat-card__content">
+        <span class="stat-card__label">Preparing</span>
+        <span class="stat-card__value">{{ orderStats().preparing }}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__icon icon--lowstock">⚠️</div>
+      <div class="stat-card__content">
+        <span class="stat-card__label">Low Stock</span>
+        <span class="stat-card__value">{{ lowStockProducts().length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <section class="dashboard-section section--orders">
+      <div class="section-header">
+        <h2 class="section-title">Active Orders</h2>
+        <a routerLink="/staff/orders" class="section-link">View All</a>
+      </div>
+      <div class="table-container">
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of pendingOrders()">
+              <td>#{{ order.id }}</td>
+              <td>{{ order.receiverName }}</td>
+              <td>{{ formatPrice(order.totalPrice || 0) }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td>
+                <a [routerLink]="['/staff/orders']" class="btn-action">Process</a>
+              </td>
+            </tr>
+            <tr *ngIf="pendingOrders().length === 0">
+              <td colspan="5" class="text-center py-8 text-slate-400">No active orders to process.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="dashboard-section section--inventory">
+      <div class="section-header">
+        <h2 class="section-title">Low Stock Alert</h2>
+        <a routerLink="/staff/products" class="section-link">Manage Inventory</a>
+      </div>
+      <div class="inventory-list">
+        <div class="inventory-item" *ngFor="let product of lowStockProducts()">
+          <div class="product-info">
+            <img [src]="product.image" [alt]="product.name" class="product-thumb">
+            <div class="product-meta">
+              <span class="product-name">{{ product.name }}</span>
+              <span class="product-category">Category ID: {{ product.categoryId }}</span>
+            </div>
+          </div>
+          <div class="stock-status" [class.stock--critical]="product.stockQuantity < 5">
+            {{ product.stockQuantity }} left
+          </div>
+        </div>
+        <div *ngIf="lowStockProducts().length === 0" class="text-center py-8 text-slate-400">
+          All products are well stocked.
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

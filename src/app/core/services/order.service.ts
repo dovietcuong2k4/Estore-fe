@@ -105,6 +105,19 @@ export class OrderService {
     this.updateOrderStatus(orderId, 'PENDING');
   }
 
+  prepareOrder(orderId: number): void {
+    this.updateOrderStatus(orderId, 'PREPARING');
+  }
+
+  handoverToShipper(orderId: number, shipperId: number): void {
+    this.ordersSignal.set(
+      this.ordersSignal().map(o =>
+        o.id === orderId ? { ...o, shipperId, status: 'SHIPPING' as OrderStatus, shippingDate: new Date().toISOString() } : o
+      )
+    );
+    this.saveToStorage();
+  }
+
   cancelOrder(orderId: number): void {
     this.updateOrderStatus(orderId, 'CANCELLED');
   }
@@ -115,6 +128,7 @@ export class OrderService {
       total: orders.length,
       created: orders.filter(o => o.status === 'CREATED').length,
       pending: orders.filter(o => o.status === 'PENDING').length,
+      preparing: orders.filter(o => o.status === 'PREPARING').length,
       shipping: orders.filter(o => o.status === 'SHIPPING').length,
       delivered: orders.filter(o => o.status === 'DELIVERED').length,
       cancelled: orders.filter(o => o.status === 'CANCELLED').length,

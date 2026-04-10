@@ -58,6 +58,16 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'staff',
+    loadComponent: () => import('./pages/staff/layout/staff-layout').then(m => m.StaffLayoutComponent),
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', loadComponent: () => import('./pages/staff/dashboard/staff-dashboard').then(m => m.StaffDashboardComponent), title: 'Dashboard - Nhân viên' },
+      { path: 'products', loadComponent: () => import('./pages/staff/product-mgmt/staff-product-mgmt').then(m => m.StaffProductMgmtComponent), title: 'Quản lý Sản phẩm - Nhân viên' },
+      { path: 'orders', loadComponent: () => import('./pages/staff/order-mgmt/staff-order-mgmt').then(m => m.StaffOrderMgmtComponent), title: 'Quản lý Đơn hàng - Nhân viên' }
+    ]
+  },
+  {
     path: '**',
     redirectTo: ''
   }
