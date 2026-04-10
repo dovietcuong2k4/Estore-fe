@@ -1,0 +1,64 @@
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar__header">
+      <a routerLink="/" class="admin-logo">
+        <span class="admin-logo__icon">⚡</span>
+        <span class="admin-logo__text">E-Store Admin</span>
+      </a>
+    </div>
+
+    <nav class="admin-nav">
+      <div class="admin-nav__group">
+        <span class="admin-nav__label">Tổng quan</span>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav__link">
+          <span class="icon">📊</span> Dashboard
+        </a>
+      </div>
+
+      <div class="admin-nav__group">
+        <span class="admin-nav__label">Quản lý bán hàng</span>
+        <a routerLink="/admin/orders" routerLinkActive="active" class="admin-nav__link">
+          <span class="icon">📦</span> Đơn hàng
+        </a>
+        <a routerLink="/admin/products" routerLinkActive="active" class="admin-nav__link">
+          <span class="icon">🛍️</span> Sản phẩm
+        </a>
+      </div>
+
+      <div class="admin-nav__group">
+        <span class="admin-nav__label">Quản lý hệ thống</span>
+        <a routerLink="/admin/users" routerLinkActive="active" class="admin-nav__link">
+          <span class="icon">👥</span> Người dùng
+        </a>
+      </div>
+    </nav>
+
+    <div class="admin-sidebar__footer">
+      <div class="admin-user">
+        <div class="admin-user__avatar">
+          {{ auth.user()?.fullName?.charAt(0) }}
+        </div>
+        <div class="admin-user__info">
+          <div class="admin-user__name">{{ auth.user()?.fullName }}</div>
+          <div class="admin-user__role">{{ auth.user()?.roles?.[0]?.name }}</div>
+        </div>
+      </div>
+      <a routerLink="/" class="btn-store">🏠 Quay về cửa hàng</a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div class="admin-header__search">
+        <input type="text" placeholder="Tìm kiếm trong admin..." />
+      </div>
+      <div class="admin-header__actions">
+        <button class="action-btn">🔔</button>
+        <button class="action-btn">⚙️</button>
+      </div>
+    </div>
+    <div class="admin-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

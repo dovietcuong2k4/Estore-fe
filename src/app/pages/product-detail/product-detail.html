@@ -1,0 +1,142 @@
+@if (product) {
+<div class="detail-page">
+  <div class="detail-page__container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a routerLink="/" class="breadcrumb__link">Trang chủ</a>
+      <span class="breadcrumb__sep">/</span>
+      <a routerLink="/products" class="breadcrumb__link">Sản phẩm</a>
+      <span class="breadcrumb__sep">/</span>
+      <a [routerLink]="['/products']" [queryParams]="{category: product.categoryId}" class="breadcrumb__link">{{ category }}</a>
+      <span class="breadcrumb__sep">/</span>
+      <span class="breadcrumb__current">{{ product.name }}</span>
+    </nav>
+
+    <!-- Product Info -->
+    <div class="product-info">
+      <div class="product-info__image">
+        <img [src]="product.image" [alt]="product.name" />
+        @if (discount > 0) {
+          <span class="product-info__badge">-{{ discount }}%</span>
+        }
+      </div>
+
+      <div class="product-info__details">
+        <span class="product-info__brand">{{ brand }}</span>
+        <h1 class="product-info__name">{{ product.name }}</h1>
+
+        <div class="product-info__rating">
+          <span class="stars">{{ ratingStars }}</span>
+          <span class="reviews">{{ product.reviewCount }} đánh giá</span>
+          <span class="sold">| Đã bán {{ product.soldQuantity }}</span>
+        </div>
+
+        <div class="product-info__price-box">
+          <span class="product-info__price">{{ formatPrice(product.price) }}</span>
+          @if (product.originalPrice && product.originalPrice > product.price) {
+            <span class="product-info__original">{{ formatPrice(product.originalPrice) }}</span>
+            <span class="product-info__save">Tiết kiệm {{ formatPrice(product.originalPrice - product.price) }}</span>
+          }
+        </div>
+
+        <!-- Quick Specs -->
+        <div class="quick-specs">
+          @if (product.cpu !== 'N/A') {
+            <div class="quick-specs__item"><span class="quick-specs__label">CPU</span><span class="quick-specs__value">{{ product.cpu }}</span></div>
+          }
+          @if (product.ram !== 'N/A') {
+            <div class="quick-specs__item"><span class="quick-specs__label">RAM</span><span class="quick-specs__value">{{ product.ram }}</span></div>
+          }
+          @if (product.screen !== 'N/A') {
+            <div class="quick-specs__item"><span class="quick-specs__label">Màn hình</span><span class="quick-specs__value">{{ product.screen }}</span></div>
+          }
+          @if (product.operatingSystem !== 'N/A') {
+            <div class="quick-specs__item"><span class="quick-specs__label">Hệ điều hành</span><span class="quick-specs__value">{{ product.operatingSystem }}</span></div>
+          }
+        </div>
+
+        <!-- Quantity & Actions -->
+        <div class="product-info__actions">
+          <div class="qty-selector">
+            <button class="qty-selector__btn" (click)="decrementQty()" [disabled]="quantity() <= 1">−</button>
+            <span class="qty-selector__value">{{ quantity() }}</span>
+            <button class="qty-selector__btn" (click)="incrementQty()">+</button>
+          </div>
+          <span class="stock-info">
+            @if (product.stockQuantity > 0) {
+              ✅ Còn {{ product.stockQuantity }} sản phẩm
+            } @else {
+              ❌ Hết hàng
+            }
+          </span>
+        </div>
+
+        <div class="product-info__buttons">
+          <button class="btn-add-cart" (click)="addToCart()" [disabled]="product.stockQuantity === 0">
+            🛒 {{ isInCart() ? 'Đã thêm - Thêm nữa' : 'Thêm vào giỏ hàng' }}
+          </button>
+          <button class="btn-buy-now" (click)="buyNow()" [disabled]="product.stockQuantity === 0">
+            ⚡ Mua ngay
+          </button>
+        </div>
+
+        <div class="product-info__guarantee">
+          <span>🛡️ Bảo hành chính hãng {{ product.warrantyInfo }}</span>
+          <span>🚚 Miễn phí giao hàng</span>
+          <span>↩️ Đổi trả 30 ngày</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tabs__header">
+        <button class="tabs__tab" [class.active]="activeTab() === 'specs'" (click)="activeTab.set('specs')">Thông số kỹ thuật</button>
+        <button class="tabs__tab" [class.active]="activeTab() === 'desc'" (click)="activeTab.set('desc')">Mô tả sản phẩm</button>
+        <button class="tabs__tab" [class.active]="activeTab() === 'warranty'" (click)="activeTab.set('warranty')">Bảo hành</button>
+      </div>
+      <div class="tabs__content">
+        @if (activeTab() === 'specs') {
+          <table class="specs-table">
+            <tbody>
+              <tr><td>CPU</td><td>{{ product.cpu }}</td></tr>
+              <tr><td>RAM</td><td>{{ product.ram }}</td></tr>
+              <tr><td>Màn hình</td><td>{{ product.screen }}</td></tr>
+              <tr><td>Hệ điều hành</td><td>{{ product.operatingSystem }}</td></tr>
+              <tr><td>Pin</td><td>{{ product.batteryCapacity }}</td></tr>
+              <tr><td>Thiết kế</td><td>{{ product.design }}</td></tr>
+              <tr><td>Thương hiệu</td><td>{{ brand }}</td></tr>
+              <tr><td>Danh mục</td><td>{{ category }}</td></tr>
+            </tbody>
+          </table>
+        }
+        @if (activeTab() === 'desc') {
+          <div class="desc-content">
+            <p>{{ product.description }}</p>
+          </div>
+        }
+        @if (activeTab() === 'warranty') {
+          <div class="desc-content">
+            <p><strong>Thông tin bảo hành:</strong> {{ product.warrantyInfo }}</p>
+            <p>• Bảo hành chính hãng tại các trung tâm ủy quyền trên toàn quốc</p>
+            <p>• Hỗ trợ đổi mới trong 30 ngày đầu nếu có lỗi từ nhà sản xuất</p>
+            <p>• Kiểm tra tình trạng bảo hành qua hotline: 1900 1234 56</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    @if (relatedProducts.length > 0) {
+      <section class="related">
+        <h2 class="related__title">Sản phẩm tương tự</h2>
+        <div class="related__grid">
+          @for (p of relatedProducts; track p.id) {
+            <app-product-card [product]="p" />
+          }
+        </div>
+      </section>
+    }
+  </div>
+</div>
+}

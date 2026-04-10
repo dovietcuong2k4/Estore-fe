@@ -1,0 +1,88 @@
+<div class="checkout-page">
+  <div class="checkout-page__container">
+    @if (success()) {
+      <div class="success-box">
+        <span class="success-box__icon">✅</span>
+        <h2 class="success-box__title">Đặt hàng thành công!</h2>
+        <p class="success-box__desc">Mã đơn hàng: #{{ orderId() }}</p>
+        <p class="success-box__desc">Chúng tôi sẽ liên hệ xác nhận đơn hàng sớm nhất.</p>
+        <div class="success-box__actions">
+          <a routerLink="/orders" class="success-box__btn success-box__btn--primary">📦 Xem đơn hàng</a>
+          <a routerLink="/products" class="success-box__btn">🛍️ Tiếp tục mua sắm</a>
+        </div>
+      </div>
+    } @else {
+      <h1 class="checkout-page__title">📝 Đặt hàng</h1>
+
+      @if (items().length === 0) {
+        <div class="success-box">
+          <p class="success-box__desc">Giỏ hàng trống. <a routerLink="/products">Mua sắm ngay</a></p>
+        </div>
+      } @else {
+        <div class="checkout-layout">
+          <!-- Form -->
+          <div class="checkout-form">
+            <h3 class="form-title">Thông tin giao hàng</h3>
+
+            @if (error()) {
+              <div class="error-msg">{{ error() }}</div>
+            }
+
+            <div class="form-group">
+              <label class="form-label">Họ và tên người nhận *</label>
+              <input type="text" class="form-input" [(ngModel)]="form.receiverName" placeholder="Nguyễn Văn A" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Số điện thoại *</label>
+              <input type="tel" class="form-input" [(ngModel)]="form.receiverPhone" placeholder="0901234567" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Địa chỉ giao hàng *</label>
+              <input type="text" class="form-input" [(ngModel)]="form.receiverAddress" placeholder="123 Nguyễn Huệ, Q.1, TP.HCM" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ghi chú đơn hàng</label>
+              <textarea class="form-input form-textarea" [(ngModel)]="form.note" placeholder="Giao giờ hành chính, gọi trước khi giao..." rows="3"></textarea>
+            </div>
+
+            <h3 class="form-title" style="margin-top: 1.5rem;">Phương thức thanh toán</h3>
+            <div class="payment-option active">
+              <span>💵</span>
+              <div>
+                <strong>Thanh toán khi nhận hàng (COD)</strong>
+                <p>Thanh toán bằng tiền mặt khi nhận được hàng</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="order-summary">
+            <h3 class="summary-title">Đơn hàng của bạn</h3>
+
+            @for (item of items(); track item.productId) {
+              <div class="summary-item">
+                <img [src]="item.product?.image" class="summary-item__img" />
+                <div class="summary-item__info">
+                  <span class="summary-item__name">{{ item.product?.name }}</span>
+                  <span class="summary-item__qty">x{{ item.quantity }}</span>
+                </div>
+                <span class="summary-item__price">{{ formatPrice((item.product?.price || 0) * item.quantity) }}</span>
+              </div>
+            }
+
+            <hr class="summary-divider" />
+            <div class="summary-row"><span>Tạm tính</span><span>{{ formatPrice(totalPrice()) }}</span></div>
+            <div class="summary-row"><span>Phí vận chuyển</span><span class="free">Miễn phí</span></div>
+            <hr class="summary-divider" />
+            <div class="summary-row summary-row--total"><span>Tổng cộng</span><span>{{ formatPrice(totalPrice()) }}</span></div>
+
+            <button class="place-order-btn" (click)="placeOrder()">⚡ Đặt hàng</button>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<a [routerLink]="['/products', product.id]" class="product-card">
+  <!-- Image -->
+  <div class="product-card__image-wrapper">
+    <img [src]="product.image" [alt]="product.name" class="product-card__image" loading="lazy" />
+    @if (discount > 0) {
+      <span class="product-card__badge">-{{ discount }}%</span>
+    }
+    <div class="product-card__overlay">
+      <button class="product-card__cart-btn" (click)="addToCart($event)">
+        🛒 Thêm vào giỏ
+      </button>
+    </div>
+  </div>
+
+  <!-- Info -->
+  <div class="product-card__info">
+    <span class="product-card__brand">{{ brand }}</span>
+    <h3 class="product-card__name">{{ product.name }}</h3>
+
+    <div class="product-card__specs">
+      @if (product.cpu !== 'N/A') {
+        <span class="product-card__spec">{{ product.cpu }}</span>
+      }
+      @if (product.ram !== 'N/A') {
+        <span class="product-card__spec">{{ product.ram }}</span>
+      }
+    </div>
+
+    <div class="product-card__rating">
+      <span class="product-card__stars">{{ ratingStars }}</span>
+      <span class="product-card__reviews">({{ product.reviewCount }})</span>
+    </div>
+
+    <div class="product-card__price-row">
+      <span class="product-card__price">{{ formatPrice(product.price) }}</span>
+      @if (product.originalPrice && product.originalPrice > product.price) {
+        <span class="product-card__original-price">{{ formatPrice(product.originalPrice) }}</span>
+      }
+    </div>
+
+    <div class="product-card__sold">
+      Đã bán {{ product.soldQuantity }}
+    </div>
+  </div>
+</a>

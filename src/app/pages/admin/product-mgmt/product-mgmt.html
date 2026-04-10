@@ -1,0 +1,41 @@
+<div class="dashboard">
+  <div class="dashboard__header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <h1 class="dashboard__title">Quản lý Sản phẩm</h1>
+      <p class="dashboard__subtitle">Xem và quản lý danh sách sản phẩm trong kho</p>
+    </div>
+    <button class="btn-primary" style="padding: 0.6rem 1.25rem; background: #818cf8; color: #fff; border-radius: 8px; font-weight: 600;">+ Thêm sản phẩm</button>
+  </div>
+
+  <div class="content-panel">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Hình ảnh</th>
+            <th>Tên sản phẩm</th>
+            <th>Danh mục</th>
+            <th>Giá bán</th>
+            <th>Tồn kho</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of products; track product.id) {
+            <tr>
+              <td><img [src]="product.image" style="width: 40px; height: 40px; border-radius: 6px; object-fit: cover;" /></td>
+              <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ product.name }}</td>
+              <td>{{ getCategory(product.categoryId) }}</td>
+              <td class="text-success font-semibold">{{ formatPrice(product.price) }}</td>
+              <td>{{ product.stockQuantity }}</td>
+              <td>
+                <button style="background: none; border: none; color: #818cf8; cursor: pointer; margin-right: 0.5rem;">Sửa</button>
+                <button style="background: none; border: none; color: #ef4444; cursor: pointer;">Xóa</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

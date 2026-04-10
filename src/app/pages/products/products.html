@@ -1,0 +1,92 @@
+<div class="products-page">
+  <div class="products-page__container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar__section">
+        <h3 class="sidebar__title">🔍 Tìm kiếm</h3>
+        <input
+          type="text"
+          placeholder="Tên sản phẩm, CPU..."
+          class="sidebar__search"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event); currentPage.set(1)"
+        />
+      </div>
+
+      <div class="sidebar__section">
+        <h3 class="sidebar__title">📂 Danh mục</h3>
+        <div class="sidebar__list">
+          <button class="sidebar__item" [class.active]="selectedCategory() === null" (click)="setCategory(null)">
+            Tất cả <span class="sidebar__count">{{ allProducts.length }}</span>
+          </button>
+          @for (cat of categories; track cat.id) {
+            <button class="sidebar__item" [class.active]="selectedCategory() === cat.id" (click)="setCategory(cat.id)">
+              {{ cat.icon }} {{ cat.name }} <span class="sidebar__count">{{ cat.productCount }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="sidebar__section">
+        <h3 class="sidebar__title">🏷️ Thương hiệu</h3>
+        <div class="sidebar__list">
+          <button class="sidebar__item" [class.active]="selectedBrand() === null" (click)="setBrand(null)">
+            Tất cả
+          </button>
+          @for (brand of brands; track brand.id) {
+            <button class="sidebar__item" [class.active]="selectedBrand() === brand.id" (click)="setBrand(brand.id)">
+              {{ brand.name }}
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (selectedCategory() || selectedBrand() || searchQuery()) {
+        <button class="sidebar__clear" (click)="clearFilters()">✕ Xóa bộ lọc</button>
+      }
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="toolbar">
+        <div class="toolbar__info">
+          <h1 class="toolbar__title">{{ getCategoryName(selectedCategory()) }}</h1>
+          <span class="toolbar__count">{{ filteredProducts().length }} sản phẩm</span>
+        </div>
+        <div class="toolbar__sort">
+          <span class="toolbar__sort-label">Sắp xếp:</span>
+          <button class="toolbar__sort-btn" [class.active]="sortBy() === 'popular'" (click)="setSort('popular')">Phổ biến</button>
+          <button class="toolbar__sort-btn" [class.active]="sortBy() === 'newest'" (click)="setSort('newest')">Mới nhất</button>
+          <button class="toolbar__sort-btn" [class.active]="sortBy() === 'price-asc'" (click)="setSort('price-asc')">Giá ↑</button>
+          <button class="toolbar__sort-btn" [class.active]="sortBy() === 'price-desc'" (click)="setSort('price-desc')">Giá ↓</button>
+          <button class="toolbar__sort-btn" [class.active]="sortBy() === 'discount'" (click)="setSort('discount')">Giảm giá</button>
+        </div>
+      </div>
+
+      @if (paginatedProducts().length > 0) {
+        <div class="grid">
+          @for (product of paginatedProducts(); track product.id) {
+            <app-product-card [product]="product" />
+          }
+        </div>
+
+        @if (totalPages() > 1) {
+          <div class="pagination">
+            <button class="pagination__btn" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">‹</button>
+            @for (p of pages; track p) {
+              <button class="pagination__btn" [class.active]="currentPage() === p" (click)="goToPage(p)">{{ p }}</button>
+            }
+            <button class="pagination__btn" [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)">›</button>
+          </div>
+        }
+      } @else {
+        <div class="empty">
+          <span class="empty__icon">🔍</span>
+          <h3 class="empty__title">Không tìm thấy sản phẩm</h3>
+          <p class="empty__desc">Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+          <button class="empty__btn" (click)="clearFilters()">Xóa bộ lọc</button>
+        </div>
+      }
+    </main>
+  </div>
+</div>

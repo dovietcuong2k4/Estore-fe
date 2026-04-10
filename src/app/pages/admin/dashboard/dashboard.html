@@ -1,0 +1,100 @@
+<div class="dashboard">
+  <div class="dashboard__header">
+    <h1 class="dashboard__title">Tổng quan E-Store</h1>
+    <p class="dashboard__subtitle">Thống kê hoạt động kinh doanh mới nhất</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-card__icon stat-card__icon--revenue">💰</div>
+      <div class="stat-card__info">
+        <span class="stat-card__label">Tổng doanh thu</span>
+        <span class="stat-card__value">{{ formatPrice(orderStats().totalRevenue) }}</span>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-card__icon stat-card__icon--orders">📦</div>
+      <div class="stat-card__info">
+        <span class="stat-card__label">Tổng đơn hàng</span>
+        <span class="stat-card__value">{{ orderStats().total }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card__icon stat-card__icon--products">🛍️</div>
+      <div class="stat-card__info">
+        <span class="stat-card__label">Sản phẩm</span>
+        <span class="stat-card__value">{{ productCount }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card__icon stat-card__icon--users">👥</div>
+      <div class="stat-card__info">
+        <span class="stat-card__label">Người dùng</span>
+        <span class="stat-card__value">{{ userCount }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard__content">
+    <div class="content-panel">
+      <div class="content-panel__header">
+        <h2 class="content-panel__title">Đơn hàng hiện tại</h2>
+      </div>
+      <div class="order-status-grid">
+        <div class="status-box">
+          <span class="status-box__count">{{ orderStats().created }}</span>
+          <span class="status-box__label">Mới tạo</span>
+        </div>
+        <div class="status-box">
+          <span class="status-box__count text-warning">{{ orderStats().pending }}</span>
+          <span class="status-box__label">Đang xử lý</span>
+        </div>
+        <div class="status-box">
+          <span class="status-box__count text-info">{{ orderStats().shipping }}</span>
+          <span class="status-box__label">Đang giao hàng</span>
+        </div>
+        <div class="status-box">
+          <span class="status-box__count text-success">{{ orderStats().delivered }}</span>
+          <span class="status-box__label">Đã giao</span>
+        </div>
+        <div class="status-box">
+          <span class="status-box__count text-danger">{{ orderStats().cancelled }}</span>
+          <span class="status-box__label">Đã hủy</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-panel">
+      <div class="content-panel__header">
+        <h2 class="content-panel__title">Đơn hàng gần đây</h2>
+        <a routerLink="/admin/orders" class="content-panel__link">Xem tất cả</a>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Khách hàng</th>
+              <th>Tổng tiền</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of recentOrders(); track order.id) {
+              <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.receiverName }}</td>
+                <td class="text-success font-semibold">{{ formatPrice(order.totalPrice || 0) }}</td>
+                <td><span class="badge" [class]="getStatusClass(order.status)">{{ order.status }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

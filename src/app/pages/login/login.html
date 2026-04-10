@@ -1,0 +1,49 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card__header">
+      <div class="auth-card__logo">
+        <span class="auth-card__logo-icon">⚡</span>
+        <span class="auth-card__logo-text">E-Store</span>
+      </div>
+      <h1 class="auth-card__title">Đăng nhập</h1>
+      <p class="auth-card__subtitle">Chào mừng bạn quay lại hệ thống</p>
+    </div>
+
+    @if (error()) {
+      <div class="auth-card__error">{{ error() }}</div>
+    }
+
+    <form class="auth-form" (ngSubmit)="login()">
+      <div class="auth-form__group">
+        <label class="auth-form__label">Email</label>
+        <input type="email" class="auth-form__input" [(ngModel)]="email" name="email" placeholder="Nhập email của bạn" required />
+      </div>
+
+      <div class="auth-form__group">
+        <div class="auth-form__label-row">
+          <label class="auth-form__label">Mật khẩu</label>
+          <a href="#" class="auth-form__forgot">Quên mật khẩu?</a>
+        </div>
+        <input type="password" class="auth-form__input" [(ngModel)]="password" name="password" placeholder="Nhập mật khẩu" required />
+      </div>
+
+      <button type="submit" class="auth-form__btn">🚀 Đăng nhập</button>
+    </form>
+    
+    <div class="auth-card__footer">
+      <span>Chưa có tài khoản?</span>
+      <a routerLink="/register">Đăng ký ngay</a>
+      
+      <div class="auth-card__mock-info">
+        <small>Mock accounts for testing:</small>
+        <ul>
+          <li>Admin: admin&#64;estore.com</li>
+          <li>Customer: customer&#64;estore.com</li>
+          <li>Staff: staff&#64;estore.com</li>
+          <li>Shipper: shipper&#64;estore.com</li>
+          <li>(Password: anything)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

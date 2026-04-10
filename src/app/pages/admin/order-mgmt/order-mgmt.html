@@ -1,0 +1,49 @@
+<div class="dashboard">
+  <div class="dashboard__header">
+    <h1 class="dashboard__title">Quản lý Đơn hàng</h1>
+    <p class="dashboard__subtitle">Theo dõi trạng thái và xử lý đơn đặt hàng</p>
+  </div>
+
+  <div class="content-panel">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Mã ĐH</th>
+            <th>Khách hàng</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Thay đổi trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders(); track order.id) {
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>
+                <div style="font-weight: 500;">{{ order.receiverName }}</div>
+                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.4)">{{ order.receiverPhone }}</div>
+              </td>
+              <td>{{ order.orderDate | date:'dd/MM/yy HH:mm' }}</td>
+              <td class="text-success font-semibold">{{ formatPrice(order.totalPrice || 0) }}</td>
+              <td><span class="badge" [class]="getStatusClass(order.status)">{{ order.status }}</span></td>
+              <td>
+                <select 
+                  [value]="order.status" 
+                  (change)="updateStatus(order.id, $any($event.target).value)"
+                  style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.4rem; border-radius: 6px; outline: none;">
+                  <option value="CREATED">CREATED</option>
+                  <option value="PENDING">PENDING</option>
+                  <option value="SHIPPING">SHIPPING</option>
+                  <option value="DELIVERED">DELIVERED</option>
+                  <option value="CANCELLED">CANCELLED</option>
+                </select>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

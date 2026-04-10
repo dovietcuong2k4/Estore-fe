@@ -1,0 +1,68 @@
+<div class="cart-page">
+  <div class="cart-page__container">
+    <h1 class="cart-page__title">🛒 Giỏ hàng</h1>
+
+    @if (isEmpty()) {
+      <div class="empty-cart">
+        <span class="empty-cart__icon">🛒</span>
+        <h2 class="empty-cart__title">Giỏ hàng trống</h2>
+        <p class="empty-cart__desc">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm</p>
+        <a routerLink="/products" class="empty-cart__btn">🛍️ Tiếp tục mua sắm</a>
+      </div>
+    } @else {
+      <div class="cart-layout">
+        <!-- Cart Items -->
+        <div class="cart-items">
+          <div class="cart-items__header">
+            <span>Sản phẩm ({{ items().length }})</span>
+            <button class="clear-btn" (click)="clearAll()">🗑️ Xóa tất cả</button>
+          </div>
+
+          @for (item of items(); track item.productId) {
+            <div class="cart-item">
+              <a [routerLink]="['/products', item.productId]" class="cart-item__image">
+                <img [src]="item.product?.image" [alt]="item.product?.name" />
+              </a>
+              <div class="cart-item__info">
+                <a [routerLink]="['/products', item.productId]" class="cart-item__name">{{ item.product?.name }}</a>
+                <span class="cart-item__specs">{{ item.product?.cpu }} • {{ item.product?.ram }}</span>
+                <span class="cart-item__price-each">{{ formatPrice(item.product?.price || 0) }} / sản phẩm</span>
+              </div>
+              <div class="cart-item__qty">
+                <button class="qty-btn" (click)="decrement(item.productId, item.quantity)" [disabled]="item.quantity <= 1">−</button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button class="qty-btn" (click)="increment(item.productId, item.quantity)">+</button>
+              </div>
+              <div class="cart-item__total">
+                <span class="cart-item__total-price">{{ formatPrice((item.product?.price || 0) * item.quantity) }}</span>
+                <button class="cart-item__remove" (click)="remove(item.productId)">✕</button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Summary -->
+        <div class="cart-summary">
+          <h3 class="cart-summary__title">Tóm tắt đơn hàng</h3>
+          <div class="cart-summary__row">
+            <span>Tạm tính</span>
+            <span>{{ formatPrice(totalPrice()) }}</span>
+          </div>
+          <div class="cart-summary__row">
+            <span>Phí vận chuyển</span>
+            <span class="free-ship">Miễn phí</span>
+          </div>
+          <hr class="cart-summary__divider" />
+          <div class="cart-summary__row cart-summary__row--total">
+            <span>Tổng cộng</span>
+            <span class="total-price">{{ formatPrice(totalPrice()) }}</span>
+          </div>
+          <a routerLink="/checkout" class="cart-summary__checkout">
+            ⚡ Tiến hành đặt hàng
+          </a>
+          <a routerLink="/products" class="cart-summary__continue">← Tiếp tục mua sắm</a>
+        </div>
+      </div>
+    }
+  </div>
+</div>

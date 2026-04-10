@@ -1,0 +1,154 @@
+<div class="home">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero__bg"></div>
+    <div class="hero__content">
+      <span class="hero__badge">🔥 Khuyến mãi lớn nhất năm</span>
+      <h1 class="hero__title">
+        Công nghệ <span class="hero__highlight">đỉnh cao</span><br />
+        Giá cả <span class="hero__highlight2">tốt nhất</span>
+      </h1>
+      <p class="hero__subtitle">
+        Khám phá hàng ngàn sản phẩm công nghệ chính hãng từ các thương hiệu hàng đầu thế giới.
+        Laptop, PC, phụ kiện với mức giá ưu đãi và bảo hành tận tâm.
+      </p>
+      <div class="hero__actions">
+        <a routerLink="/products" class="hero__btn hero__btn--primary">
+          🛍️ Mua sắm ngay
+        </a>
+        <a routerLink="/products" [queryParams]="{sort: 'discount'}" class="hero__btn hero__btn--outline">
+          💎 Xem khuyến mãi
+        </a>
+      </div>
+      <div class="hero__stats">
+        <div class="hero__stat">
+          <span class="hero__stat-value">50+</span>
+          <span class="hero__stat-label">Sản phẩm</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">10+</span>
+          <span class="hero__stat-label">Thương hiệu</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">15K+</span>
+          <span class="hero__stat-label">Khách hàng</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">24/7</span>
+          <span class="hero__stat-label">Hỗ trợ</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="section">
+    <div class="section__container">
+      <div class="section__header">
+        <h2 class="section__title">Danh mục sản phẩm</h2>
+        <p class="section__subtitle">Khám phá các danh mục sản phẩm công nghệ đa dạng</p>
+      </div>
+      <div class="categories-grid">
+        @for (cat of categories; track cat.id) {
+          <a [routerLink]="['/products']" [queryParams]="{category: cat.id}" class="category-card">
+            <span class="category-card__icon">{{ cat.icon }}</span>
+            <span class="category-card__name">{{ cat.name }}</span>
+            <span class="category-card__count">{{ cat.productCount }} sản phẩm</span>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="section">
+    <div class="section__container">
+      <div class="section__header">
+        <div>
+          <h2 class="section__title">🔥 Bán chạy nhất</h2>
+          <p class="section__subtitle">Sản phẩm được khách hàng yêu thích nhất</p>
+        </div>
+        <a routerLink="/products" [queryParams]="{sort: 'popular'}" class="section__view-all">Xem tất cả →</a>
+      </div>
+      <div class="products-grid">
+        @for (product of featuredProducts; track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Banner -->
+  <section class="promo-banner">
+    <div class="promo-banner__content">
+      <span class="promo-banner__tag">⚡ Ưu đãi đặc biệt</span>
+      <h2 class="promo-banner__title">Giảm đến 30% cho Laptop Gaming</h2>
+      <p class="promo-banner__desc">Nâng cấp trải nghiệm gaming của bạn với các dòng laptop gaming mới nhất từ ASUS ROG, MSI, Acer Predator.</p>
+      <a routerLink="/products" [queryParams]="{category: 1}" class="promo-banner__btn">Khám phá ngay →</a>
+    </div>
+  </section>
+
+  <!-- Discounted Products -->
+  <section class="section">
+    <div class="section__container">
+      <div class="section__header">
+        <div>
+          <h2 class="section__title">💎 Giảm giá sốc</h2>
+          <p class="section__subtitle">Sản phẩm giảm giá mạnh nhất hôm nay</p>
+        </div>
+        <a routerLink="/products" [queryParams]="{sort: 'discount'}" class="section__view-all">Xem tất cả →</a>
+      </div>
+      <div class="products-grid">
+        @for (product of discountedProducts; track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- New Products -->
+  <section class="section">
+    <div class="section__container">
+      <div class="section__header">
+        <div>
+          <h2 class="section__title">✨ Sản phẩm mới</h2>
+          <p class="section__subtitle">Mới nhất, hot nhất vừa về kho</p>
+        </div>
+        <a routerLink="/products" [queryParams]="{sort: 'newest'}" class="section__view-all">Xem tất cả →</a>
+      </div>
+      <div class="products-grid">
+        @for (product of newProducts; track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section features-section">
+    <div class="section__container">
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-card__icon">🚚</span>
+          <h3 class="feature-card__title">Giao hàng nhanh</h3>
+          <p class="feature-card__desc">Miễn phí giao hàng cho đơn từ 500K. Giao trong 2-4 ngày toàn quốc.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card__icon">🔒</span>
+          <h3 class="feature-card__title">Thanh toán an toàn</h3>
+          <p class="feature-card__desc">Hỗ trợ nhiều phương thức thanh toán. Bảo mật thông tin tuyệt đối.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card__icon">🛡️</span>
+          <h3 class="feature-card__title">Bảo hành chính hãng</h3>
+          <p class="feature-card__desc">Tất cả sản phẩm đều được bảo hành chính hãng từ 12-36 tháng.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card__icon">💬</span>
+          <h3 class="feature-card__title">Hỗ trợ 24/7</h3>
+          <p class="feature-card__desc">Đội ngũ tư vấn sẵn sàng hỗ trợ bạn mọi lúc, mọi nơi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,56 @@
+<div class="auth-page">
+  <div class="auth-card" style="max-width: 500px;">
+    <div class="auth-card__header">
+      <div class="auth-card__logo">
+        <span class="auth-card__logo-icon">⚡</span>
+        <span class="auth-card__logo-text">E-Store</span>
+      </div>
+      <h1 class="auth-card__title">Đăng ký tài khoản</h1>
+      <p class="auth-card__subtitle">Trở thành thành viên để nhận nhiều ưu đãi</p>
+    </div>
+
+    @if (error()) {
+      <div class="auth-card__error">{{ error() }}</div>
+    }
+
+    <form class="auth-form" (ngSubmit)="register()">
+      <div class="auth-form__group">
+        <label class="auth-form__label">Họ và tên *</label>
+        <input type="text" class="auth-form__input" [(ngModel)]="form.fullName" name="fullName" placeholder="VD: Nguyễn Văn A" required />
+      </div>
+
+      <div class="auth-form__group">
+        <label class="auth-form__label">Email *</label>
+        <input type="email" class="auth-form__input" [(ngModel)]="form.email" name="email" placeholder="VD: email@example.com" required />
+      </div>
+
+      <div class="auth-form__group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <label class="auth-form__label">Mật khẩu *</label>
+          <input type="password" class="auth-form__input" [(ngModel)]="form.password" name="password" placeholder="Tối thiểu 6 ký tự" required />
+        </div>
+        <div>
+          <label class="auth-form__label">Xác nhận mật khẩu *</label>
+          <input type="password" class="auth-form__input" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required />
+        </div>
+      </div>
+
+      <div class="auth-form__group">
+        <label class="auth-form__label">Số điện thoại</label>
+        <input type="tel" class="auth-form__input" [(ngModel)]="form.phone" name="phone" placeholder="VD: 0901234567" />
+      </div>
+
+      <div class="auth-form__group">
+        <label class="auth-form__label">Địa chỉ</label>
+        <input type="text" class="auth-form__input" [(ngModel)]="form.address" name="address" placeholder="Tỉnh/Thành phố, Quận/Huyện..." />
+      </div>
+
+      <button type="submit" class="auth-form__btn">📝 Đăng ký</button>
+    </form>
+    
+    <div class="auth-card__footer">
+      <span>Đã có tài khoản?</span>
+      <a routerLink="/login">Đăng nhập</a>
+    </div>
+  </div>
+</div>

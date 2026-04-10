@@ -1,0 +1,87 @@
+<header class="header">
+  <div class="header__container">
+    <!-- Logo -->
+    <a routerLink="/" class="header__logo">
+      <span class="header__logo-icon">⚡</span>
+      <span class="header__logo-text">E-Store</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="header__nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="header__nav-link">Trang chủ</a>
+      <a routerLink="/products" routerLinkActive="active" class="header__nav-link">Sản phẩm</a>
+      <a routerLink="/contact" routerLinkActive="active" class="header__nav-link">Liên hệ</a>
+      @if (isAdmin()) {
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="header__nav-link header__nav-link--admin">
+          ⚙️ Quản trị
+        </a>
+      }
+    </nav>
+
+    <!-- Search Bar -->
+    <form class="header__search" (submit)="onSearch($event)">
+      <input
+        type="text"
+        placeholder="Tìm kiếm sản phẩm..."
+        class="header__search-input"
+        [value]="searchQuery()"
+        (input)="searchQuery.set($any($event.target).value)"
+      />
+      <a [routerLink]="['/products']" [queryParams]="{search: searchQuery()}" class="header__search-btn">
+        🔍
+      </a>
+    </form>
+
+    <!-- Actions -->
+    <div class="header__actions">
+      <!-- Cart -->
+      <a routerLink="/cart" class="header__cart">
+        <span class="header__cart-icon">🛒</span>
+        @if (cartCount() > 0) {
+          <span class="header__cart-badge">{{ cartCount() }}</span>
+        }
+      </a>
+
+      <!-- User -->
+      @if (isLoggedIn()) {
+        <div class="header__user">
+          <button class="header__user-btn" (click)="toggleUserMenu()">
+            <span class="header__user-avatar">{{ user()?.fullName?.charAt(0) }}</span>
+            <span class="header__user-name">{{ user()?.fullName }}</span>
+          </button>
+          @if (userMenuOpen()) {
+            <div class="header__dropdown">
+              <a routerLink="/orders" class="header__dropdown-item" (click)="userMenuOpen.set(false)">📦 Đơn hàng của tôi</a>
+              <hr class="header__dropdown-divider" />
+              <button class="header__dropdown-item header__dropdown-item--danger" (click)="logout()">🚪 Đăng xuất</button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a routerLink="/login" class="header__login-btn">Đăng nhập</a>
+      }
+
+      <!-- Mobile menu toggle -->
+      <button class="header__mobile-toggle" (click)="toggleMobileMenu()">
+        @if (mobileMenuOpen()) { ✕ } @else { ☰ }
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  @if (mobileMenuOpen()) {
+    <div class="header__mobile-menu">
+      <a routerLink="/" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">🏠 Trang chủ</a>
+      <a routerLink="/products" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">🛍️ Sản phẩm</a>
+      <a routerLink="/cart" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">🛒 Giỏ hàng ({{ cartCount() }})</a>
+      <a routerLink="/contact" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">📧 Liên hệ</a>
+      @if (isLoggedIn()) {
+        <a routerLink="/orders" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">📦 Đơn hàng</a>
+        <button class="header__mobile-link header__mobile-link--danger" (click)="logout(); mobileMenuOpen.set(false)">🚪 Đăng xuất</button>
+      } @else {
+        <a routerLink="/login" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">🔑 Đăng nhập</a>
+        <a routerLink="/register" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">📝 Đăng ký</a>
+      }
+    </div>
+  }
+</header>
