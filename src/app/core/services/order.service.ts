@@ -122,6 +122,15 @@ export class OrderService {
     this.updateOrderStatus(orderId, 'CANCELLED');
   }
 
+  markAsDelivered(orderId: number): void {
+    this.updateOrderStatus(orderId, 'DELIVERED');
+  }
+
+  markAsFailed(orderId: number): void {
+    this.updateOrderStatus(orderId, 'DELIVERY_FAILED');
+  }
+
+
   getOrderStats() {
     const orders = this.ordersSignal();
     return {
@@ -131,6 +140,7 @@ export class OrderService {
       preparing: orders.filter(o => o.status === 'PREPARING').length,
       shipping: orders.filter(o => o.status === 'SHIPPING').length,
       delivered: orders.filter(o => o.status === 'DELIVERED').length,
+      deliveryFailed: orders.filter(o => o.status === 'DELIVERY_FAILED').length,
       cancelled: orders.filter(o => o.status === 'CANCELLED').length,
       totalRevenue: orders
         .filter(o => o.status === 'DELIVERED')

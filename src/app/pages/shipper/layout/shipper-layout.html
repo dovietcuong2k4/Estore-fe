@@ -1,0 +1,46 @@
+<div class="shipper-layout">
+  <aside class="shipper-sidebar">
+    <div class="shipper-sidebar__header">
+      <a routerLink="/" class="shipper-logo">
+        <span class="shipper-logo__icon">🚚</span>
+        <span class="shipper-logo__text">E-Store Shipper</span>
+      </a>
+    </div>
+
+    <nav class="shipper-nav">
+      <div class="shipper-nav__group">
+        <span class="shipper-nav__label">Giao hàng</span>
+        <a routerLink="/shipper/orders" routerLinkActive="active" class="shipper-nav__link">
+          <span class="icon">📦</span> Quản lý Đơn giao
+        </a>
+      </div>
+    </nav>
+
+    <div class="shipper-sidebar__footer">
+      <div class="shipper-user">
+        <div class="shipper-user__avatar">
+          {{ auth.user()?.fullName?.charAt(0) }}
+        </div>
+        <div class="shipper-user__info">
+          <div class="shipper-user__name">{{ auth.user()?.fullName }}</div>
+          <div class="shipper-user__role">Shipper</div>
+        </div>
+      </div>
+      <a routerLink="/" class="btn-store">🏠 Về trang chủ cửa hàng</a>
+    </div>
+  </aside>
+
+  <main class="shipper-main">
+    <div class="shipper-header">
+      <div class="shipper-header__search">
+        <input type="text" placeholder="Tìm kiếm đơn hàng..." />
+      </div>
+      <div class="shipper-header__actions">
+        <button class="action-btn">🔔</button>
+      </div>
+    </div>
+    <div class="shipper-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

@@ -68,6 +68,14 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'shipper',
+    loadComponent: () => import('./pages/shipper/layout/shipper-layout').then(m => m.ShipperLayoutComponent),
+    children: [
+      { path: '', redirectTo: 'orders', pathMatch: 'full' },
+      { path: 'orders', loadComponent: () => import('./pages/shipper/orders/shipper-orders').then(m => m.ShipperOrdersComponent), title: 'Quản lý Giao hàng - Shipper' }
+    ]
+  },
+  {
     path: '**',
     redirectTo: ''
   }

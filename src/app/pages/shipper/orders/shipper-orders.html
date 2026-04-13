@@ -1,0 +1,127 @@
+<div class="shipper-orders">
+  <div class="order-list-section">
+    <header class="page-header">
+      <h1 class="page-title">Quản lý Đơn giao</h1>
+      <div class="status-filters">
+        <button [class.active]="selectedStatus() === 'ALL'" (click)="selectedStatus.set('ALL')">Tất cả</button>
+        <button [class.active]="selectedStatus() === 'SHIPPING'" (click)="selectedStatus.set('SHIPPING')">Đang giao</button>
+        <button [class.active]="selectedStatus() === 'DELIVERED'" (click)="selectedStatus.set('DELIVERED')">Thành công</button>
+        <button [class.active]="selectedStatus() === 'DELIVERY_FAILED'" (click)="selectedStatus.set('DELIVERY_FAILED')">Thất bại</button>
+      </div>
+    </header>
+
+    <div class="order-grid" *ngIf="filteredOrders().length > 0; else noOrders">
+      <div class="order-card" *ngFor="let order of filteredOrders()" [class.selected]="selectedOrder()?.id === order.id" (click)="selectOrder(order)">
+        <div class="order-card__header">
+          <span class="order-id">#{{ order.id }}</span>
+          <span class="order-date">{{ order.orderDate | date:'shortTime' }} {{ order.orderDate | date:'shortDate' }}</span>
+        </div>
+        <div class="order-card__body">
+          <div class="customer-info">
+            <strong>{{ order.receiverName }}</strong>
+            <span class="text-sm text-slate-400">📍 {{ order.receiverAddress | slice:0:30 }}...</span>
+          </div>
+          <div class="order-total">{{ formatPrice(order.totalPrice || 0) }}</div>
+        </div>
+        <div class="order-card__footer">
+          <span class="status-badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+        </div>
+      </div>
+    </div>
+    <ng-template #noOrders>
+      <div class="empty-state">
+        <div class="empty-icon">📂</div>
+        <p>Không có đơn hàng nào.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="order-detail-section" [class.open]="selectedOrder()">
+    <div class="detail-placeholder" *ngIf="!selectedOrder()">
+      <div class="placeholder-icon">🚚</div>
+      <h3>Chọn đơn hàng để xem chi tiết</h3>
+      <p>Thực hiện giao hàng và cập nhật trạng thái.</p>
+    </div>
+
+    <div class="detail-content" *ngIf="selectedOrder() as order">
+      <div class="detail-header">
+        <div class="header-main">
+          <h2>Đơn hàng #{{ order.id }}</h2>
+          <span class="status-badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+        </div>
+        <button class="btn-close" (click)="selectedOrder.set(null)">×</button>
+      </div>
+
+      <div class="detail-body">
+        <section class="detail-section">
+          <h3>Thông tin giao hàng</h3>
+          <div class="delivery-info">
+            <div class="info-group">
+              <span class="icon">👤</span>
+              <div class="content">
+                <label>Người nhận</label>
+                <strong>{{ order.receiverName }}</strong>
+              </div>
+            </div>
+            <div class="info-group">
+              <span class="icon">📞</span>
+              <div class="content">
+                <label>Số điện thoại</label>
+                <strong>{{ order.receiverPhone }}</strong>
+              </div>
+            </div>
+            <div class="info-group">
+              <span class="icon">📍</span>
+              <div class="content">
+                <label>Địa chỉ</label>
+                <strong>{{ order.receiverAddress }}</strong>
+              </div>
+            </div>
+            <div class="info-group" *ngIf="order.note">
+              <span class="icon">📝</span>
+              <div class="content">
+                <label>Ghi chú</label>
+                <strong class="text-orange-400">{{ order.note }}</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <h3>Sản phẩm ({{ order.items.length }})</h3>
+          <div class="item-list">
+            <div class="order-item" *ngFor="let item of order.items">
+              <img [src]="item.product?.image" class="item-img">
+              <div class="item-info">
+                <div class="item-name">{{ item.product?.name }}</div>
+                <div class="item-meta">SL: {{ item.quantity }} × {{ formatPrice(item.price) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="order-summary">
+            <div class="summary-row total">
+              <span>Tổng thu:</span> 
+              <span>{{ formatPrice(order.totalPrice || 0) }}</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="detail-footer">
+        <ng-container *ngIf="order.status === 'SHIPPING'">
+          <div class="action-grid">
+            <button class="btn-action btn-delivered" (click)="markAsDelivered(order.id)">
+              <span class="icon">✅</span> Giao thành công
+            </button>
+            <button class="btn-action btn-failed" (click)="markAsFailed(order.id)">
+              <span class="icon">❌</span> Giao thất bại
+            </button>
+          </div>
+        </ng-container>
+        
+        <p class="action-hint" *ngIf="order.status === 'DELIVERED'">Đơn hàng này đã được giao thành công.</p>
+        <p class="action-hint text-red-400" *ngIf="order.status === 'DELIVERY_FAILED'">Đơn hàng này giao thất bại.</p>
+      </div>
+    </div>
+  </div>
+</div>
