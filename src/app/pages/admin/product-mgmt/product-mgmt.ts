@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MockDataService } from '../../../core/services/mock-data.service';
+import { Product } from '../../../core/models/product.model';
+import { ProductApiService } from '../../../core/services/product-api.service';
 
 @Component({
   selector: 'app-product-mgmt',
@@ -10,15 +11,19 @@ import { MockDataService } from '../../../core/services/mock-data.service';
   styleUrl: '../dashboard/dashboard.scss' // Reusing dashboard table styles
 })
 export class ProductMgmtComponent {
-  get products() { return this.mockData.products; }
+  products: Product[] = [];
 
-  constructor(private mockData: MockDataService) {}
+  constructor(private productApi: ProductApiService) {
+    this.productApi.getProducts('', 0, 500).subscribe(products => {
+      this.products = products;
+    });
+  }
 
   formatPrice(price: number): string {
     return new Intl.NumberFormat('vi-VN').format(price) + '₫';
   }
 
-  getCategory(id: number) {
-    return this.mockData.getCategoryById(id)?.name;
+  getCategory(product: Product) {
+    return product.categoryName ?? 'N/A';
   }
 }

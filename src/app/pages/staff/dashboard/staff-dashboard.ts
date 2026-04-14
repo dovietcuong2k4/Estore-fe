@@ -1,10 +1,10 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from '../../../core/services/order.service';
-import { MockDataService } from '../../../core/services/mock-data.service';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { Order } from '../../../core/models/order.model';
+import { ProductApiService } from '../../../core/services/product-api.service';
 
 @Component({
   selector: 'app-staff-dashboard',
@@ -15,12 +15,13 @@ import { Order } from '../../../core/models/order.model';
 })
 export class StaffDashboardComponent implements OnInit {
   private orderService = inject(OrderService);
-  private mockData = inject(MockDataService);
+  private productApi = inject(ProductApiService);
+  products: Product[] = [];
 
   readonly orderStats = computed(() => this.orderService.getOrderStats());
   
   readonly lowStockProducts = computed(() => {
-    return this.mockData.products
+    return this.products
       .filter((p: Product) => p.stockQuantity < 10)
       .sort((a: Product, b: Product) => a.stockQuantity - b.stockQuantity)
       .slice(0, 5);
@@ -34,6 +35,9 @@ export class StaffDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.orderService.loadOrders();
+    this.productApi.getProducts('', 0, 500).subscribe(products => {
+      this.products = products;
+    });
   }
 
   formatPrice(price: number): string {

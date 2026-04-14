@@ -1,9 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MockDataService } from '../../core/services/mock-data.service';
 import { CartService } from '../../core/services/cart.service';
 import { Product } from '../../core/models/product.model';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card';
+import { ProductApiService } from '../../core/services/product-api.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,26 +21,34 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private mockData: MockDataService,
+    private productApi: ProductApiService,
     private cartService: CartService
   ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       const id = +params['id'];
-      this.product = this.mockData.getProductById(id) ?? null;
-      if (!this.product) {
-        this.router.navigate(['/products']);
-        return;
-      }
-      this.relatedProducts = this.mockData.getProductsByCategory(this.product.categoryId)
-        .filter(p => p.id !== id).slice(0, 4);
-      this.quantity.set(1);
+
+      this.productApi.getProductById(id).subscribe(product => {
+        this.product = product;
+        if (!this.product) {
+          this.router.navigate(['/products']);
+          return;
+        }
+
+        this.productApi.getProducts('', 0, 200).subscribe(products => {
+          this.relatedProducts = products
+            .filter(p => p.categoryName === this.product?.categoryName && p.id !== id)
+            .slice(0, 4);
+        });
+
+        this.quantity.set(1);
+      });
     });
   }
 
-  get brand() { return this.mockData.getBrandById(this.product?.brandId ?? 0)?.name ?? ''; }
-  get category() { return this.mockData.getCategoryById(this.product?.categoryId ?? 0)?.name ?? ''; }
+  get brand() { return this.product?.brandName ?? ''; }
+  get category() { return this.product?.categoryName ?? ''; }
 
   get discount() {
     if (!this.product?.originalPrice || this.product.originalPrice <= this.product.price) return 0;

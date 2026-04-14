@@ -1,14 +1,15 @@
 import { Component, signal, computed, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card';
 import { MockDataService } from '../../core/services/mock-data.service';
 import { Product, Category, Brand } from '../../core/models/product.model';
+import { ProductApiService } from '../../core/services/product-api.service';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [RouterLink, FormsModule, ProductCardComponent],
+  imports: [FormsModule, ProductCardComponent],
   templateUrl: './products.html',
   styleUrl: './products.scss'
 })
@@ -64,13 +65,24 @@ export class ProductsComponent implements OnInit {
 
   totalPages = computed(() => Math.ceil(this.filteredProducts().length / this.pageSize));
 
-  constructor(private mockData: MockDataService, private route: ActivatedRoute) {
-    this.allProducts = mockData.products;
+  constructor(
+    private mockData: MockDataService,
+    private route: ActivatedRoute,
+    private productApi: ProductApiService
+  ) {
     this.categories = mockData.categories;
     this.brands = mockData.brands;
   }
 
   ngOnInit() {
+    this.productApi.getProducts('', 0, 500).subscribe(products => {
+      this.allProducts = products;
+      this.categories = this.categories.map(cat => ({
+        ...cat,
+        productCount: products.filter(p => p.categoryId === cat.id).length
+      }));
+    });
+
     this.route.queryParams.subscribe(params => {
       if (params['category']) this.selectedCategory.set(+params['category']);
       if (params['brand']) this.selectedBrand.set(+params['brand']);

@@ -1,8 +1,8 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MockDataService } from '../../../core/services/mock-data.service';
 import { Product } from '../../../core/models/product.model';
+import { ProductApiService } from '../../../core/services/product-api.service';
 
 @Component({
   selector: 'app-staff-product-mgmt',
@@ -12,8 +12,8 @@ import { Product } from '../../../core/models/product.model';
   styleUrl: './staff-product-mgmt.scss'
 })
 export class StaffProductMgmtComponent {
-  private mockData = inject(MockDataService);
-  readonly products = signal<Product[]>(this.mockData.products);
+  private productApi = inject(ProductApiService);
+  readonly products = signal<Product[]>([]);
   searchQuery = signal('');
 
   filteredProducts = computed(() => {
@@ -27,7 +27,11 @@ export class StaffProductMgmtComponent {
   isModalOpen = false;
   editingProduct: Partial<Product> | null = null;
 
-  constructor() {}
+  constructor() {
+    this.productApi.getProducts('', 0, 500).subscribe(products => {
+      this.products.set(products);
+    });
+  }
 
   openAddModal() {
     this.editingProduct = {

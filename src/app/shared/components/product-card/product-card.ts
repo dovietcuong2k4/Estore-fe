@@ -1,27 +1,22 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
 import { Product } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
-import { MockDataService } from '../../../core/services/mock-data.service';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink],
   templateUrl: './product-card.html',
   styleUrl: './product-card.scss'
 })
 export class ProductCardComponent {
   @Input({ required: true }) product!: Product;
 
-  constructor(
-    private cartService: CartService,
-    private mockData: MockDataService
-  ) {}
+  constructor(private cartService: CartService) {}
 
   get brand() {
-    return this.mockData.getBrandById(this.product.brandId)?.name ?? '';
+    return this.product.brandName ?? '';
   }
 
   get discount() {
