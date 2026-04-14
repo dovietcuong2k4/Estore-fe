@@ -14,7 +14,7 @@
             <th>Ngày đặt</th>
             <th>Tổng tiền</th>
             <th>Trạng thái</th>
-            <th>Thay đổi trạng thái</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -29,16 +29,16 @@
               <td class="text-success font-semibold">{{ formatPrice(order.totalPrice || 0) }}</td>
               <td><span class="badge" [class]="getStatusClass(order.status)">{{ order.status }}</span></td>
               <td>
-                <select 
-                  [value]="order.status" 
-                  (change)="updateStatus(order.id, $any($event.target).value)"
-                  style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.4rem; border-radius: 6px; outline: none;">
-                  <option value="CREATED">CREATED</option>
-                  <option value="PENDING">PENDING</option>
-                  <option value="SHIPPING">SHIPPING</option>
-                  <option value="DELIVERED">DELIVERED</option>
-                  <option value="CANCELLED">CANCELLED</option>
-                </select>
+                <button *ngIf="order.status === 'CREATED'" 
+                  (click)="confirmOrder(order.id)"
+                  style="background: #10b981; color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-right: 0.5rem;">
+                  Xác nhận
+                </button>
+                <button *ngIf="order.status !== 'CANCELLED' && order.status !== 'DELIVERED'" 
+                  (click)="cancelOrder(order.id)"
+                  style="background: #ef4444; color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
+                  Hủy đơn
+                </button>
               </td>
             </tr>
           }

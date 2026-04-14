@@ -4,6 +4,7 @@
       <h1 class="page-title">Quản lý Đơn giao</h1>
       <div class="status-filters">
         <button [class.active]="selectedStatus() === 'ALL'" (click)="selectedStatus.set('ALL')">Tất cả</button>
+        <button [class.active]="selectedStatus() === 'READY_FOR_SHIPPING'" (click)="selectedStatus.set('READY_FOR_SHIPPING')">Chờ nhận</button>
         <button [class.active]="selectedStatus() === 'SHIPPING'" (click)="selectedStatus.set('SHIPPING')">Đang giao</button>
         <button [class.active]="selectedStatus() === 'DELIVERED'" (click)="selectedStatus.set('DELIVERED')">Thành công</button>
         <button [class.active]="selectedStatus() === 'DELIVERY_FAILED'" (click)="selectedStatus.set('DELIVERY_FAILED')">Thất bại</button>
@@ -108,6 +109,12 @@
       </div>
 
       <div class="detail-footer">
+        <!-- READY_FOR_SHIPPING → Start Shipping -->
+        <button class="btn-action btn-start-shipping" *ngIf="order.status === 'READY_FOR_SHIPPING'" (click)="startShipping(order.id)" style="width:100%;padding:1rem;border:none;border-radius:14px;font-weight:700;font-size:0.95rem;cursor:pointer;background:#3b82f6;color:#fff;margin-bottom:0.5rem;">
+          🚚 Nhận đơn & Bắt đầu giao
+        </button>
+
+        <!-- SHIPPING → Delivered / Failed -->
         <ng-container *ngIf="order.status === 'SHIPPING'">
           <div class="action-grid">
             <button class="btn-action btn-delivered" (click)="markAsDelivered(order.id)">

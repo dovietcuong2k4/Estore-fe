@@ -5,8 +5,9 @@
       <div class="status-filters">
         <button [class.active]="selectedStatus() === 'ALL'" (click)="selectedStatus.set('ALL')">All</button>
         <button [class.active]="selectedStatus() === 'CREATED'" (click)="selectedStatus.set('CREATED')">New</button>
-        <button [class.active]="selectedStatus() === 'PENDING'" (click)="selectedStatus.set('PENDING')">Confirmed</button>
+        <button [class.active]="selectedStatus() === 'CONFIRMED'" (click)="selectedStatus.set('CONFIRMED')">Confirmed</button>
         <button [class.active]="selectedStatus() === 'PREPARING'" (click)="selectedStatus.set('PREPARING')">Preparing</button>
+        <button [class.active]="selectedStatus() === 'READY_FOR_SHIPPING'" (click)="selectedStatus.set('READY_FOR_SHIPPING')">Ready</button>
       </div>
     </header>
 
@@ -40,7 +41,7 @@
     <div class="detail-placeholder" *ngIf="!selectedOrder()">
       <div class="placeholder-icon">🔍</div>
       <h3>Select an order to view details</h3>
-      <p>Manage order confirmation, preparation, and handover.</p>
+      <p>Manage order confirmation, preparation, and shipping readiness.</p>
     </div>
 
     <div class="detail-content" *ngIf="selectedOrder() as order">
@@ -84,34 +85,23 @@
       </div>
 
       <div class="detail-footer">
-        <!-- CREATED -> Confirm -> PENDING -->
+        <!-- CREATED → Confirm → CONFIRMED -->
         <button class="btn-action btn-confirm" *ngIf="order.status === 'CREATED'" (click)="confirmOrder(order.id)">
           Confirm Order
         </button>
 
-        <!-- PENDING -> Prepare -> PREPARING -->
-        <button class="btn-action btn-prepare" *ngIf="order.status === 'PENDING'" (click)="prepareOrder(order.id)">
+        <!-- CONFIRMED → Prepare → PREPARING -->
+        <button class="btn-action btn-prepare" *ngIf="order.status === 'CONFIRMED'" (click)="prepareOrder(order.id)">
           Start Preparing
         </button>
 
-        <!-- PREPARING -> Handover -> SHIPPING -->
-        <div class="handover-controls" *ngIf="order.status === 'PREPARING'">
-          <div class="form-group mb-4">
-            <label class="block text-sm font-medium text-slate-400 mb-2">Assign Shipper</label>
-            <select class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none focus:border-blue-500"
-                   [ngModel]="selectedShipperId()" (ngModelChange)="selectedShipperId.set($event)">
-              <option [value]="null">Select a shipper...</option>
-              <option *ngFor="let shipper of shippers()" [value]="shipper.id">
-                {{ shipper.fullName }}
-              </option>
-            </select>
-          </div>
-          <button class="btn-action btn-handover" (click)="handoverToShipper(order.id)">
-            Handover to Shipper
-          </button>
-        </div>
+        <!-- PREPARING → Ready → READY_FOR_SHIPPING -->
+        <button class="btn-action btn-handover" *ngIf="order.status === 'PREPARING'" (click)="readyForShipping(order.id)">
+          Mark Ready for Shipping
+        </button>
         
-        <p class="action-hint" *ngIf="order.status === 'SHIPPING'">This order has been handed over to the shipper.</p>
+        <p class="action-hint" *ngIf="order.status === 'READY_FOR_SHIPPING'">Waiting for shipper to pick up.</p>
+        <p class="action-hint" *ngIf="order.status === 'SHIPPING'">This order has been picked up by a shipper.</p>
         <p class="action-hint" *ngIf="order.status === 'DELIVERED'">This order is completed.</p>
       </div>
     </div>

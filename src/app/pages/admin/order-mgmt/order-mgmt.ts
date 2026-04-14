@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from '../../../core/services/order.service';
 
@@ -9,10 +9,14 @@ import { OrderService } from '../../../core/services/order.service';
   templateUrl: './order-mgmt.html',
   styleUrl: '../dashboard/dashboard.scss'
 })
-export class OrderMgmtComponent {
+export class OrderMgmtComponent implements OnInit {
+  private orderService = inject(OrderService);
+
   orders = computed(() => this.orderService.allOrders());
 
-  constructor(private orderService: OrderService) {}
+  ngOnInit() {
+    this.orderService.loadOrders();
+  }
 
   formatPrice(price: number): string {
     return new Intl.NumberFormat('vi-VN').format(price) + '₫';
@@ -22,7 +26,13 @@ export class OrderMgmtComponent {
     return `status--${status.toLowerCase()}`;
   }
 
-  updateStatus(orderId: number, status: any) {
-    this.orderService.updateOrderStatus(orderId, status);
+  async confirmOrder(orderId: number) {
+    await this.orderService.adminConfirmOrder(orderId);
+  }
+
+  async cancelOrder(orderId: number) {
+    if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
+      await this.orderService.cancelOrder(orderId);
+    }
   }
 }

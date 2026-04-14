@@ -1,13 +1,19 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { Order, OrderItem, OrderStatus, CreateOrderRequest } from '../models/order.model';
-import { CartService } from './cart.service';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import {
+  Order, OrderStatus, CreateOrderRequest,
+  OrderResponse, mapOrderResponseToOrder
+} from '../models/order.model';
+import { BaseResultDTO } from '../models/user.model';
+import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
-import { MockDataService } from './mock-data.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
-  private readonly STORAGE_KEY = 'estore_orders';
-  private readonly ordersSignal = signal<Order[]>(this.loadFromStorage());
+  private api = inject(ApiService);
+  private auth = inject(AuthService);
+
+  private readonly ordersSignal = signal<Order[]>([]);
 
   readonly orders = computed(() => this.ordersSignal());
 
@@ -32,112 +38,97 @@ export class OrderService {
       .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
   });
 
-  constructor(
-    private cart: CartService,
-    private auth: AuthService,
-    private mockData: MockDataService
-  ) {}
+  // --- API calls ---
 
-  createOrder(request: CreateOrderRequest): Order | null {
-    const user = this.auth.user();
-    if (!user) return null;
+  /** Load orders from BE (GET /api/orders) */
+  async loadOrders(): Promise<void> {
+    try {
+      const res = await firstValueFrom(
+        this.api.get<BaseResultDTO<OrderResponse[]>>('/orders')
+      );
+      if (res.success && res.data) {
+        this.ordersSignal.set(res.data.map(mapOrderResponseToOrder));
+      }
+    } catch (err) {
+      console.error('Failed to load orders:', err);
+    }
+  }
 
-    const cartItems = this.cart.items();
-    if (cartItems.length === 0) return null;
-
-    const orderItems: OrderItem[] = cartItems.map((item, index) => ({
-      id: Date.now() + index,
-      orderId: Date.now(),
-      productId: item.productId,
-      quantity: item.quantity,
-      price: item.product?.price ?? 0,
-      product: item.product
-    }));
-
-    const order: Order = {
-      id: Date.now(),
-      userId: user.id,
-      receiverName: request.receiverName,
-      receiverPhone: request.receiverPhone,
-      receiverAddress: request.receiverAddress,
-      note: request.note,
-      orderDate: new Date().toISOString(),
-      status: 'CREATED',
-      items: orderItems,
-      totalPrice: this.cart.totalPrice()
-    };
-
-    this.ordersSignal.set([...this.ordersSignal(), order]);
-    this.saveToStorage();
-    this.cart.clearCart();
-    return order;
+  /** Customer: create order (POST /api/orders) */
+  async createOrder(request: CreateOrderRequest): Promise<{ success: boolean; message: string }> {
+    try {
+      const res = await firstValueFrom(
+        this.api.post<BaseResultDTO<void>>('/orders', request)
+      );
+      if (res.success) {
+        await this.loadOrders();
+      }
+      return { success: res.success, message: res.message };
+    } catch (err: any) {
+      return { success: false, message: err?.error?.message || 'Tạo đơn hàng thất bại' };
+    }
   }
 
   getOrderById(id: number): Order | undefined {
     return this.ordersSignal().find(o => o.id === id);
   }
 
-  updateOrderStatus(orderId: number, status: OrderStatus): void {
-    this.ordersSignal.set(
-      this.ordersSignal().map(o => {
-        if (o.id === orderId) {
-          const update: Partial<Order> = { status };
-          if (status === 'SHIPPING') update.shippingDate = new Date().toISOString();
-          if (status === 'DELIVERED') update.receivedDate = new Date().toISOString();
-          return { ...o, ...update };
-        }
-        return o;
-      })
-    );
-    this.saveToStorage();
+  // --- Staff APIs ---
+
+  /** Staff: confirm order → CONFIRMED */
+  async confirmOrder(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/staff/orders/confirm/${orderId}`);
   }
 
-  assignShipper(orderId: number, shipperId: number): void {
-    this.ordersSignal.set(
-      this.ordersSignal().map(o =>
-        o.id === orderId ? { ...o, shipperId, status: 'PENDING' as OrderStatus } : o
-      )
-    );
-    this.saveToStorage();
+  /** Staff: prepare order → PREPARING */
+  async prepareOrder(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/staff/orders/prepare/${orderId}`);
   }
 
-  confirmOrder(orderId: number): void {
-    this.updateOrderStatus(orderId, 'PENDING');
+  /** Staff: ready for shipping → READY_FOR_SHIPPING */
+  async readyForShipping(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/staff/orders/ready/${orderId}`);
   }
 
-  prepareOrder(orderId: number): void {
-    this.updateOrderStatus(orderId, 'PREPARING');
+  // --- Shipper APIs ---
+
+  /** Shipper: start shipping → SHIPPING */
+  async startShipping(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/shipper/orders/shipping/${orderId}`);
   }
 
-  handoverToShipper(orderId: number, shipperId: number): void {
-    this.ordersSignal.set(
-      this.ordersSignal().map(o =>
-        o.id === orderId ? { ...o, shipperId, status: 'SHIPPING' as OrderStatus, shippingDate: new Date().toISOString() } : o
-      )
-    );
-    this.saveToStorage();
+  /** Shipper: mark delivered → DELIVERED */
+  async markAsDelivered(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/shipper/orders/delivered/${orderId}`);
   }
 
-  cancelOrder(orderId: number): void {
-    this.updateOrderStatus(orderId, 'CANCELLED');
+  /** Shipper: mark failed → DELIVERY_FAILED */
+  async markAsFailed(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/shipper/orders/delivery-failed/${orderId}`);
   }
 
-  markAsDelivered(orderId: number): void {
-    this.updateOrderStatus(orderId, 'DELIVERED');
+  // --- Admin APIs ---
+
+  /** Admin: confirm order → CONFIRMED */
+  async adminConfirmOrder(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/admin/orders/confirm/${orderId}`);
   }
 
-  markAsFailed(orderId: number): void {
-    this.updateOrderStatus(orderId, 'DELIVERY_FAILED');
+  /** Admin: cancel order → CANCELLED */
+  async cancelOrder(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/admin/orders/cancel/${orderId}`);
   }
 
+  // --- Stats (computed from local data) ---
 
   getOrderStats() {
     const orders = this.ordersSignal();
     return {
       total: orders.length,
       created: orders.filter(o => o.status === 'CREATED').length,
-      pending: orders.filter(o => o.status === 'PENDING').length,
+      confirmed: orders.filter(o => o.status === 'CONFIRMED').length,
       preparing: orders.filter(o => o.status === 'PREPARING').length,
+      readyForShipping: orders.filter(o => o.status === 'READY_FOR_SHIPPING').length,
       shipping: orders.filter(o => o.status === 'SHIPPING').length,
       delivered: orders.filter(o => o.status === 'DELIVERED').length,
       deliveryFailed: orders.filter(o => o.status === 'DELIVERY_FAILED').length,
@@ -148,16 +139,19 @@ export class OrderService {
     };
   }
 
-  private saveToStorage(): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.ordersSignal()));
-  }
+  // --- Shared helper ---
 
-  private loadFromStorage(): Order[] {
+  private async updateOrderViaApi(path: string): Promise<{ success: boolean; message: string }> {
     try {
-      const data = localStorage.getItem(this.STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch {
-      return [];
+      const res = await firstValueFrom(
+        this.api.put<BaseResultDTO<void>>(path)
+      );
+      if (res.success) {
+        await this.loadOrders();
+      }
+      return { success: res.success, message: res.message };
+    } catch (err: any) {
+      return { success: false, message: err?.error?.message || 'Cập nhật đơn hàng thất bại' };
     }
   }
 }

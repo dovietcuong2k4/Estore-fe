@@ -4,7 +4,7 @@
       <div class="success-box">
         <span class="success-box__icon">✅</span>
         <h2 class="success-box__title">Đặt hàng thành công!</h2>
-        <p class="success-box__desc">Mã đơn hàng: #{{ orderId() }}</p>
+        <p class="success-box__desc">Đơn hàng của bạn đã được ghi nhận.</p>
         <p class="success-box__desc">Chúng tôi sẽ liên hệ xác nhận đơn hàng sớm nhất.</p>
         <div class="success-box__actions">
           <a routerLink="/orders" class="success-box__btn success-box__btn--primary">📦 Xem đơn hàng</a>
@@ -79,7 +79,9 @@
             <hr class="summary-divider" />
             <div class="summary-row summary-row--total"><span>Tổng cộng</span><span>{{ formatPrice(totalPrice()) }}</span></div>
 
-            <button class="place-order-btn" (click)="placeOrder()">⚡ Đặt hàng</button>
+            <button class="place-order-btn" (click)="placeOrder()" [disabled]="loading()">
+              {{ loading() ? 'Đang xử lý...' : '⚡ Đặt hàng' }}
+            </button>
           </div>
         </div>
       }

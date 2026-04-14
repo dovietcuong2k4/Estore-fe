@@ -14,18 +14,31 @@ export class LoginComponent {
   email = '';
   password = '';
   error = signal('');
-  
+  loading = signal(false);
+
   constructor(private auth: AuthService, private router: Router) {}
 
-  login() {
+  private getRedirectPath(): string {
+    if (this.auth.isAdmin()) return '/admin';
+    if (this.auth.isStaff()) return '/staff';
+    if (this.auth.isShipper()) return '/shipper';
+    return '/';
+  }
+
+  async login() {
     if (!this.email || !this.password) {
       this.error.set('Vui lòng nhập email và mật khẩu');
       return;
     }
 
-    const result = this.auth.login({ email: this.email, password: this.password });
+    this.loading.set(true);
+    this.error.set('');
+
+    const result = await this.auth.login({ email: this.email, password: this.password });
+    this.loading.set(false);
+
     if (result.success) {
-      this.router.navigate(['/']);
+      this.router.navigate([this.getRedirectPath()]);
     } else {
       this.error.set(result.message);
     }

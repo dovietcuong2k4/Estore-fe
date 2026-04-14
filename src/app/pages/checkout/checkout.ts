@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../core/services/cart.service';
@@ -14,6 +14,11 @@ import { CreateOrderRequest } from '../../core/models/order.model';
   styleUrl: './checkout.scss'
 })
 export class CheckoutComponent {
+  private cart = inject(CartService);
+  private orderService = inject(OrderService);
+  private auth = inject(AuthService);
+  private router = inject(Router);
+
   readonly items = computed(() => this.cart.items());
   readonly totalPrice = computed(() => this.cart.totalPrice());
   readonly user = computed(() => this.auth.user());
@@ -27,19 +32,14 @@ export class CheckoutComponent {
 
   error = signal('');
   success = signal(false);
-  orderId = signal(0);
+  loading = signal(false);
 
-  constructor(
-    private cart: CartService,
-    private orderService: OrderService,
-    private auth: AuthService,
-    private router: Router
-  ) {
+  constructor() {
     const u = this.auth.user();
     if (u) {
-      this.form.receiverName = u.fullName;
-      this.form.receiverPhone = u.phone;
-      this.form.receiverAddress = u.address;
+      this.form.receiverName = u.fullName || '';
+      this.form.receiverPhone = u.phone || '';
+      this.form.receiverAddress = u.address || '';
     }
   }
 
@@ -47,7 +47,7 @@ export class CheckoutComponent {
     return new Intl.NumberFormat('vi-VN').format(price) + '₫';
   }
 
-  placeOrder() {
+  async placeOrder() {
     if (!this.auth.isLoggedIn()) {
       this.router.navigate(['/login']);
       return;
@@ -68,13 +68,18 @@ export class CheckoutComponent {
       note: this.form.note
     };
 
-    const order = this.orderService.createOrder(request);
-    if (order) {
+    this.loading.set(true);
+    this.error.set('');
+
+    const result = await this.orderService.createOrder(request);
+    
+    this.loading.set(false);
+
+    if (result.success) {
       this.success.set(true);
-      this.orderId.set(order.id);
-      this.error.set('');
+      // NOTE: BE doesn't return created order ID immediately in BaseResultDTO<void>.
     } else {
-      this.error.set('Đặt hàng thất bại. Vui lòng thử lại.');
+      this.error.set(result.message || 'Đặt hàng thất bại. Vui lòng thử lại.');
     }
   }
 }

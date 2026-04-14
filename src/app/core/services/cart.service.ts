@@ -1,22 +1,40 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { Cart, CartItem } from '../models/cart.model';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { CartItem } from '../models/cart.model';
 import { Product } from '../models/product.model';
+import { BaseResultDTO } from '../models/user.model';
+import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
 import { MockDataService } from './mock-data.service';
+import { firstValueFrom } from 'rxjs';
+
+/** Response from GET /api/cart — assumed structure */
+export interface CartItemResponse {
+  id: number;
+  product: Product;
+  quantity: number;
+}
+
+export interface CartResponse {
+  id: number;
+  userId: number;
+  cartItems: CartItemResponse[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
   private readonly STORAGE_KEY = 'estore_cart';
+  private api = inject(ApiService);
+  private auth = inject(AuthService);
+
+  // MockDataService kept but not used for cart logic anymore
+  private mockData = inject(MockDataService);
+
   private readonly cartItems = signal<CartItem[]>(this.loadFromStorage());
 
-  readonly items = computed(() => {
-    return this.cartItems().map(item => ({
-      ...item,
-      product: this.mockData.getProductById(item.productId)
-    }));
-  });
+  readonly items = computed(() => this.cartItems());
 
   readonly totalPrice = computed(() => {
-    return this.items().reduce((sum, item) => {
+    return this.cartItems().reduce((sum, item) => {
       const price = item.product?.price ?? 0;
       return sum + price * item.quantity;
     }, 0);
@@ -28,9 +46,50 @@ export class CartService {
 
   readonly itemCount = computed(() => this.cartItems().length);
 
-  constructor(private mockData: MockDataService) {}
+  /** Load cart from API (for logged-in users) or from localStorage */
+  async loadCart(): Promise<void> {
+    if (!this.auth.isLoggedIn()) {
+      // Guest: load from localStorage only
+      this.cartItems.set(this.loadFromStorage());
+      return;
+    }
 
-  addToCart(productId: number, quantity: number = 1): void {
+    try {
+      const res = await firstValueFrom(
+        this.api.get<BaseResultDTO<CartResponse>>('/cart')
+      );
+      if (res.success && res.data) {
+        const items: CartItem[] = (res.data.cartItems ?? []).map(item => ({
+          id: item.id,
+          cartId: res.data.id,
+          productId: item.product?.id ?? 0,
+          quantity: item.quantity,
+          product: item.product
+        }));
+        this.cartItems.set(items);
+        this.saveToStorage();
+      }
+    } catch (err) {
+      console.error('Failed to load cart from API, using localStorage fallback:', err);
+      this.cartItems.set(this.loadFromStorage());
+    }
+  }
+
+  /** Add item to cart */
+  async addToCart(productId: number, quantity: number = 1): Promise<void> {
+    if (this.auth.isLoggedIn()) {
+      try {
+        await firstValueFrom(
+          this.api.post<BaseResultDTO<void>>('/cart/add', { productId, quantity })
+        );
+        await this.loadCart();
+        return;
+      } catch (err) {
+        console.error('API add to cart failed, falling back to localStorage:', err);
+      }
+    }
+
+    // Fallback: localStorage only
     const current = this.cartItems();
     const existing = current.find(i => i.productId === productId);
 
@@ -54,21 +113,50 @@ export class CartService {
     this.saveToStorage();
   }
 
-  updateQuantity(productId: number, quantity: number): void {
+  /** Update item quantity */
+  async updateQuantity(itemId: number, quantity: number): Promise<void> {
     if (quantity <= 0) {
-      this.removeFromCart(productId);
+      await this.removeFromCart(itemId);
       return;
     }
+
+    if (this.auth.isLoggedIn()) {
+      try {
+        await firstValueFrom(
+          this.api.put<BaseResultDTO<void>>(`/cart/item/${itemId}`, { quantity })
+        );
+        await this.loadCart();
+        return;
+      } catch (err) {
+        console.error('API update cart failed:', err);
+      }
+    }
+
+    // Fallback: localStorage
     this.cartItems.set(
       this.cartItems().map(i =>
-        i.productId === productId ? { ...i, quantity } : i
+        i.id === itemId ? { ...i, quantity } : i
       )
     );
     this.saveToStorage();
   }
 
-  removeFromCart(productId: number): void {
-    this.cartItems.set(this.cartItems().filter(i => i.productId !== productId));
+  /** Remove item from cart */
+  async removeFromCart(itemId: number): Promise<void> {
+    if (this.auth.isLoggedIn()) {
+      try {
+        await firstValueFrom(
+          this.api.delete<BaseResultDTO<void>>(`/cart/item/${itemId}`)
+        );
+        await this.loadCart();
+        return;
+      } catch (err) {
+        console.error('API delete cart item failed:', err);
+      }
+    }
+
+    // Fallback: localStorage
+    this.cartItems.set(this.cartItems().filter(i => i.id !== itemId));
     this.saveToStorage();
   }
 

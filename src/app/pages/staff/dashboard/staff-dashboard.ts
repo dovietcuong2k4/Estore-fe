@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from '../../../core/services/order.service';
 import { MockDataService } from '../../../core/services/mock-data.service';
@@ -13,7 +13,7 @@ import { Order } from '../../../core/models/order.model';
   templateUrl: './staff-dashboard.html',
   styleUrl: './staff-dashboard.scss'
 })
-export class StaffDashboardComponent {
+export class StaffDashboardComponent implements OnInit {
   private orderService = inject(OrderService);
   private mockData = inject(MockDataService);
 
@@ -28,11 +28,13 @@ export class StaffDashboardComponent {
 
   readonly pendingOrders = computed(() => {
     return this.orderService.allOrders()
-      .filter((o: Order) => o.status === 'CREATED' || o.status === 'PENDING' || o.status === 'PREPARING')
+      .filter((o: Order) => o.status === 'CREATED' || o.status === 'CONFIRMED' || o.status === 'PREPARING')
       .slice(0, 5);
   });
 
-  constructor() {}
+  ngOnInit() {
+    this.orderService.loadOrders();
+  }
 
   formatPrice(price: number): string {
     return new Intl.NumberFormat('vi-VN').format(price) + '₫';

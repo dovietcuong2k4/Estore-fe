@@ -9,7 +9,7 @@ import { RegisterRequest } from '../../core/models/user.model';
   standalone: true,
   imports: [RouterLink, FormsModule],
   templateUrl: './register.html',
-  styleUrl: '../login/login.scss' // Reusing login styles
+  styleUrl: '../login/login.scss'
 })
 export class RegisterComponent {
   form: RegisterRequest = {
@@ -22,10 +22,11 @@ export class RegisterComponent {
   confirmPassword = '';
   
   error = signal('');
+  loading = signal(false);
   
   constructor(private auth: AuthService, private router: Router) {}
 
-  register() {
+  async register() {
     if (!this.form.fullName || !this.form.email || !this.form.password) {
       this.error.set('Vui lòng điền đầy đủ các thông tin bắt buộc (*)');
       return;
@@ -36,9 +37,14 @@ export class RegisterComponent {
       return;
     }
 
-    const result = this.auth.register(this.form);
+    this.loading.set(true);
+    this.error.set('');
+
+    const result = await this.auth.register(this.form);
+    this.loading.set(false);
+
     if (result.success) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/login']);
     } else {
       this.error.set(result.message);
     }
