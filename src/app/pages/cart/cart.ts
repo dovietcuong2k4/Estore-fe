@@ -28,8 +28,8 @@ export class CartComponent {
     this.cartService.removeFromCart(cartLineId);
   }
 
-  clearAll() {
-    this.cartService.clearCart();
+  async clearAll() {
+    await this.cartService.clearCart();
   }
 
   increment(cartLineId: number, currentQty: number) {

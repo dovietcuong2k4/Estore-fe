@@ -5,6 +5,7 @@ import { BaseResultDTO } from '../models/user.model';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 import { firstValueFrom } from 'rxjs';
+import { ToastService } from './toast.service';
 
 /** Matches BE CartItemResponse */
 export interface CartLineDto {
@@ -49,6 +50,7 @@ export class CartService {
   private readonly STORAGE_KEY_PREFIX = 'estore_cart_user';
   private api = inject(ApiService);
   private auth = inject(AuthService);
+  private toastService = inject(ToastService);
 
   private readonly cartItems = signal<CartItem[]>([]);
 
@@ -140,6 +142,7 @@ export class CartService {
       this.cartItems.set([...current, newItem]);
     }
     this.saveToStorage();
+    this.toastService.success('Đã thêm sản phẩm vào giỏ hàng');
   }
 
   /** Update item quantity */
@@ -168,6 +171,7 @@ export class CartService {
       )
     );
     this.saveToStorage();
+    this.toastService.info('Đã cập nhật số lượng sản phẩm');
   }
 
   /** Remove item from cart */
@@ -187,11 +191,30 @@ export class CartService {
     // Fallback: localStorage
     this.cartItems.set(this.cartItems().filter(i => i.id !== itemId));
     this.saveToStorage();
+    this.toastService.warning('Đã xóa sản phẩm khỏi giỏ hàng');
   }
 
-  clearCart(): void {
+  async clearCart(): Promise<void> {
+    if (this.auth.isLoggedIn()) {
+      try {
+        await firstValueFrom(
+          this.api.delete<BaseResultDTO<void>>('/cart/clear')
+        );
+        this.cartItems.set([]);
+        this.saveToStorage();
+        this.toastService.info('Đã xóa toàn bộ giỏ hàng');
+      } catch (err) {
+        console.error('API clear cart failed:', err);
+        this.toastService.error('Xóa giỏ hàng thất bại');
+      }
+
+      return;
+    }
+
+    // 👉 chỉ dành cho user chưa login
     this.cartItems.set([]);
     this.saveToStorage();
+    this.toastService.info('Đã xóa toàn bộ giỏ hàng');
   }
 
   isInCart(productId: number): boolean {

@@ -1,0 +1,12 @@
+<div class="toast-container">
+  @for (toast of toasts(); track toast.id) {
+    <div class="toast" [class]="toast.type" (click)="remove(toast.id)">
+      <div class="toast__content">
+        <span class="toast__icon">{{ getIcon(toast.type) }}</span>
+        <span class="toast__message">{{ toast.message }}</span>
+      </div>
+      <button class="toast__close" (click)="remove(toast.id); $event.stopPropagation()">✕</button>
+      <div class="toast__progress" [style.animationDuration.ms]="toast.duration"></div>
+    </div>
+  }
+</div>

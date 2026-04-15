@@ -6,11 +6,15 @@ import {
 import { ApiService } from './api.service';
 import { MockDataService } from './mock-data.service';
 import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
+import { ToastService } from './toast.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly STORAGE_KEY = 'estore_auth';
   private api = inject(ApiService);
+  private router = inject(Router);
+  private toastService = inject(ToastService);
 
   // MockDataService is kept but no longer used for auth logic
   private mockData = inject(MockDataService);
@@ -65,6 +69,8 @@ export class AuthService {
     this.currentUser.set(null);
     this.api.clearToken();
     localStorage.removeItem(this.STORAGE_KEY);
+    this.toastService.success('Đăng xuất thành công');
+    this.router.navigate(['/login']);
   }
 
   hasRole(role: string): boolean {

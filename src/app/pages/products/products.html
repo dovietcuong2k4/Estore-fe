@@ -17,7 +17,7 @@
         <h3 class="sidebar__title">📂 Danh mục</h3>
         <div class="sidebar__list">
           <button class="sidebar__item" [class.active]="selectedCategory() === null" (click)="setCategory(null)">
-            Tất cả <span class="sidebar__count">{{ allProducts.length }}</span>
+            Tất cả <span class="sidebar__count">{{ allProducts().length }}</span>
           </button>
           @for (cat of categories; track cat.id) {
             <button class="sidebar__item" [class.active]="selectedCategory() === cat.id" (click)="setCategory(cat.id)">
@@ -63,7 +63,12 @@
         </div>
       </div>
 
-      @if (paginatedProducts().length > 0) {
+      @if (loading()) {
+        <div class="loading">
+          <div class="loading__spinner"></div>
+          <p>Đang tải sản phẩm...</p>
+        </div>
+      } @else if (paginatedProducts().length > 0) {
         <div class="grid">
           @for (product of paginatedProducts(); track product.id) {
             <app-product-card [product]="product" />

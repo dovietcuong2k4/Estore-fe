@@ -14,7 +14,8 @@ import { ProductApiService } from '../../core/services/product-api.service';
   styleUrl: './products.scss'
 })
 export class ProductsComponent implements OnInit {
-  allProducts: Product[] = [];
+  allProducts = signal<Product[]>([]);
+  loading = signal(true);
   categories: Category[] = [];
   brands: Brand[] = [];
 
@@ -26,7 +27,7 @@ export class ProductsComponent implements OnInit {
   readonly pageSize = 12;
 
   filteredProducts = computed(() => {
-    let products = [...this.allProducts];
+    let products = [...this.allProducts()];
     const query = this.searchQuery().toLowerCase();
     const catId = this.selectedCategory();
     const brandId = this.selectedBrand();
@@ -77,12 +78,12 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit() {
     this.productApi.getProducts('', 0, 500).subscribe(products => {
-      this.allProducts = products;
+      this.allProducts.set(products);
       this.categories = this.categories.map(cat => ({
         ...cat,
         productCount: products.filter(p => p.categoryId === cat.id).length
       }));
-      this.cdr.detectChanges();      
+      this.loading.set(false);
     });
 
     this.route.queryParams.subscribe(params => {
