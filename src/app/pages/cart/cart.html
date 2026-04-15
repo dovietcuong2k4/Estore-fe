@@ -18,7 +18,7 @@
             <button class="clear-btn" (click)="clearAll()">🗑️ Xóa tất cả</button>
           </div>
 
-          @for (item of items(); track item.productId) {
+          @for (item of items(); track item.id) {
             <div class="cart-item">
               <a [routerLink]="['/products', item.productId]" class="cart-item__image">
                 <img [src]="item.product?.image" [alt]="item.product?.name" />
@@ -29,13 +29,13 @@
                 <span class="cart-item__price-each">{{ formatPrice(item.product?.price || 0) }} / sản phẩm</span>
               </div>
               <div class="cart-item__qty">
-                <button class="qty-btn" (click)="decrement(item.productId, item.quantity)" [disabled]="item.quantity <= 1">−</button>
+                <button class="qty-btn" (click)="decrement(item.id, item.quantity)" [disabled]="item.quantity <= 1">−</button>
                 <span class="qty-value">{{ item.quantity }}</span>
-                <button class="qty-btn" (click)="increment(item.productId, item.quantity)">+</button>
+                <button class="qty-btn" (click)="increment(item.id, item.quantity)">+</button>
               </div>
               <div class="cart-item__total">
                 <span class="cart-item__total-price">{{ formatPrice((item.product?.price || 0) * item.quantity) }}</span>
-                <button class="cart-item__remove" (click)="remove(item.productId)">✕</button>
+                <button class="cart-item__remove" (click)="remove(item.id)">✕</button>
               </div>
             </div>
           }

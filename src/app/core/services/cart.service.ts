@@ -1,35 +1,64 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, effect } from '@angular/core';
 import { CartItem } from '../models/cart.model';
 import { Product } from '../models/product.model';
 import { BaseResultDTO } from '../models/user.model';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
-import { MockDataService } from './mock-data.service';
 import { firstValueFrom } from 'rxjs';
 
-/** Response from GET /api/cart — assumed structure */
-export interface CartItemResponse {
+/** Matches BE CartItemResponse */
+export interface CartLineDto {
   id: number;
-  product: Product;
+  productId: number;
+  productName: string;
+  productPrice: number;
   quantity: number;
 }
 
+/** Matches BE CartResponse */
 export interface CartResponse {
   id: number;
-  userId: number;
-  cartItems: CartItemResponse[];
+  userId?: number;
+  totalPrice: number;
+  items: CartLineDto[];
+}
+
+function productStubFromCartLine(line: CartLineDto): Product {
+  return {
+    id: line.productId,
+    name: line.productName,
+    price: line.productPrice,
+    cpu: 'N/A',
+    ram: 'N/A',
+    screen: 'N/A',
+    operatingSystem: 'N/A',
+    batteryCapacity: 'N/A',
+    design: 'N/A',
+    warrantyInfo: 'N/A',
+    description: '',
+    soldQuantity: 0,
+    stockQuantity: 0,
+    categoryId: 0,
+    brandId: 0,
+    image: '',
+  };
 }
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private readonly STORAGE_KEY = 'estore_cart';
+  private readonly STORAGE_KEY_PREFIX = 'estore_cart_user';
   private api = inject(ApiService);
   private auth = inject(AuthService);
 
-  // MockDataService kept but not used for cart logic anymore
-  private mockData = inject(MockDataService);
+  private readonly cartItems = signal<CartItem[]>([]);
 
-  private readonly cartItems = signal<CartItem[]>(this.loadFromStorage());
+  constructor() {
+    // Watch for user changes to reload the correct cart
+    effect(() => {
+      const user = this.auth.user();
+      this.loadCart();
+    });
+  }
 
   readonly items = computed(() => this.cartItems());
 
@@ -59,12 +88,12 @@ export class CartService {
         this.api.get<BaseResultDTO<CartResponse>>('/cart')
       );
       if (res.success && res.data) {
-        const items: CartItem[] = (res.data.cartItems ?? []).map(item => ({
-          id: item.id,
-          cartId: res.data.id,
-          productId: item.product?.id ?? 0,
-          quantity: item.quantity,
-          product: item.product
+        const items: CartItem[] = (res.data.items ?? []).map(line => ({
+          id: line.id,
+          cartId: res.data!.id,
+          productId: line.productId,
+          quantity: line.quantity,
+          product: productStubFromCartLine(line)
         }));
         this.cartItems.set(items);
         this.saveToStorage();
@@ -169,13 +198,18 @@ export class CartService {
     return this.cartItems().some(i => i.productId === productId);
   }
 
+  private getStorageKey(): string {
+    const userId = this.auth.user()?.id ?? -1;
+    return `${this.STORAGE_KEY_PREFIX}_${userId}`;
+  }
+
   private saveToStorage(): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.cartItems()));
+    localStorage.setItem(this.getStorageKey(), JSON.stringify(this.cartItems()));
   }
 
   private loadFromStorage(): CartItem[] {
     try {
-      const data = localStorage.getItem(this.STORAGE_KEY);
+      const data = localStorage.getItem(this.getStorageKey());
       return data ? JSON.parse(data) : [];
     } catch {
       return [];

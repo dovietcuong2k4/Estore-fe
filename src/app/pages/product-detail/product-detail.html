@@ -1,4 +1,6 @@
-@if (product) {
+@if (loading) {
+  <p>Đang tải sản phẩm...</p>
+} @else if (product; as p) {
 <div class="detail-page">
   <div class="detail-page__container">
     <!-- Breadcrumb -->
@@ -14,10 +16,27 @@
 
     <!-- Product Info -->
     <div class="product-info">
-      <div class="product-info__image">
-        <img [src]="product.image" [alt]="product.name" />
-        @if (discount > 0) {
-          <span class="product-info__badge">-{{ discount }}%</span>
+      <div class="product-info__gallery">
+        <div class="product-info__image-main">
+          <img [src]="activeImage()" [alt]="product.name" />
+          @if (discount > 0) {
+            <span class="product-info__badge">-{{ discount }}%</span>
+          }
+        </div>
+        
+        @if (product.images && product.images.length > 1) {
+          <div class="product-info__thumbnails">
+            <div class="thumb" [class.active]="activeImage() === product.image" (click)="activeImage.set(product.image)">
+              <img [src]="product.image" alt="Thumbnail" />
+            </div>
+            @for (img of product.images; track img) {
+              @if (img !== product.image) {
+                <div class="thumb" [class.active]="activeImage() === img" (click)="activeImage.set(img)">
+                  <img [src]="img" alt="Thumbnail" />
+                </div>
+              }
+            }
+          </div>
         }
       </div>
 
@@ -139,4 +158,6 @@
     }
   </div>
 </div>
+} @else {
+  <p>Không tìm thấy sản phẩm</p>
 }

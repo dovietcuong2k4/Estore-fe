@@ -17,11 +17,10 @@ export class OrderService {
 
   readonly orders = computed(() => this.ordersSignal());
 
+  /** Orders for the logged-in user (backend GET /api/orders scopes by token). */
   readonly myOrders = computed(() => {
-    const userId = this.auth.user()?.id;
-    if (!userId) return [];
     return this.ordersSignal()
-      .filter(o => o.userId === userId)
+      .slice()
       .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
   });
 

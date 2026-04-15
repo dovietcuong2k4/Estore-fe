@@ -1,4 +1,4 @@
-import { Component, signal, computed, OnInit } from '@angular/core';
+import { Component, signal, computed, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card';
@@ -68,7 +68,8 @@ export class ProductsComponent implements OnInit {
   constructor(
     private mockData: MockDataService,
     private route: ActivatedRoute,
-    private productApi: ProductApiService
+    private productApi: ProductApiService,
+    private cdr: ChangeDetectorRef
   ) {
     this.categories = mockData.categories;
     this.brands = mockData.brands;
@@ -81,6 +82,7 @@ export class ProductsComponent implements OnInit {
         ...cat,
         productCount: products.filter(p => p.categoryId === cat.id).length
       }));
+      this.cdr.detectChanges();      
     });
 
     this.route.queryParams.subscribe(params => {

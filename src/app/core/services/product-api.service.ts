@@ -17,9 +17,22 @@ interface ProductResponse {
   id: number;
   name: string;
   price: number;
-  categoryName: string;
-  brandName: string;
+  categoryName?: string;
+  brandName?: string;
   images: ProductImageResponse[];
+  originalPrice?: number;
+  cpu?: string;
+  ram?: string;
+  screen?: string;
+  operatingSystem?: string;
+  batteryCapacity?: string;
+  design?: string;
+  warrantyInfo?: string;
+  description?: string;
+  soldQuantity?: number;
+  stockQuantity?: number;
+  rating?: number;
+  reviewCount?: number;
 }
 
 interface PageResponse<T> {
@@ -61,23 +74,23 @@ export class ProductApiService {
       price: item.price,
       categoryId,
       brandId,
-      categoryName: item.categoryName,
-      brandName: item.brandName,
+      categoryName: item.categoryName ?? '',
+      brandName: item.brandName ?? '',
       image,
       images: item.images?.map(i => i.imageUrl) ?? [],
-      originalPrice: item.price,
-      cpu: 'N/A',
-      ram: 'N/A',
-      screen: 'N/A',
-      operatingSystem: 'N/A',
-      batteryCapacity: 'N/A',
-      design: 'N/A',
-      warrantyInfo: 'N/A',
-      description: 'Đang cập nhật mô tả sản phẩm.',
-      soldQuantity: 0,
-      stockQuantity: 0,
-      rating: 0,
-      reviewCount: 0
+      originalPrice: item.originalPrice ?? item.price,
+      cpu: item.cpu ?? 'N/A',
+      ram: item.ram ?? 'N/A',
+      screen: item.screen ?? 'N/A',
+      operatingSystem: item.operatingSystem ?? 'N/A',
+      batteryCapacity: item.batteryCapacity ?? 'N/A',
+      design: item.design ?? 'N/A',
+      warrantyInfo: item.warrantyInfo ?? 'N/A',
+      description: item.description ?? 'Đang cập nhật mô tả sản phẩm.',
+      soldQuantity: item.soldQuantity ?? 0,
+      stockQuantity: item.stockQuantity ?? 0,
+      rating: item.rating ?? 0,
+      reviewCount: item.reviewCount ?? 0
     };
   }
 
@@ -87,14 +100,14 @@ export class ProductApiService {
     return thumbnail || images[0].imageUrl || this.fallbackImage;
   }
 
-  private mapCategoryId(categoryName: string): number {
+  private mapCategoryId(categoryName?: string): number {
     const category = this.mockData.categories.find(
       c => c.name.toLowerCase() === (categoryName ?? '').toLowerCase()
     );
     return category?.id ?? 0;
   }
 
-  private mapBrandId(brandName: string): number {
+  private mapBrandId(brandName?: string): number {
     const brand = this.mockData.brands.find(
       b => b.name.toLowerCase() === (brandName ?? '').toLowerCase()
     );

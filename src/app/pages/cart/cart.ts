@@ -20,23 +20,23 @@ export class CartComponent {
     return new Intl.NumberFormat('vi-VN').format(price) + '₫';
   }
 
-  updateQty(productId: number, qty: number) {
-    this.cartService.updateQuantity(productId, qty);
+  updateQty(cartLineId: number, qty: number) {
+    this.cartService.updateQuantity(cartLineId, qty);
   }
 
-  remove(productId: number) {
-    this.cartService.removeFromCart(productId);
+  remove(cartLineId: number) {
+    this.cartService.removeFromCart(cartLineId);
   }
 
   clearAll() {
     this.cartService.clearCart();
   }
 
-  increment(productId: number, currentQty: number) {
-    this.cartService.updateQuantity(productId, currentQty + 1);
+  increment(cartLineId: number, currentQty: number) {
+    this.cartService.updateQuantity(cartLineId, currentQty + 1);
   }
 
-  decrement(productId: number, currentQty: number) {
-    if (currentQty > 1) this.cartService.updateQuantity(productId, currentQty - 1);
+  decrement(cartLineId: number, currentQty: number) {
+    if (currentQty > 1) this.cartService.updateQuantity(cartLineId, currentQty - 1);
   }
 }

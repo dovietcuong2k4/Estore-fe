@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
 import { Product } from '../../core/models/product.model';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card';
 import { ProductApiService } from '../../core/services/product-api.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail',
@@ -16,33 +17,42 @@ export class ProductDetailComponent implements OnInit {
   product: Product | null = null;
   relatedProducts: Product[] = [];
   quantity = signal(1);
+  activeImage = signal<string>('');
   activeTab = signal<'specs' | 'desc' | 'warranty'>('specs');
+  loading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productApi: ProductApiService,
-    private cartService: CartService
-  ) {}
+    private cartService: CartService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       const id = +params['id'];
 
-      this.productApi.getProductById(id).subscribe(product => {
-        this.product = product;
-        if (!this.product) {
+      this.loading = true;
+
+      forkJoin({
+        product: this.productApi.getProductById(id),
+        products: this.productApi.getProducts('', 0, 200)
+      }).subscribe(({ product, products }) => {
+        if (!product) {
           this.router.navigate(['/products']);
           return;
         }
 
-        this.productApi.getProducts('', 0, 200).subscribe(products => {
-          this.relatedProducts = products
-            .filter(p => p.categoryName === this.product?.categoryName && p.id !== id)
-            .slice(0, 4);
-        });
+        this.product = product;
 
-        this.quantity.set(1);
+        this.relatedProducts = products
+          .filter(p => p.categoryName === product.categoryName && p.id !== product.id)
+          .slice(0, 4);
+
+        this.activeImage.set(product.image || product.images?.[0] || '');
+        this.loading = false;
+        this.cdr.detectChanges();
       });
     });
   }
