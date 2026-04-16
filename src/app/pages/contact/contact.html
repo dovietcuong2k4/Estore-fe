@@ -50,7 +50,7 @@
             <span class="success-box__icon">✅</span>
             <h2 class="success-box__title">Gửi thành công!</h2>
             <p class="success-box__desc">Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi lại bạn sớm nhất có thể.</p>
-            <button class="btn-primary" style="margin-top: 1rem;" (click)="success.set(false); form = {name: '', email: '', subject: '', message: ''}">Gửi tin nhắn khác</button>
+            <button class="btn-primary" style="margin-top: 1rem;" (click)="resetForm()">Gửi tin nhắn khác</button>
           </div>
         } @else {
           <h3 class="contact-form-title">Gửi tin nhắn</h3>
@@ -65,10 +65,15 @@
                 <input type="email" [(ngModel)]="form.email" name="email" placeholder="email@example.com" required>
               </div>
             </div>
+
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="text" [(ngModel)]="form.phone" name="phone" placeholder="0901234567">
+            </div>
             
             <div class="form-group">
-              <label>Chủ đề</label>
-              <input type="text" [(ngModel)]="form.subject" name="subject" placeholder="VD: Tư vấn sản phẩm">
+              <label>Chủ đề *</label>
+              <input type="text" [(ngModel)]="form.subject" name="subject" placeholder="VD: Tư vấn sản phẩm" required>
             </div>
 
             <div class="form-group">
@@ -76,7 +81,13 @@
               <textarea [(ngModel)]="form.message" name="message" rows="5" placeholder="Bạn cần chúng tôi giúp gì?" required></textarea>
             </div>
 
-            <button type="submit" class="btn-primary">Gửi tin nhắn 🚀</button>
+            @if (error()) {
+              <p class="form-error">{{ error() }}</p>
+            }
+
+            <button type="submit" class="btn-primary" [disabled]="submitting()">
+              {{ submitting() ? 'Đang gửi...' : 'Gửi tin nhắn 🚀' }}
+            </button>
           </form>
         }
       </div>
