@@ -27,7 +27,7 @@
         [value]="searchQuery()"
         (input)="searchQuery.set($any($event.target).value)"
       />
-      <a [routerLink]="['/products']" [queryParams]="{search: searchQuery()}" class="header__search-btn">
+      <a class="header__search-btn" type="submit">
         🔍
       </a>
     </form>

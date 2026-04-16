@@ -1,5 +1,5 @@
 import { Component, signal, computed } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -22,7 +22,8 @@ export class HeaderComponent {
 
   constructor(
     private cartService: CartService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) {}
 
   toggleMobileMenu() {
@@ -39,6 +40,12 @@ export class HeaderComponent {
   }
 
   onSearch(event: Event) {
-    event.preventDefault();
-  }
+  event.preventDefault();
+
+  this.router.navigate(['/products'], {
+    queryParams: {
+      search: this.searchQuery()
+    }
+  });
+}
 }

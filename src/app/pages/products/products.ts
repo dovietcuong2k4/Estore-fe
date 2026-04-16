@@ -1,4 +1,4 @@
-import { Component, signal, computed, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, signal, computed, OnInit, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card';
@@ -14,6 +14,7 @@ import { ProductApiService } from '../../core/services/product-api.service';
   styleUrl: './products.scss'
 })
 export class ProductsComponent implements OnInit {
+  @ViewChild('searchInput') searchInput!: ElementRef;
   allProducts = signal<Product[]>([]);
   loading = signal(true);
   categories: Category[] = [];
@@ -133,5 +134,19 @@ export class ProductsComponent implements OnInit {
   get pages(): number[] {
     const total = this.totalPages();
     return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  ngAfterViewInit() {
+    this.route.queryParams.subscribe(params => {
+      if ('search' in params) {
+        const search = params['search'] ?? '';
+
+        this.searchQuery.set(search);
+
+        setTimeout(() => {
+          this.searchInput?.nativeElement.focus();
+        }, 0);
+      }
+    });
   }
 }
