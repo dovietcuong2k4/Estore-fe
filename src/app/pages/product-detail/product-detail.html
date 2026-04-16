@@ -30,9 +30,9 @@
               <img [src]="product.image" alt="Thumbnail" />
             </div>
             @for (img of product.images; track img) {
-              @if (img !== product.image) {
-                <div class="thumb" [class.active]="activeImage() === img" (click)="activeImage.set(img)">
-                  <img [src]="img" alt="Thumbnail" />
+              @if (img.imageUrl !== product.image) {
+                <div class="thumb" [class.active]="activeImage() === img.imageUrl" (click)="activeImage.set(img.imageUrl)">
+                  <img [src]="img.imageUrl" alt="Thumbnail" />
                 </div>
               }
             }

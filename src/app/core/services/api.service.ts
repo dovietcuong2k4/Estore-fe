@@ -9,9 +9,12 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders(): HttpHeaders {
+  private getHeaders(contentType: string | null = 'application/json'): HttpHeaders {
     const token = localStorage.getItem(this.TOKEN_KEY);
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    let headers = new HttpHeaders();
+    if (contentType) {
+      headers = headers.set('Content-Type', contentType);
+    }
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }
@@ -32,20 +35,22 @@ export class ApiService {
   }
 
   post<T>(path: string, body: any = {}): Observable<T> {
+    const isFormData = body instanceof FormData;
     return this.http.post<T>(`${this.BASE_URL}${path}`, body, {
-      headers: this.getHeaders()
+      headers: this.getHeaders(isFormData ? null : 'application/json')
     });
   }
 
   put<T>(path: string, body: any = {}): Observable<T> {
+    const isFormData = body instanceof FormData;
     return this.http.put<T>(`${this.BASE_URL}${path}`, body, {
-      headers: this.getHeaders()
+      headers: this.getHeaders(isFormData ? null : 'application/json')
     });
   }
 
   delete<T>(path: string): Observable<T> {
     return this.http.delete<T>(`${this.BASE_URL}${path}`, {
-      headers: this.getHeaders()
+      headers: this.getHeaders() // defaults to application/json but delete usually has no body
     });
   }
 

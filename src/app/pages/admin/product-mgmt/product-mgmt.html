@@ -4,7 +4,7 @@
       <h1 class="dashboard__title">Quản lý Sản phẩm</h1>
       <p class="dashboard__subtitle">Xem và quản lý danh sách sản phẩm trong kho</p>
     </div>
-    <button class="btn-primary" style="padding: 0.6rem 1.25rem; background: #818cf8; color: #fff; border-radius: 8px; font-weight: 600;">+ Thêm sản phẩm</button>
+    <button class="btn-primary" (click)="openAddModal()" style="padding: 0.6rem 1.25rem; background: #818cf8; color: #fff; border-radius: 8px; font-weight: 600;">+ Thêm sản phẩm</button>
   </div>
 
   <div class="content-panel">
@@ -22,15 +22,15 @@
         </thead>
         <tbody>
           @for (product of products; track product.id) {
-            <tr>
+            <tr (click)="openDetailModal(product)" style="cursor: pointer;">
               <td><img [src]="product.image" style="width: 40px; height: 40px; border-radius: 6px; object-fit: cover;" /></td>
               <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ product.name }}</td>
               <td>{{ getCategory(product) }}</td>
               <td class="text-success font-semibold">{{ formatPrice(product.price) }}</td>
               <td>{{ product.stockQuantity }}</td>
               <td>
-                <button style="background: none; border: none; color: #818cf8; cursor: pointer; margin-right: 0.5rem;">Sửa</button>
-                <button style="background: none; border: none; color: #ef4444; cursor: pointer;">Xóa</button>
+                <button (click)="openEditModal(product); $event.stopPropagation()" style="background: none; border: none; color: #818cf8; cursor: pointer; margin-right: 0.5rem;">Sửa</button>
+                <button (click)="deleteProduct(product.id); $event.stopPropagation()" style="background: none; border: none; color: #ef4444; cursor: pointer;">Xóa</button>
               </td>
             </tr>
           }
@@ -39,3 +39,13 @@
     </div>
   </div>
 </div>
+
+<app-product-modal
+  [isVisible]="isModalOpen || isDetailModalOpen"
+  [isDetail]="isDetailModalOpen"
+  [product]="selectedProduct"
+  [categories]="categories"
+  [brands]="brands"
+  (close)="closeModal()"
+  (save)="saveProduct($event)"
+></app-product-modal>

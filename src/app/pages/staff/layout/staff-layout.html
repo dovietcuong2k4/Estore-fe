@@ -23,6 +23,12 @@
         <a routerLink="/staff/products" routerLinkActive="active" class="staff-nav__link">
           <span class="icon">🛍️</span> Product Management
         </a>
+        <a routerLink="/staff/categories" routerLinkActive="active" class="staff-nav__link">
+          <span class="icon">📁</span> Category Management
+        </a>
+        <a routerLink="/staff/brands" routerLinkActive="active" class="staff-nav__link">
+          <span class="icon">🏷️</span> Brand Management
+        </a>
       </div>
     </nav>
 
@@ -36,7 +42,7 @@
           <div class="staff-user__role">Staff Role</div>
         </div>
       </div>
-      <a routerLink="/" class="btn-store">🏠 Back to Store</a>
+      <button (click)="auth.logout()" class="btn-store">🚪 Đăng xuất</button>
     </div>
   </aside>
 

@@ -1,0 +1,26 @@
+@use '../product-mgmt/product-mgmt.scss' as *;
+
+.action-btn-edit {
+  background: none;
+  border: none;
+  color: #818cf8;
+  cursor: pointer;
+  font-weight: 600;
+  margin-right: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+  &:hover { background: rgba(129,140,248,0.15); }
+}
+.action-btn-delete {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+  &:hover { background: rgba(239,68,68,0.15); }
+}
+.modal-container--sm { max-width: 480px; }

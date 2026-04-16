@@ -1,0 +1,125 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="close()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="modal-header__info">
+        <h2 class="modal-header__title">
+          {{ user ? 'Chỉnh sửa Người dùng' : 'Thêm Người dùng Mới' }}
+        </h2>
+        <p class="modal-header__subtitle">
+          {{ user ? 'Cập nhật thông tin tài khoản và phân quyền' : 'Tạo tài khoản mới và thiết lập vai trò hệ thống' }}
+        </p>
+      </div>
+      <button class="modal-header__close" (click)="close()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" id="userForm">
+        
+        <div class="form-grid">
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-group__label">Họ và Tên <span class="text-error">*</span></label>
+            <div class="input-wrapper">
+              <input type="text" formControlName="fullName" class="form-group__input" 
+                     placeholder="Ví dụ: Nguyễn Văn A"
+                     [class.is-invalid]="userForm.get('fullName')?.invalid && userForm.get('fullName')?.touched">
+            </div>
+            <div class="error-msg" *ngIf="userForm.get('fullName')?.invalid && userForm.get('fullName')?.touched">
+              Họ tên không được để trống và ít nhất 2 ký tự.
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-group__label">Email / Gmail <span class="text-error">*</span></label>
+            <div class="input-wrapper">
+              <input type="email" formControlName="email" class="form-group__input" 
+                     placeholder="example@gmail.com"
+                     [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+            </div>
+            <div class="error-msg" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+              Vui lòng nhập đúng định dạng email.
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-group__label">
+              Mật khẩu <span class="text-error" *ngIf="!user">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="password" formControlName="password" class="form-group__input" 
+                     [placeholder]="user ? 'Để trống nếu không muốn đổi' : 'Tối thiểu 6 ký tự'"
+                     [class.is-invalid]="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+            </div>
+            <div class="error-msg" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+              Mật khẩu phải từ 6 ký tự trở lên.
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group">
+            <label class="form-group__label">Số điện thoại</label>
+            <div class="input-wrapper">
+              <input type="text" formControlName="phone" class="form-group__input" placeholder="09xxxxxxxx">
+            </div>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label class="form-group__label">Địa chỉ</label>
+          <div class="input-wrapper">
+            <input type="text" formControlName="address" class="form-group__input" placeholder="Nhập địa chỉ cư trú">
+          </div>
+        </div>
+
+        <!-- Role Selection -->
+        <div class="role-section">
+          <label class="form-group__label">Vai trò & Quyền hạn <span class="text-error">*</span></label>
+          <div class="role-grid">
+            <div *ngFor="let role of roleOptions" 
+                 class="role-card" 
+                 [class.active]="isRoleSelected(role.value)"
+                 (click)="toggleRole(role.value)">
+              <div class="role-card__checkbox">
+                <svg *ngIf="isRoleSelected(role.value)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <div class="role-card__info">
+                <span class="role-card__name">{{ role.label }}</span>
+                <span class="role-card__desc">Quyền {{ role.label.toLowerCase() }} hệ thống</span>
+              </div>
+            </div>
+          </div>
+          <div class="error-msg" *ngIf="userForm.get('roles')?.invalid && userForm.get('roles')?.touched">
+            Vui lòng chọn ít nhất một vai trò.
+          </div>
+        </div>
+
+        <!-- Common Error -->
+        <div class="alert alert--error" *ngIf="errorMessage">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn--secondary" (click)="close()" [disabled]="isSubmitting">
+        Hủy bỏ
+      </button>
+      <button type="submit" form="userForm" class="btn btn--primary" [disabled]="isSubmitting">
+        <span *ngIf="!isSubmitting">
+          {{ user ? 'Lưu Thay đổi' : 'Tạo Người dùng' }}
+        </span>
+        <div class="spinner" *ngIf="isSubmitting"></div>
+        <span *ngIf="isSubmitting">Đang xử lý...</span>
+      </button>
+    </div>
+  </div>
+</div>

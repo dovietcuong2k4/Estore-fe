@@ -1,0 +1,62 @@
+<div class="dashboard">
+  <div class="dashboard__header" style="display:flex;justify-content:space-between;align-items:flex-end;">
+    <div>
+      <h1 class="dashboard__title">Quản lý Hãng sản xuất</h1>
+      <p class="dashboard__subtitle">Xem và cập nhật thông tin hãng sản xuất (Quyền Staff: No Delete)</p>
+    </div>
+    <button class="btn btn--primary" (click)="openAdd()">+ Thêm hãng mới</button>
+  </div>
+
+  <div class="content-panel">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Tên hãng</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (brand of brands; track brand.id) {
+            <tr>
+              <td>
+                <img [src]="brand.imageUrl || 'https://via.placeholder.com/40'" 
+                     style="width: 40px; height: 40px; border-radius: 6px; object-fit: contain; background: #fff;" />
+              </td>
+              <td>{{ brand.name }}</td>
+              <td>
+                <button (click)="openEdit(brand)" class="action-btn-edit">Sửa</button>
+                <!-- No delete button for staff -->
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="isModalOpen" class="modal-overlay">
+  <div class="modal-container modal-container--sm">
+    <div class="modal-header">
+      <h2 class="modal-header__title">{{ isEditing ? 'Cập nhật' : 'Thêm' }} Hãng sản xuất</h2>
+      <button class="modal-header__close" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-group__label">Tên hãng <span class="text-error">*</span></label>
+        <input [(ngModel)]="selectedBrand.name" class="form-group__input" placeholder="VD: Apple, Samsung, Dell..." />
+      </div>
+      <div class="form-group">
+        <label class="form-group__label">Link Logo (URL)</label>
+        <input [(ngModel)]="selectedBrand.imageUrl" class="form-group__input" placeholder="https://..." />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--secondary" (click)="closeModal()">Hủy</button>
+      <button class="btn btn--primary" (click)="save()">Lưu</button>
+    </div>
+  </div>
+</div>

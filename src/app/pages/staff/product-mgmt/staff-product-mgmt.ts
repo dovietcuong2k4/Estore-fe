@@ -1,84 +1,106 @@
-import { Component, signal, computed, inject } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Product } from '../../../core/models/product.model';
+import { Product, ProductImage, Category, Brand } from '../../../core/models/product.model';
 import { ProductApiService } from '../../../core/services/product-api.service';
+import { ProductModalComponent } from '../../../shared/components/product-modal/product-modal';
 
 @Component({
   selector: 'app-staff-product-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ProductModalComponent],
   templateUrl: './staff-product-mgmt.html',
-  styleUrl: './staff-product-mgmt.scss'
+  styleUrls: ['../../admin/dashboard/dashboard.scss', './staff-product-mgmt.scss']
 })
 export class StaffProductMgmtComponent {
-  private productApi = inject(ProductApiService);
-  readonly products = signal<Product[]>([]);
-  searchQuery = signal('');
-
-  filteredProducts = computed(() => {
-    const query = this.searchQuery().toLowerCase();
-    return this.products().filter(p => 
-      p.name.toLowerCase().includes(query) || 
-      p.id.toString().includes(query)
-    );
-  });
-
+  products: Product[] = [];
+  
   isModalOpen = false;
-  editingProduct: Partial<Product> | null = null;
+  isDetailModalOpen = false;
+  selectedProduct: any = null;
+  categories: Category[] = [];
+  brands: Brand[] = [];
 
-  constructor() {
+  constructor(
+    private productApi: ProductApiService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.loadProducts();
+    this.loadMetadata();
+  }
+
+  loadMetadata() {
+    this.productApi.getCategories().subscribe(res => this.categories = res);
+    this.productApi.getBrands().subscribe(res => this.brands = res);
+  }
+
+  loadProducts() {
     this.productApi.getProducts('', 0, 500).subscribe(products => {
-      this.products.set(products);
+      this.products = products;
+      this.cdr.detectChanges();
     });
-  }
-
-  openAddModal() {
-    this.editingProduct = {
-      id: Date.now(),
-      name: '',
-      price: 0,
-      stockQuantity: 0,
-      categoryId: 1,
-      brandId: 1,
-      image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600',
-      description: '',
-      cpu: 'N/A', ram: 'N/A', screen: 'N/A', operatingSystem: 'N/A', batteryCapacity: 'N/A', design: 'N/A', warrantyInfo: 'N/A'
-    };
-    this.isModalOpen = true;
-  }
-
-  openEditModal(product: Product) {
-    this.editingProduct = { ...product };
-    this.isModalOpen = true;
-  }
-
-  closeModal() {
-    this.isModalOpen = false;
-    this.editingProduct = null;
-  }
-
-  saveProduct() {
-    if (!this.editingProduct) return;
-
-    const existingIndex = this.products().findIndex(p => p.id === this.editingProduct?.id);
-    if (existingIndex > -1) {
-      const updatedProducts = [...this.products()];
-      updatedProducts[existingIndex] = this.editingProduct as Product;
-      this.products.set(updatedProducts);
-    } else {
-      this.products.set([...this.products(), this.editingProduct as Product]);
-    }
-    this.closeModal();
-  }
-
-  deleteProduct(id: number) {
-    if (confirm('Are you sure you want to delete this product?')) {
-      this.products.set(this.products().filter(p => p.id !== id));
-    }
   }
 
   formatPrice(price: number): string {
     return new Intl.NumberFormat('vi-VN').format(price) + '₫';
+  }
+
+  getCategory(product: Product) {
+    return product.categoryName ?? 'N/A';
+  }
+
+  openAddModal() {    
+    this.selectedProduct = {
+      name: '', price: 0, categoryId: this.categories[0]?.id || 1, brandId: this.brands[0]?.id || 1,
+      cpu: '', ram: '', screen: '', operatingSystem: '',
+      batteryCapacity: '', design: '', warrantyInfo: '', description: '',
+      stockQuantity: 0, images: []
+    };
+    this.isDetailModalOpen = false;
+    this.isModalOpen = true;
+  }
+
+  openEditModal(product: Product) {
+    this.selectedProduct = { ...product };
+    this.isDetailModalOpen = false;
+    this.isModalOpen = true;
+  }
+
+  openDetailModal(product: Product) {
+    this.selectedProduct = product;
+    this.isDetailModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.isDetailModalOpen = false;
+    this.selectedProduct = null;
+  }
+
+  saveProduct(updatedProduct: any) {
+    this.selectedProduct = updatedProduct;
+    this.executeSave();
+  }
+
+  private executeSave() {
+    if (this.selectedProduct.id) {
+      this.productApi.updateProduct(this.selectedProduct.id, this.selectedProduct).subscribe(() => {
+        this.closeModal();
+        this.loadProducts();
+      });
+    } else {
+      this.productApi.createProduct(this.selectedProduct).subscribe(() => {
+        this.closeModal();
+        this.loadProducts();
+      });
+    }
+  }
+
+  deleteProduct(id: number) {
+    if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+      this.productApi.deleteProduct(id).subscribe(() => {
+        this.loadProducts();
+      });
+    }
   }
 }

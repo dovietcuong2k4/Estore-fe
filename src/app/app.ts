@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, RouterEvent, NavigationEnd, Router } from '@angular/router';
-import { HeaderComponent } from './shared/components/header/header';
-import { FooterComponent } from './shared/components/footer/footer';
 import { ToastComponent } from './shared/components/toast/toast';
 import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, ToastComponent],
+  imports: [RouterOutlet, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
+
 export class App {
   constructor(private router: Router) {
     // Scroll to top on route change

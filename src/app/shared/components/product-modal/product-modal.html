@@ -1,0 +1,163 @@
+<div *ngIf="isVisible" class="modal-overlay" (click)="closeModal()">
+  <div class="modal-container" [class.modal-container--small]="isDetail" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 class="modal-header__title">
+        {{ isDetail ? 'Chi tiết Sản phẩm' : (_product.id ? 'Sửa' : 'Thêm mới') + ' Sản phẩm' }}
+      </h2>
+      <button class="modal-header__close" (click)="closeModal()">&times;</button>
+    </div>
+
+    <!-- Body (Add/Edit) -->
+    <div class="modal-body" *ngIf="!isDetail">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-group__label">Tên sản phẩm <span class="text-error">*</span></label>
+          <input [(ngModel)]="_product.name" class="form-group__input" placeholder="Nhập tên sản phẩm..." />
+        </div>
+        <div class="form-group">
+          <label class="form-group__label">Giá (VNĐ) <span class="text-error">*</span></label>
+          <input type="number" [(ngModel)]="_product.price" class="form-group__input" placeholder="0" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-group__label">Danh mục <span class="text-error">*</span></label>
+          <select [(ngModel)]="_product.categoryId" class="form-group__input">
+            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-group__label">Hãng sản xuất <span class="text-error">*</span></label>
+          <select [(ngModel)]="_product.brandId" class="form-group__input">
+            <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-group__label">CPU</label>
+          <input [(ngModel)]="_product.cpu" class="form-group__input" placeholder="VD: Apple M2" />
+        </div>
+        <div class="form-group">
+          <label class="form-group__label">RAM</label>
+          <input [(ngModel)]="_product.ram" class="form-group__input" placeholder="VD: 16GB" />
+        </div>
+        <div class="form-group">
+          <label class="form-group__label">Màn hình</label>
+          <input [(ngModel)]="_product.screen" class="form-group__input" placeholder="VD: 13.6 inch OLED" />
+        </div>
+        <div class="form-group">
+          <label class="form-group__label">Hệ điều hành</label>
+          <input [(ngModel)]="_product.operatingSystem" class="form-group__input" placeholder="VD: macOS" />
+        </div>
+        <div class="form-group">
+          <label class="form-group__label">Dung lượng pin</label>
+          <input [(ngModel)]="_product.batteryCapacity" class="form-group__input" placeholder="VD: 52.6Wh" />
+        </div>
+        <div class="form-group">
+          <label class="form-group__label">Thiết kế</label>
+          <input [(ngModel)]="_product.design" class="form-group__input" placeholder="VD: Nhôm nguyên khối" />
+        </div>
+        <div class="form-group">
+          <label class="form-group__label">Bảo hành</label>
+          <input [(ngModel)]="_product.warrantyInfo" class="form-group__input" placeholder="VD: 12 tháng" />
+        </div>
+        <div class="form-group">
+          <label class="form-group__label">Số lượng tồn kho <span class="text-error">*</span></label>
+          <input type="number" [(ngModel)]="_product.stockQuantity" class="form-group__input" placeholder="0" />
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="form-group__label">Mô tả sản phẩm</label>
+          <textarea [(ngModel)]="_product.description" class="form-group__textarea" style="min-height: 120px;" placeholder="Nhập mô tả chi tiết..."></textarea>
+        </div>
+      </div>
+
+      <!-- Image section -->
+      <div class="image-section">
+        <h3 class="image-section__title">Album Hình ảnh</h3>
+        <div class="image-section__upload">
+          <label for="file-upload">
+            <i class="fas fa-cloud-upload-alt"></i> Tải ảnh lên
+          </label>
+          <input id="file-upload" type="file" (change)="onFileSelected($event)" accept="image/*" />
+        </div>
+        
+        <div class="image-grid">
+          <div *ngFor="let img of productImages; let i = index" class="image-card" [class.is-thumbnail]="img.isThumbnail">
+            <img [src]="img.imageUrl" />
+            <div *ngIf="img.isThumbnail" class="image-card__badge">Thumbnail</div>
+            <div class="image-card__overlay">
+              <button class="image-card__btn image-card__btn--thumbnail" (click)="setThumbnail(i)">
+                Làm ảnh đại diện
+              </button>
+              <button class="image-card__btn image-card__btn--delete" (click)="removeImage(i)">
+                Xóa ảnh
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body (View Detail) -->
+    <div class="modal-body" *ngIf="isDetail">
+      <div class="product-gallery">
+        <img *ngFor="let img of _product.images" [src]="img.imageUrl" class="product-gallery__img" />
+      </div>
+
+      <div class="detail-info">
+        <div class="detail-info__section">
+          <h3 class="detail-info__title">Thông tin cơ bản</h3>
+          <div class="detail-info__grid">
+            <div class="detail-info__item">
+              <span class="detail-info__label">Tên sản phẩm</span>
+              <span class="detail-info__value">{{ _product.name }}</span>
+            </div>
+            <div class="detail-info__item">
+              <span class="detail-info__label">Giá bán</span>
+              <span class="detail-info__value text-success font-semibold">{{ formatPrice(_product.price || 0) }}</span>
+            </div>
+            <div class="detail-info__item">
+              <span class="detail-info__label">Danh mục</span>
+              <span class="detail-info__value">{{ _product.categoryName }}</span>
+            </div>
+            <div class="detail-info__item">
+              <span class="detail-info__label">Thương hiệu</span>
+              <span class="detail-info__value">{{ _product.brandName }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-info__section">
+          <h3 class="detail-info__title">Cấu hình kỹ thuật</h3>
+          <div class="detail-info__grid">
+            <div class="detail-info__item">
+              <span class="detail-info__label">CPU</span>
+              <span class="detail-info__value">{{ _product.cpu }}</span>
+            </div>
+            <div class="detail-info__item">
+              <span class="detail-info__label">RAM</span>
+              <span class="detail-info__value">{{ _product.ram }}</span>
+            </div>
+            <div class="detail-info__item">
+              <span class="detail-info__label">Màn hình</span>
+              <span class="detail-info__value">{{ _product.screen }}</span>
+            </div>
+            <div class="detail-info__item">
+              <span class="detail-info__label">Hệ điều hành</span>
+              <span class="detail-info__value">{{ _product.operatingSystem }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn btn--secondary" (click)="closeModal()">{{ isDetail ? 'Đóng' : 'Hủy bỏ' }}</button>
+      <button class="btn btn--primary" *ngIf="!isDetail" (click)="saveProduct()">Lưu thông tin</button>
+    </div>
+
+  </div>
+</div>

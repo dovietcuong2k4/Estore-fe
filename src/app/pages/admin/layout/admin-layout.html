@@ -23,6 +23,12 @@
         <a routerLink="/admin/products" routerLinkActive="active" class="admin-nav__link">
           <span class="icon">🛍️</span> Sản phẩm
         </a>
+        <a routerLink="/admin/categories" routerLinkActive="active" class="admin-nav__link">
+          <span class="icon">📁</span> Danh mục
+        </a>
+        <a routerLink="/admin/brands" routerLinkActive="active" class="admin-nav__link">
+          <span class="icon">🏷️</span> Hãng sản xuất
+        </a>
       </div>
 
       <div class="admin-nav__group">
@@ -43,7 +49,7 @@
           <div class="admin-user__role">{{ auth.user()?.roles?.[0]?.name }}</div>
         </div>
       </div>
-      <a routerLink="/" class="btn-store">🏠 Quay về cửa hàng</a>
+      <button (click)="auth.logout()" class="btn-store">🚪 Đăng xuất</button>
     </div>
   </aside>
 

@@ -51,7 +51,7 @@
 }
 
 .btn-store {
-  display: block; text-align: center; padding: 0.875rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px;
+  display: block; width: 100%; text-align: center; border: none; cursor: pointer; padding: 0.875rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px;
   color: #cad1d9; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;
   &:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
 }

@@ -53,6 +53,15 @@ export interface BaseResultDTO<T> {
   count: number | null;
 }
 
+export interface AdminUserUpsertRequest {
+  fullName: string;
+  email: string;
+  password?: string;
+  phone?: string;
+  address?: string;
+  roles: string[];
+}
+
 /** Maps BE UserResponse to FE User */
 export function mapUserResponseToUser(res: UserResponse): User {
   return {

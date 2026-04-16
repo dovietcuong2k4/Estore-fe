@@ -31,7 +31,16 @@ export interface Product {
   categoryId: number;
   brandId: number;
   image: string;
-  images?: string[];
+  images?: ProductImage[];
   rating?: number;
   reviewCount?: number;
+}
+
+export interface ProductImage {
+  id?: number;
+  imageUrl: string;
+  isThumbnail: boolean;
+  sortOrder: number;
+  publicId?: string;
+  file?: File; // For local storage before upload
 }

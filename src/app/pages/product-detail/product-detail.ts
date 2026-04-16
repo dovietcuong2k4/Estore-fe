@@ -50,7 +50,7 @@ export class ProductDetailComponent implements OnInit {
           .filter(p => p.categoryName === product.categoryName && p.id !== product.id)
           .slice(0, 4);
 
-        this.activeImage.set(product.image || product.images?.[0] || '');
+        this.activeImage.set(product.image || product.images?.[0]?.imageUrl || '');
         this.loading = false;
         this.cdr.detectChanges();
       });

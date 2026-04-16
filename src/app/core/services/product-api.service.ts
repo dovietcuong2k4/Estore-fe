@@ -63,6 +63,50 @@ export class ProductApiService {
       .pipe(map(res => (res.data ? this.mapProduct(res.data) : null)));
   }
 
+  createProduct(data: any): Observable<any> {
+    return this.api.post<BaseResultDTO<ProductResponse>>('/products/create', data);
+  }
+
+  updateProduct(id: number, data: any): Observable<any> {
+    return this.api.put<BaseResultDTO<ProductResponse>>(`/products/update/${id}`, data);
+  }
+
+  deleteProduct(id: number): Observable<any> {
+    return this.api.delete<BaseResultDTO<any>>(`/products/delete/${id}`);
+  }
+
+  getCategories(): Observable<any[]> {
+    return this.api.get<any[]>('/categories');
+  }
+
+  createCategory(data: any): Observable<any> {
+    return this.api.post<any>('/categories', data);
+  }
+
+  updateCategory(id: number, data: any): Observable<any> {
+    return this.api.put<any>(`/categories/${id}`, data);
+  }
+
+  deleteCategory(id: number): Observable<any> {
+    return this.api.delete<any>(`/categories/${id}`);
+  }
+
+  getBrands(): Observable<any[]> {
+    return this.api.get<any[]>('/brands');
+  }
+
+  createBrand(data: any): Observable<any> {
+    return this.api.post<any>('/brands', data);
+  }
+
+  updateBrand(id: number, data: any): Observable<any> {
+    return this.api.put<any>(`/brands/${id}`, data);
+  }
+
+  deleteBrand(id: number): Observable<any> {
+    return this.api.delete<any>(`/brands/${id}`);
+  }
+
   private mapProduct(item: ProductResponse): Product {
     const image = this.pickImage(item.images);
     const categoryId = this.mapCategoryId(item.categoryName);
@@ -77,7 +121,13 @@ export class ProductApiService {
       categoryName: item.categoryName ?? '',
       brandName: item.brandName ?? '',
       image,
-      images: item.images?.map(i => i.imageUrl) ?? [],
+      images: item.images?.map(i => ({
+        id: i.id,
+        imageUrl: i.imageUrl,
+        isThumbnail: i.isThumbnail,
+        sortOrder: i.sortOrder,
+        publicId: i.publicId
+      })) ?? [],
       originalPrice: item.originalPrice ?? item.price,
       cpu: item.cpu ?? 'N/A',
       ram: item.ram ?? 'N/A',
