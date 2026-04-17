@@ -14,6 +14,7 @@ export interface CartLineDto {
   productName: string;
   productPrice: number;
   quantity: number;
+  productImageUrl: string;
 }
 
 /** Matches BE CartResponse */
@@ -41,7 +42,7 @@ function productStubFromCartLine(line: CartLineDto): Product {
     stockQuantity: 0,
     categoryId: 0,
     brandId: 0,
-    image: '',
+    image: line.productImageUrl,
   };
 }
 
@@ -107,7 +108,7 @@ export class CartService {
   }
 
   /** Add item to cart */
-  async addToCart(productId: number, quantity: number = 1): Promise<void> {
+  async addToCart(productId: number, quantity: number = 1, product?: Product): Promise<void> {
     if (this.auth.isLoggedIn()) {
       try {
         await firstValueFrom(
@@ -137,7 +138,8 @@ export class CartService {
         id: Date.now(),
         cartId: 1,
         productId,
-        quantity
+        quantity,
+        product: product ? { ...product } : undefined
       };
       this.cartItems.set([...current, newItem]);
     }

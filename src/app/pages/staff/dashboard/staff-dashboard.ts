@@ -34,7 +34,7 @@ export class StaffDashboardComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.orderService.loadOrders();
+    this.orderService.loadStaffOrders();
     this.productApi.getProducts('', 0, 500).subscribe(products => {
       this.products = products;
     });

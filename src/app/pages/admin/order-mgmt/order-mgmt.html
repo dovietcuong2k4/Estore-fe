@@ -1,49 +1,37 @@
-<div class="dashboard">
-  <div class="dashboard__header">
-    <h1 class="dashboard__title">Quản lý Đơn hàng</h1>
-    <p class="dashboard__subtitle">Theo dõi trạng thái và xử lý đơn đặt hàng</p>
-  </div>
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Quản lý đơn hàng</h1>
+      <p>Admin chỉ xem và lọc đơn hàng theo trạng thái, shipper và ngày tạo.</p>
+    </div>
 
-  <div class="content-panel">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Mã ĐH</th>
-            <th>Khách hàng</th>
-            <th>Ngày đặt</th>
-            <th>Tổng tiền</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (order of orders(); track order.id) {
-            <tr>
-              <td>#{{ order.id }}</td>
-              <td>
-                <div style="font-weight: 500;">{{ order.receiverName }}</div>
-                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.4)">{{ order.receiverPhone }}</div>
-              </td>
-              <td>{{ order.orderDate | date:'dd/MM/yy HH:mm' }}</td>
-              <td class="text-success font-semibold">{{ formatPrice(order.totalPrice || 0) }}</td>
-              <td><span class="badge" [class]="getStatusClass(order.status)">{{ order.status }}</span></td>
-              <td>
-                <button *ngIf="order.status === 'CREATED'" 
-                  (click)="confirmOrder(order.id)"
-                  style="background: #10b981; color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-right: 0.5rem;">
-                  Xác nhận
-                </button>
-                <button *ngIf="order.status !== 'CANCELLED' && order.status !== 'DELIVERED'" 
-                  (click)="cancelOrder(order.id)"
-                  style="background: #ef4444; color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
-                  Hủy đơn
-                </button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+    <div class="filters">
+      <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event); reload()">
+        <option value="ALL">Tất cả trạng thái</option>
+        <option value="CREATED">CREATED</option>
+        <option value="PENDING">PENDING</option>
+        <option value="CONFIRMED">CONFIRMED</option>
+        <option value="PREPARING">PREPARING</option>
+        <option value="READY_FOR_SHIPPING">READY_FOR_SHIPPING</option>
+        <option value="SHIPPING">SHIPPING</option>
+        <option value="DELIVERED">DELIVERED</option>
+        <option value="DELIVERY_FAILED">DELIVERY_FAILED</option>
+        <option value="CANCELLED">CANCELLED</option>
+      </select>
+
+      <select [ngModel]="selectedShipperId()" (ngModelChange)="selectedShipperId.set($event); reload()">
+        <option value="ALL">Tất cả shipper</option>
+        @for (shipper of shippers(); track shipper.id) {
+          <option [ngValue]="shipper.id">{{ shipper.fullName }}</option>
+        }
+      </select>
+
+      <input type="date" [ngModel]="selectedDate()" (ngModelChange)="selectedDate.set($event); reload()">
     </div>
   </div>
+
+  <app-order-table
+    [orders]="orders()"
+    [role]="'ROLE_ADMIN'">
+  </app-order-table>
 </div>

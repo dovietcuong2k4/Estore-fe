@@ -1,0 +1,76 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.action-btn,
+.primary-btn,
+.secondary-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.action-btn,
+.primary-btn {
+  background: #2563eb;
+  color: #fff;
+}
+
+.secondary-btn {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.action-btn.is-disabled,
+.action-btn:disabled,
+.primary-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.readonly-text {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.modal {
+  width: min(420px, 100%);
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  color: #0f172a;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.field select {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}

@@ -35,7 +35,7 @@ export class ProductCardComponent {
   addToCart(event: Event) {
     event.preventDefault();
     event.stopPropagation();
-    this.cartService.addToCart(this.product.id);
+    this.cartService.addToCart(this.product.id, 1, this.product);
   }
 
   formatPrice(price: number): string {

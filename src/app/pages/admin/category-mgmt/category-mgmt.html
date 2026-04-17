@@ -1,32 +1,40 @@
-<div class="dashboard">
-  <div class="dashboard__header" style="display:flex;justify-content:space-between;align-items:flex-end;">
+<div class="p-6">
+  <div class="flex justify-between items-end mb-6">
     <div>
-      <h1 class="dashboard__title">Quản lý Danh mục</h1>
-      <p class="dashboard__subtitle">Thêm, sửa, xóa danh mục sản phẩm</p>
+      <h1 class="text-2xl font-bold text-gray-800">Quản lý Danh mục</h1>
+      <p class="text-gray-500 mt-1">Thêm, sửa, xóa danh mục sản phẩm</p>
     </div>
-    <button class="btn btn--primary" (click)="openAdd()">+ Thêm danh mục</button>
+    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 transition font-medium flex items-center" (click)="openAdd()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+      Thêm danh mục
+    </button>
   </div>
 
-  <div class="content-panel">
-    <div class="table-responsive">
-      <table class="table">
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse min-w-[600px]">
         <thead>
-          <tr>
-            <th>#</th>
-            <th>Tên danh mục</th>
-            <th>Thao tác</th>
+          <tr class="bg-gray-50 border-b border-gray-100 text-sm font-semibold text-gray-600 uppercase tracking-wide">
+            <th class="py-4 px-6 w-20">#</th>
+            <th class="py-4 px-6">Tên danh mục</th>
+            <th class="py-4 px-6 text-right w-48">Thao tác</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="divide-y divide-gray-100 text-gray-700">
           @for (cat of categories; track cat.id) {
-            <tr>
-              <td>{{ cat.id }}</td>
-              <td>{{ cat.name }}</td>
-              <td>
-                <button (click)="openEdit(cat)" class="action-btn-edit">Sửa</button>
-                <button (click)="delete(cat.id)" class="action-btn-delete">Xóa</button>
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="py-4 px-6">{{ cat.id }}</td>
+              <td class="py-4 px-6 font-medium">{{ cat.name }}</td>
+              <td class="py-4 px-6 text-right space-x-2">
+                <button (click)="openEdit(cat)" class="px-3 py-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors font-medium text-sm">Sửa</button>
+                <button (click)="delete(cat.id)" class="px-3 py-1.5 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors font-medium text-sm">Xóa</button>
               </td>
             </tr>
+          }
+          @if (categories.length === 0) {
+             <tr>
+               <td colspan="3" class="py-8 text-center text-gray-500">Không có danh mục nào.</td>
+             </tr>
           }
         </tbody>
       </table>
@@ -34,22 +42,10 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div *ngIf="isModalOpen" class="modal-overlay">
-  <div class="modal-container modal-container--sm">
-    <div class="modal-header">
-      <h2 class="modal-header__title">{{ isEditing ? 'Sửa' : 'Thêm' }} Danh mục</h2>
-      <button class="modal-header__close" (click)="closeModal()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-group__label">Tên danh mục <span class="text-error">*</span></label>
-        <input [(ngModel)]="selectedCategory.name" class="form-group__input" placeholder="VD: Laptop, Điện thoại..." />
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn--secondary" (click)="closeModal()">Hủy</button>
-      <button class="btn btn--primary" (click)="save()">Lưu</button>
-    </div>
-  </div>
-</div>
+<app-category-modal
+  [isOpen]="isModalOpen"
+  [isSaving]="isSaving"
+  [category]="selectedCategory"
+  (save)="save($event)"
+  (cancel)="closeModal()">
+</app-category-modal>

@@ -1,109 +1,31 @@
-<div class="order-mgmt">
-  <div class="order-list-section">
-    <header class="page-header">
-      <h1 class="page-title">Order Management</h1>
-      <div class="status-filters">
-        <button [class.active]="selectedStatus() === 'ALL'" (click)="selectedStatus.set('ALL')">All</button>
-        <button [class.active]="selectedStatus() === 'CREATED'" (click)="selectedStatus.set('CREATED')">New</button>
-        <button [class.active]="selectedStatus() === 'CONFIRMED'" (click)="selectedStatus.set('CONFIRMED')">Confirmed</button>
-        <button [class.active]="selectedStatus() === 'PREPARING'" (click)="selectedStatus.set('PREPARING')">Preparing</button>
-        <button [class.active]="selectedStatus() === 'READY_FOR_SHIPPING'" (click)="selectedStatus.set('READY_FOR_SHIPPING')">Ready</button>
-      </div>
-    </header>
-
-    <div class="order-grid" *ngIf="filteredOrders().length > 0; else noOrders">
-      <div class="order-card" *ngFor="let order of filteredOrders()" [class.selected]="selectedOrder()?.id === order.id" (click)="selectOrder(order)">
-        <div class="order-card__header">
-          <span class="order-id">#{{ order.id }}</span>
-          <span class="order-date">{{ order.orderDate | date:'short' }}</span>
-        </div>
-        <div class="order-card__body">
-          <div class="customer-info">
-            <strong>{{ order.receiverName }}</strong>
-            <span>{{ order.receiverPhone }}</span>
-          </div>
-          <div class="order-total">{{ formatPrice(order.totalPrice || 0) }}</div>
-        </div>
-        <div class="order-card__footer">
-          <span class="status-badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
-        </div>
-      </div>
-    </div>
-    <ng-template #noOrders>
-      <div class="empty-state">
-        <div class="empty-icon">📂</div>
-        <p>No orders found for the selected status.</p>
-      </div>
-    </ng-template>
-  </div>
-
-  <div class="order-detail-section" [class.open]="selectedOrder()">
-    <div class="detail-placeholder" *ngIf="!selectedOrder()">
-      <div class="placeholder-icon">🔍</div>
-      <h3>Select an order to view details</h3>
-      <p>Manage order confirmation, preparation, and shipping readiness.</p>
+<div class="p-6">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-800">Quản lý đơn hàng</h1>
+      <p class="text-gray-500 mt-1">Xử lý xác nhận, chuẩn bị, sẵn sàng giao và phân công shipper.</p>
     </div>
 
-    <div class="detail-content" *ngIf="selectedOrder() as order">
-      <div class="detail-header">
-        <div class="header-main">
-          <h2>Order #{{ order.id }}</h2>
-          <span class="status-badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
-        </div>
-        <button class="btn-close" (click)="selectedOrder.set(null)">×</button>
-      </div>
-
-      <div class="detail-body">
-        <section class="detail-section">
-          <h3>Customer Information</h3>
-          <div class="info-grid">
-            <div class="info-item"><label>Name:</label> <span>{{ order.receiverName }}</span></div>
-            <div class="info-item"><label>Phone:</label> <span>{{ order.receiverPhone }}</span></div>
-            <div class="info-item"><label>Address:</label> <span>{{ order.receiverAddress }}</span></div>
-            <div class="info-item" *ngIf="order.note"><label>Note:</label> <span>{{ order.note }}</span></div>
-          </div>
-        </section>
-
-        <section class="detail-section">
-          <h3>Order Items ({{ order.items.length }})</h3>
-          <div class="item-list">
-            <div class="order-item" *ngFor="let item of order.items">
-              <img [src]="item.product?.image" class="item-img">
-              <div class="item-info">
-                <div class="item-name">{{ item.product?.name }}</div>
-                <div class="item-meta">Qty: {{ item.quantity }} × {{ formatPrice(item.price) }}</div>
-              </div>
-              <div class="item-total">{{ formatPrice(item.price * item.quantity) }}</div>
-            </div>
-          </div>
-          <div class="order-summary">
-            <div class="summary-row"><span>Subtotal:</span> <span>{{ formatPrice(order.totalPrice || 0) }}</span></div>
-            <div class="summary-row"><span>Shipping:</span> <span class="free">Free</span></div>
-            <div class="summary-row total"><span>Total:</span> <span>{{ formatPrice(order.totalPrice || 0) }}</span></div>
-          </div>
-        </section>
-      </div>
-
-      <div class="detail-footer">
-        <!-- CREATED → Confirm → CONFIRMED -->
-        <button class="btn-action btn-confirm" *ngIf="order.status === 'CREATED'" (click)="confirmOrder(order.id)">
-          Confirm Order
-        </button>
-
-        <!-- CONFIRMED → Prepare → PREPARING -->
-        <button class="btn-action btn-prepare" *ngIf="order.status === 'CONFIRMED'" (click)="prepareOrder(order.id)">
-          Start Preparing
-        </button>
-
-        <!-- PREPARING → Ready → READY_FOR_SHIPPING -->
-        <button class="btn-action btn-handover" *ngIf="order.status === 'PREPARING'" (click)="readyForShipping(order.id)">
-          Mark Ready for Shipping
-        </button>
-        
-        <p class="action-hint" *ngIf="order.status === 'READY_FOR_SHIPPING'">Waiting for shipper to pick up.</p>
-        <p class="action-hint" *ngIf="order.status === 'SHIPPING'">This order has been picked up by a shipper.</p>
-        <p class="action-hint" *ngIf="order.status === 'DELIVERED'">This order is completed.</p>
-      </div>
+    <div class="flex items-center space-x-2">
+      <label class="text-sm font-medium text-gray-600">Trạng thái:</label>
+      <select 
+        class="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 shadow-sm outline-none"
+        [ngModel]="selectedStatus()" 
+        (ngModelChange)="selectedStatus.set($event)">
+        <option value="ALL">Tất cả</option>
+        <option value="CREATED">CREATED</option>
+        <option value="PENDING">PENDING</option>
+        <option value="CONFIRMED">CONFIRMED</option>
+        <option value="PREPARING">PREPARING</option>
+        <option value="READY_FOR_SHIPPING">READY_FOR_SHIPPING</option>
+      </select>
     </div>
   </div>
+
+  <app-order-table
+    [orders]="filteredOrders()"
+    [role]="'ROLE_STAFF'"
+    [shippers]="shippers()"
+    [loadingAction]="loadingAction()"
+    (action)="handleAction($event)">
+  </app-order-table>
 </div>

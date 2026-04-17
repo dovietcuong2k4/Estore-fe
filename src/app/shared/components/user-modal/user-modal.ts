@@ -22,10 +22,10 @@ export class UserModalComponent implements OnChanges {
   errorMessage: string | null = null;
 
   readonly roleOptions: { value: RoleName; label: string }[] = [
-    { value: 'ADMIN', label: 'Admin' },
-    { value: 'STAFF', label: 'Staff' },
-    { value: 'SHIPPER', label: 'Shipper' },
-    { value: 'CUSTOMER', label: 'User' }
+    { value: 'ROLE_ADMIN', label: 'Admin' },
+    { value: 'ROLE_STAFF', label: 'Staff' },
+    { value: 'ROLE_SHIPPER', label: 'Shipper' },
+    { value: 'ROLE_CUSTOMER', label: 'User' }
   ];
 
   constructor(
@@ -51,13 +51,13 @@ export class UserModalComponent implements OnChanges {
       password: ['', [Validators.minLength(6)]],
       phone: [''],
       address: [''],
-      roles: [['CUSTOMER'], [Validators.required, Validators.minLength(1)]]
+      roles: [['ROLE_CUSTOMER'], [Validators.required, Validators.minLength(1)]]
     });
   }
 
   private resetForm(): void {
     this.userForm.reset({
-      roles: ['CUSTOMER']
+      roles: ['ROLE_CUSTOMER']
     });
     this.errorMessage = null;
     this.isSubmitting = false;

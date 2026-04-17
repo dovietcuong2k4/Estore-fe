@@ -1,12 +1,21 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import {
-  Order, OrderStatus, CreateOrderRequest,
-  OrderResponse, mapOrderResponseToOrder
+  CreateOrderRequest,
+  Order,
+  OrderResponse,
+  mapOrderResponseToOrder
 } from '../models/order.model';
 import { BaseResultDTO } from '../models/user.model';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 import { firstValueFrom } from 'rxjs';
+import { User, UserResponse, mapUserResponseToUser } from '../models/user.model';
+
+export interface AdminOrderFilters {
+  status?: string;
+  shipperId?: number | null;
+  date?: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
@@ -14,53 +23,21 @@ export class OrderService {
   private auth = inject(AuthService);
 
   private readonly ordersSignal = signal<Order[]>([]);
+  private readonly shippersSignal = signal<User[]>([]);
 
   readonly orders = computed(() => this.ordersSignal());
+  readonly shippers = computed(() => this.shippersSignal());
+  readonly myOrders = computed(() => this.ordersSignal());
+  readonly allOrders = computed(() => this.ordersSignal());
+  readonly shipperOrders = computed(() => this.ordersSignal());
 
-  /** Orders for the logged-in user (backend GET /api/orders scopes by token). */
-  readonly myOrders = computed(() => {
-    return this.ordersSignal()
-      .slice()
-      .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
-  });
-
-  readonly allOrders = computed(() => {
-    return this.ordersSignal()
-      .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
-  });
-
-  readonly shipperOrders = computed(() => {
-    const shipperId = this.auth.user()?.id;
-    if (!shipperId) return [];
-    return this.ordersSignal()
-      .filter(o => o.shipperId === shipperId)
-      .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
-  });
-
-  // --- API calls ---
-
-  /** Load orders from BE (GET /api/orders) */
-  async loadOrders(): Promise<void> {
-    try {
-      const res = await firstValueFrom(
-        this.api.get<BaseResultDTO<OrderResponse[]>>('/orders')
-      );
-      if (res.success && res.data) {
-        this.ordersSignal.set(res.data.map(mapOrderResponseToOrder));
-      }
-    } catch (err) {
-      console.error('Failed to load orders:', err);
-    }
-  }
-
-  /** Customer: create order (POST /api/orders) */
   async createOrder(request: CreateOrderRequest): Promise<{ success: boolean; message: string }> {
     try {
       const res = await firstValueFrom(
         this.api.post<BaseResultDTO<void>>('/orders', request)
       );
       if (res.success) {
-        await this.loadOrders();
+        await this.loadMyOrders();
       }
       return { success: res.success, message: res.message };
     } catch (err: any) {
@@ -72,59 +49,79 @@ export class OrderService {
     return this.ordersSignal().find(o => o.id === id);
   }
 
-  // --- Staff APIs ---
+  async loadMyOrders(): Promise<void> {
+    await this.loadOrdersFrom('/orders');
+  }
 
-  /** Staff: confirm order → CONFIRMED */
+  async loadStaffOrders(): Promise<void> {
+    await this.loadOrdersFrom('/staff/orders');
+  }
+
+  async loadShipperOrders(): Promise<void> {
+    await this.loadOrdersFrom('/shipper/orders');
+  }
+
+  async loadAdminOrders(filters: AdminOrderFilters = {}): Promise<void> {
+    const params: Record<string, string | number> = {};
+    if (filters.status) params['status'] = filters.status;
+    if (filters.shipperId) params['shipperId'] = filters.shipperId;
+    if (filters.date) params['date'] = filters.date;
+    await this.loadOrdersFrom('/admin/orders', params);
+  }
+
+  async loadStaffShippers(): Promise<void> {
+    try {
+      const res = await firstValueFrom(
+        this.api.get<BaseResultDTO<UserResponse[]>>('/staff/shippers')
+      );
+      this.shippersSignal.set((res.data ?? []).map(mapUserResponseToUser));
+    } catch (err) {
+      console.error('Failed to load shippers', err);
+      this.shippersSignal.set([]);
+    }
+  }
+
   async confirmOrder(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/staff/orders/confirm/${orderId}`);
+    return this.updateOrderViaApi(`/staff/orders/${orderId}/confirm`);
   }
 
-  /** Staff: prepare order → PREPARING */
   async prepareOrder(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/staff/orders/prepare/${orderId}`);
+    return this.updateOrderViaApi(`/staff/orders/${orderId}/prepare`);
   }
 
-  /** Staff: ready for shipping → READY_FOR_SHIPPING */
   async readyForShipping(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/staff/orders/ready/${orderId}`);
+    return this.updateOrderViaApi(`/staff/orders/${orderId}/ready`);
   }
 
-  // --- Shipper APIs ---
-
-  /** Shipper: start shipping → SHIPPING */
-  async startShipping(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/shipper/orders/shipping/${orderId}`);
+  async assignShipper(orderId: number, shipperId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/staff/orders/${orderId}/assign-shipper`, { shipperId });
   }
 
-  /** Shipper: mark delivered → DELIVERED */
-  async markAsDelivered(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/shipper/orders/delivered/${orderId}`);
-  }
-
-  /** Shipper: mark failed → DELIVERY_FAILED */
-  async markAsFailed(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/shipper/orders/delivery-failed/${orderId}`);
-  }
-
-  // --- Admin APIs ---
-
-  /** Admin: confirm order → CONFIRMED */
-  async adminConfirmOrder(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/admin/orders/confirm/${orderId}`);
-  }
-
-  /** Admin: cancel order → CANCELLED */
   async cancelOrder(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/admin/orders/cancel/${orderId}`);
+    if (this.auth.user()?.roles.some(role => role.name === 'ROLE_STAFF')) {
+      return this.updateOrderViaApi(`/staff/orders/${orderId}/cancel`);
+    }
+    return { success: false, message: 'Bạn không có quyền hủy đơn hàng này' };
   }
 
-  // --- Stats (computed from local data) ---
+  async startShipping(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/shipper/orders/${orderId}/start`);
+  }
+
+  async markAsDelivered(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/shipper/orders/${orderId}/deliver`);
+  }
+
+  async markAsFailed(orderId: number): Promise<{ success: boolean; message: string }> {
+    return this.updateOrderViaApi(`/shipper/orders/${orderId}/fail`);
+  }
 
   getOrderStats() {
     const orders = this.ordersSignal();
     return {
       total: orders.length,
       created: orders.filter(o => o.status === 'CREATED').length,
+      pending: orders.filter(o => o.status === 'PENDING').length,
       confirmed: orders.filter(o => o.status === 'CONFIRMED').length,
       preparing: orders.filter(o => o.status === 'PREPARING').length,
       readyForShipping: orders.filter(o => o.status === 'READY_FOR_SHIPPING').length,
@@ -138,16 +135,23 @@ export class OrderService {
     };
   }
 
-  // --- Shared helper ---
-
-  private async updateOrderViaApi(path: string): Promise<{ success: boolean; message: string }> {
+  private async loadOrdersFrom(path: string, params?: Record<string, string | number>): Promise<void> {
     try {
       const res = await firstValueFrom(
-        this.api.put<BaseResultDTO<void>>(path)
+        this.api.get<BaseResultDTO<OrderResponse[]>>(path, params)
       );
-      if (res.success) {
-        await this.loadOrders();
-      }
+      this.ordersSignal.set((res.data ?? []).map(mapOrderResponseToOrder));
+    } catch (err) {
+      console.error(`Failed to load orders from ${path}`, err);
+      this.ordersSignal.set([]);
+    }
+  }
+
+  private async updateOrderViaApi(path: string, body: unknown = {}): Promise<{ success: boolean; message: string }> {
+    try {
+      const res = await firstValueFrom(
+        this.api.put<BaseResultDTO<void>>(path, body)
+      );
       return { success: res.success, message: res.message };
     } catch (err: any) {
       return { success: false, message: err?.error?.message || 'Cập nhật đơn hàng thất bại' };

@@ -81,25 +81,25 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
-  &--admin {
+  &--role_admin {
     background: rgba(248, 113, 113, 0.1);
     color: #f87171;
     border: 1px solid rgba(248, 113, 113, 0.2);
   }
 
-  &--staff {
+  &--role_staff {
     background: rgba(129, 140, 248, 0.1);
     color: #818cf8;
     border: 1px solid rgba(129, 140, 248, 0.2);
   }
 
-  &--shipper {
+  &--role_shipper {
     background: rgba(52, 211, 153, 0.1);
     color: #34d199;
     border: 1px solid rgba(52, 211, 153, 0.2);
   }
 
-  &--customer {
+  &--role_customer {
     background: rgba(255, 255, 255, 0.05);
     color: rgba(255, 255, 255, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.1);

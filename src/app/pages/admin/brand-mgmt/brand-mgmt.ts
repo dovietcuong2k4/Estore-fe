@@ -2,40 +2,46 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductApiService } from '../../../core/services/product-api.service';
+import { BrandModalComponent } from '../../../shared/components/brand-modal/brand-modal.component';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-brand-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './brand-mgmt.html',
-  styleUrls: ['../dashboard/dashboard.scss', '../category-mgmt/category-mgmt.scss']
+  imports: [CommonModule, FormsModule, BrandModalComponent],
+  templateUrl: './brand-mgmt.html'
 })
 export class BrandMgmtComponent {
   brands: any[] = [];
   isModalOpen = false;
-  selectedBrand: any = {};
-  isEditing = false;
+  isSaving = false;
+  selectedBrand: any = null;
 
-  constructor(private productApi: ProductApiService, private cdr: ChangeDetectorRef) {
+  constructor(
+    private productApi: ProductApiService,
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService
+  ) {
     this.load();
   }
 
   load() {
-    this.productApi.getBrands().subscribe(data => {
-      this.brands = data;
-      this.cdr.detectChanges();
+    this.productApi.getBrands().subscribe({
+      next: (data) => {
+        this.brands = data;
+        this.cdr.detectChanges();
+      },
+      error: () => this.toastService.error('Lỗi khi tải danh sách hãng sản xuất')
     });
   }
 
   openAdd() {
-    this.selectedBrand = { name: '', imageUrl: '' };
-    this.isEditing = false;
+    this.selectedBrand = null;
     this.isModalOpen = true;
   }
 
   openEdit(brand: any) {
     this.selectedBrand = { ...brand };
-    this.isEditing = true;
     this.isModalOpen = true;
   }
 
@@ -43,20 +49,35 @@ export class BrandMgmtComponent {
     this.isModalOpen = false;
   }
 
-  save() {
-    if (!this.selectedBrand.name?.trim()) {
-      alert('Vui lòng nhập tên hãng');
-      return;
-    }
-    const call = this.isEditing
-      ? this.productApi.updateBrand(this.selectedBrand.id, this.selectedBrand)
-      : this.productApi.createBrand(this.selectedBrand);
-    call.subscribe(() => { this.closeModal(); this.load(); });
+  save(brandData: any) {
+    this.isSaving = true;
+    const call = brandData.id
+      ? this.productApi.updateBrand(brandData.id, brandData)
+      : this.productApi.createBrand(brandData);
+      
+    call.subscribe({
+      next: () => {
+        this.toastService.success(brandData.id ? 'Cập nhật hãng thành công' : 'Thêm hãng thành công');
+        this.closeModal();
+        this.load();
+        this.isSaving = false;
+      },
+      error: () => {
+        this.toastService.error('Có lỗi xảy ra khi lưu hãng sản xuất');
+        this.isSaving = false;
+      }
+    });
   }
 
   delete(id: number) {
-    if (confirm('Xóa hãng sản xuất này?')) {
-      this.productApi.deleteBrand(id).subscribe(() => this.load());
+    if (confirm('Bạn có chắc chắn muốn xóa hãng sản xuất này?')) {
+      this.productApi.deleteBrand(id).subscribe({
+        next: () => {
+          this.toastService.success('Đã xóa thành công');
+          this.load();
+        },
+        error: () => this.toastService.error('Không thể xóa hãng này')
+      });
     }
   }
 }

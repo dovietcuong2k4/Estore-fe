@@ -1,4 +1,4 @@
-export type RoleName = 'ADMIN' | 'CUSTOMER' | 'SHIPPER' | 'STAFF';
+export type RoleName = 'ROLE_ADMIN' | 'ROLE_CUSTOMER' | 'ROLE_SHIPPER' | 'ROLE_STAFF';
 
 export interface Role {
   id: number;
@@ -70,9 +70,11 @@ export function mapUserResponseToUser(res: UserResponse): User {
     email: res.email,
     phone: res.phone ?? '',
     address: res.address ?? '',
-    roles: (res.roles ?? []).map((name, index) => ({
-      id: index + 1,
-      name: name as RoleName
-    }))
+    roles: (res.roles ?? []).map((name, index) => {
+      return {
+        id: index + 1,
+        name: name as RoleName
+      };
+    })
   };
 }

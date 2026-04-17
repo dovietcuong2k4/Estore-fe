@@ -491,10 +491,10 @@ export class MockDataService {
   ];
 
   readonly mockUsers: User[] = [
-    { id: 1, fullName: 'Admin User', email: 'admin@estore.com', phone: '0901234567', address: 'Hà Nội', roles: [{ id: 1, name: 'ADMIN' }] },
-    { id: 2, fullName: 'Nguyễn Văn Nhân Viên', email: 'staff@estore.com', phone: '0902345678', address: 'TP.HCM', roles: [{ id: 2, name: 'STAFF' }] },
-    { id: 3, fullName: 'Trần Thị Khách', email: 'customer@estore.com', phone: '0903456789', address: '123 Nguyễn Huệ, Q.1, TP.HCM', roles: [{ id: 3, name: 'CUSTOMER' }] },
-    { id: 4, fullName: 'Lê Văn Ship', email: 'shipper@estore.com', phone: '0904567890', address: 'Đà Nẵng', roles: [{ id: 4, name: 'SHIPPER' }] },
+    { id: 1, fullName: 'Admin User', email: 'admin@estore.com', phone: '0901234567', address: 'Hà Nội', roles: [{ id: 1, name: 'ROLE_ADMIN' }] },
+    { id: 2, fullName: 'Nguyễn Văn Nhân Viên', email: 'staff@estore.com', phone: '0902345678', address: 'TP.HCM', roles: [{ id: 2, name: 'ROLE_STAFF' }] },
+    { id: 3, fullName: 'Trần Thị Khách', email: 'customer@estore.com', phone: '0903456789', address: '123 Nguyễn Huệ, Q.1, TP.HCM', roles: [{ id: 3, name: 'ROLE_CUSTOMER' }] },
+    { id: 4, fullName: 'Lê Văn Ship', email: 'shipper@estore.com', phone: '0904567890', address: 'Đà Nẵng', roles: [{ id: 4, name: 'ROLE_SHIPPER' }] },
   ];
 
   getProductById(id: number): Product | undefined {

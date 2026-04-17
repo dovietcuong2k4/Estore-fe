@@ -79,7 +79,7 @@ export class ProductDetailComponent implements OnInit {
 
   addToCart() {
     if (this.product) {
-      this.cartService.addToCart(this.product.id, this.quantity());
+      this.cartService.addToCart(this.product.id, this.quantity(), this.product);
     }
   }
 

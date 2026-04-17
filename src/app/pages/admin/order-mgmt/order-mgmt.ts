@@ -1,38 +1,51 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from '../../../core/services/order.service';
+import { FormsModule } from '@angular/forms';
+import { OrderStatus } from '../../../core/models/order.model';
+import { OrderTableComponent } from '../../../shared/components/order-table/order-table';
+import { UserApiService } from '../../../core/services/user-api.service';
+import { firstValueFrom } from 'rxjs';
+import { User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-order-mgmt',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, OrderTableComponent],
   templateUrl: './order-mgmt.html',
-  styleUrl: '../dashboard/dashboard.scss'
+  styleUrl: './order-mgmt.scss'
 })
 export class OrderMgmtComponent implements OnInit {
   private orderService = inject(OrderService);
+  private userApiService = inject(UserApiService);
 
-  orders = computed(() => this.orderService.allOrders());
+  readonly orders = computed(() => this.orderService.allOrders());
+  readonly selectedStatus = signal<OrderStatus | 'ALL'>('ALL');
+  readonly selectedShipperId = signal<number | 'ALL'>('ALL');
+  readonly selectedDate = signal('');
+  readonly shippers = signal<User[]>([]);
 
-  ngOnInit() {
-    this.orderService.loadOrders();
+  async ngOnInit() {
+    await Promise.all([
+      this.reload(),
+      this.loadShippers()
+    ]);
   }
 
-  formatPrice(price: number): string {
-    return new Intl.NumberFormat('vi-VN').format(price) + '₫';
+  async reload(): Promise<void> {
+    await this.orderService.loadAdminOrders({
+      status: this.selectedStatus() === 'ALL' ? undefined : this.selectedStatus(),
+      shipperId: this.selectedShipperId() === 'ALL' ? null : Number(this.selectedShipperId()),
+      date: this.selectedDate() || undefined
+    });
   }
 
-  getStatusClass(status: string): string {
-    return `status--${status.toLowerCase()}`;
-  }
-
-  async confirmOrder(orderId: number) {
-    await this.orderService.adminConfirmOrder(orderId);
-  }
-
-  async cancelOrder(orderId: number) {
-    if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
-      await this.orderService.cancelOrder(orderId);
+  private async loadShippers(): Promise<void> {
+    try {
+      const users = await firstValueFrom(this.userApiService.getUsers());
+      this.shippers.set(users.filter(user => user.roles.some(role => role.name === 'ROLE_SHIPPER')));
+    } catch {
+      this.shippers.set([]);
     }
   }
 }

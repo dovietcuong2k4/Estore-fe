@@ -1,134 +1,83 @@
-<div class="shipper-orders">
-  <div class="order-list-section">
-    <header class="page-header">
-      <h1 class="page-title">Quản lý Đơn giao</h1>
-      <div class="status-filters">
-        <button [class.active]="selectedStatus() === 'ALL'" (click)="selectedStatus.set('ALL')">Tất cả</button>
-        <button [class.active]="selectedStatus() === 'READY_FOR_SHIPPING'" (click)="selectedStatus.set('READY_FOR_SHIPPING')">Chờ nhận</button>
-        <button [class.active]="selectedStatus() === 'SHIPPING'" (click)="selectedStatus.set('SHIPPING')">Đang giao</button>
-        <button [class.active]="selectedStatus() === 'DELIVERED'" (click)="selectedStatus.set('DELIVERED')">Thành công</button>
-        <button [class.active]="selectedStatus() === 'DELIVERY_FAILED'" (click)="selectedStatus.set('DELIVERY_FAILED')">Thất bại</button>
-      </div>
-    </header>
-
-    <div class="order-grid" *ngIf="filteredOrders().length > 0; else noOrders">
-      <div class="order-card" *ngFor="let order of filteredOrders()" [class.selected]="selectedOrder()?.id === order.id" (click)="selectOrder(order)">
-        <div class="order-card__header">
-          <span class="order-id">#{{ order.id }}</span>
-          <span class="order-date">{{ order.orderDate | date:'shortTime' }} {{ order.orderDate | date:'shortDate' }}</span>
-        </div>
-        <div class="order-card__body">
-          <div class="customer-info">
-            <strong>{{ order.receiverName }}</strong>
-            <span class="text-sm text-slate-400">📍 {{ order.receiverAddress | slice:0:30 }}...</span>
-          </div>
-          <div class="order-total">{{ formatPrice(order.totalPrice || 0) }}</div>
-        </div>
-        <div class="order-card__footer">
-          <span class="status-badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
-        </div>
-      </div>
-    </div>
-    <ng-template #noOrders>
-      <div class="empty-state">
-        <div class="empty-icon">📂</div>
-        <p>Không có đơn hàng nào.</p>
-      </div>
-    </ng-template>
+<div class="p-4 md:p-6 pb-20">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Quản lý giao hàng</h1>
+    <p class="text-gray-500 mt-1 text-sm md:text-base">Theo dõi các đơn đã được phân công và cập nhật kết quả giao.</p>
   </div>
 
-  <div class="order-detail-section" [class.open]="selectedOrder()">
-    <div class="detail-placeholder" *ngIf="!selectedOrder()">
-      <div class="placeholder-icon">🚚</div>
-      <h3>Chọn đơn hàng để xem chi tiết</h3>
-      <p>Thực hiện giao hàng và cập nhật trạng thái.</p>
-    </div>
+  <div class="mb-6 flex overflow-x-auto pb-2 scrollbar-hide space-x-2">
+    <button 
+      class="px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors"
+      [ngClass]="selectedStatus() === 'ALL' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+      (click)="selectedStatus.set('ALL')">
+      Tất cả
+    </button>
+    <button 
+      class="px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors"
+      [ngClass]="selectedStatus() === 'READY_FOR_SHIPPING' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+      (click)="selectedStatus.set('READY_FOR_SHIPPING')">
+      Chờ lấy hàng
+    </button>
+    <button 
+      class="px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors"
+      [ngClass]="selectedStatus() === 'SHIPPING' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+      (click)="selectedStatus.set('SHIPPING')">
+      Đang giao
+    </button>
+    <button 
+      class="px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors"
+      [ngClass]="selectedStatus() === 'DELIVERED' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+      (click)="selectedStatus.set('DELIVERED')">
+      Đã giao
+    </button>
+  </div>
 
-    <div class="detail-content" *ngIf="selectedOrder() as order">
-      <div class="detail-header">
-        <div class="header-main">
-          <h2>Đơn hàng #{{ order.id }}</h2>
-          <span class="status-badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" *ngIf="filteredOrders().length > 0; else emptyState">
+    @for (order of filteredOrders(); track order.id) {
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+        <div class="p-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+          <span class="font-bold text-gray-800">#{{ order.id }}</span>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
+                [ngClass]="{
+                  'bg-indigo-100 text-indigo-800': order.status === 'READY_FOR_SHIPPING',
+                  'bg-purple-100 text-purple-800': order.status === 'SHIPPING',
+                  'bg-green-100 text-green-800': order.status === 'DELIVERED',
+                  'bg-red-100 text-red-800': order.status === 'FAILED' || order.status === 'DELIVERY_FAILED'
+                }">
+            {{ order.status }}
+          </span>
         </div>
-        <button class="btn-close" (click)="selectedOrder.set(null)">×</button>
-      </div>
-
-      <div class="detail-body">
-        <section class="detail-section">
-          <h3>Thông tin giao hàng</h3>
-          <div class="delivery-info">
-            <div class="info-group">
-              <span class="icon">👤</span>
-              <div class="content">
-                <label>Người nhận</label>
-                <strong>{{ order.receiverName }}</strong>
-              </div>
-            </div>
-            <div class="info-group">
-              <span class="icon">📞</span>
-              <div class="content">
-                <label>Số điện thoại</label>
-                <strong>{{ order.receiverPhone }}</strong>
-              </div>
-            </div>
-            <div class="info-group">
-              <span class="icon">📍</span>
-              <div class="content">
-                <label>Địa chỉ</label>
-                <strong>{{ order.receiverAddress }}</strong>
-              </div>
-            </div>
-            <div class="info-group" *ngIf="order.note">
-              <span class="icon">📝</span>
-              <div class="content">
-                <label>Ghi chú</label>
-                <strong class="text-orange-400">{{ order.note }}</strong>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="detail-section">
-          <h3>Sản phẩm ({{ order.items.length }})</h3>
-          <div class="item-list">
-            <div class="order-item" *ngFor="let item of order.items">
-              <img [src]="item.product?.image" class="item-img">
-              <div class="item-info">
-                <div class="item-name">{{ item.product?.name }}</div>
-                <div class="item-meta">SL: {{ item.quantity }} × {{ formatPrice(item.price) }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="order-summary">
-            <div class="summary-row total">
-              <span>Tổng thu:</span> 
-              <span>{{ formatPrice(order.totalPrice || 0) }}</span>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <div class="detail-footer">
-        <!-- READY_FOR_SHIPPING → Start Shipping -->
-        <button class="btn-action btn-start-shipping" *ngIf="order.status === 'READY_FOR_SHIPPING'" (click)="startShipping(order.id)" style="width:100%;padding:1rem;border:none;border-radius:14px;font-weight:700;font-size:0.95rem;cursor:pointer;background:#3b82f6;color:#fff;margin-bottom:0.5rem;">
-          🚚 Nhận đơn & Bắt đầu giao
-        </button>
-
-        <!-- SHIPPING → Delivered / Failed -->
-        <ng-container *ngIf="order.status === 'SHIPPING'">
-          <div class="action-grid">
-            <button class="btn-action btn-delivered" (click)="markAsDelivered(order.id)">
-              <span class="icon">✅</span> Giao thành công
-            </button>
-            <button class="btn-action btn-failed" (click)="markAsFailed(order.id)">
-              <span class="icon">❌</span> Giao thất bại
-            </button>
-          </div>
-        </ng-container>
         
-        <p class="action-hint" *ngIf="order.status === 'DELIVERED'">Đơn hàng này đã được giao thành công.</p>
-        <p class="action-hint text-red-400" *ngIf="order.status === 'DELIVERY_FAILED'">Đơn hàng này giao thất bại.</p>
+        <div class="p-4 flex-grow space-y-3">
+          <div class="flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+            <div>
+              <p class="font-medium text-gray-800">{{ order.receiverName }}</p>
+              <p class="text-sm text-gray-600">{{ order.receiverPhone }}</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400 mr-2 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            <p class="text-sm text-gray-700 leading-snug">{{ order.receiverAddress || 'Không có địa chỉ' }}</p>
+          </div>
+        </div>
+
+        <div class="p-4 bg-gray-50 border-t border-gray-100">
+          <app-order-actions
+            [order]="order"
+            [role]="'ROLE_SHIPPER'"
+            [loadingAction]="loadingAction()"
+            (action)="handleAction($event)">
+          </app-order-actions>
+        </div>
       </div>
-    </div>
+    }
   </div>
 </div>
+
+<ng-template #emptyState>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center mt-4">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+    <p class="text-gray-500 text-lg font-medium">Không có đơn hàng nào cần giao.</p>
+  </div>
+</ng-template>

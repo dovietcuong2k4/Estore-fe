@@ -20,7 +20,7 @@ export class OrdersComponent implements OnInit {
 
   ngOnInit() {
     if (this.isLoggedIn()) {
-      this.orderService.loadOrders();
+      this.orderService.loadMyOrders();
     }
   }
 
@@ -31,6 +31,7 @@ export class OrdersComponent implements OnInit {
   getStatusText(status: string): string {
     switch(status) {
       case 'CREATED': return 'Mới đặt';
+      case 'PENDING': return 'Chờ xử lý';
       case 'CONFIRMED': return 'Đã xác nhận';
       case 'PREPARING': return 'Đang chuẩn bị';
       case 'READY_FOR_SHIPPING': return 'Sẵn sàng giao';
