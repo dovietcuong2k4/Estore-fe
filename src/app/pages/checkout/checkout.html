@@ -5,9 +5,14 @@
         <span class="success-box__icon">✅</span>
         <h2 class="success-box__title">Đặt hàng thành công!</h2>
         <p class="success-box__desc">Đơn hàng của bạn đã được ghi nhận.</p>
+        
+        <div class="success-box__info" style="margin: 1.5rem 0; padding: 1rem; background: #f8fafc; border-radius: 8px; text-align: left;">
+          <p style="margin-bottom: 0.5rem">Mã đơn hàng: <strong>#{{ successBoxData()?.id }}</strong></p>
+        </div>
+
         <p class="success-box__desc">Chúng tôi sẽ liên hệ xác nhận đơn hàng sớm nhất.</p>
         <div class="success-box__actions">
-          <a routerLink="/orders" class="success-box__btn success-box__btn--primary">📦 Xem đơn hàng</a>
+          <a routerLink="/orders" class="success-box__btn success-box__btn--primary">📦 Theo dõi đơn hàng</a>
           <a routerLink="/products" class="success-box__btn">🛍️ Tiếp tục mua sắm</a>
         </div>
       </div>

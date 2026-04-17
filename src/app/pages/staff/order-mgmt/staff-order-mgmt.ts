@@ -43,11 +43,8 @@ export class StaffOrderMgmtComponent implements OnInit {
       let result = { success: false, message: 'Thao tác không hợp lệ' };
 
       switch (event.type) {
-        case 'confirm':
-          result = await this.orderService.confirmOrder(event.orderId);
-          break;
-        case 'prepare':
-          result = await this.orderService.prepareOrder(event.orderId);
+        case 'process':
+          result = await this.orderService.processOrder(event.orderId);
           break;
         case 'ready':
           result = await this.orderService.readyForShipping(event.orderId);
@@ -58,13 +55,16 @@ export class StaffOrderMgmtComponent implements OnInit {
         case 'cancel':
           result = await this.orderService.cancelOrder(event.orderId);
           break;
+        case 'retry':
+          result = await this.orderService.retryShipping(event.orderId);
+          break;
       }
 
       if (result.success) {
-        this.toastService.success(result.message);
+        this.toastService.success(result.message || 'Cập nhật trạng thái đơn hàng thành công');
         await this.orderService.loadStaffOrders();
       } else {
-        this.toastService.error(result.message);
+        this.toastService.error(result.message || 'Cập nhật trạng thái đơn hàng thất bại');
       }
     } finally {
       this.loadingAction.set(null);

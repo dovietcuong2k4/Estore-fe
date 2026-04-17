@@ -32,6 +32,7 @@ export class CheckoutComponent {
 
   error = signal('');
   success = signal(false);
+  successBoxData = signal<{id: number} | null>(null);
   loading = signal(false);
 
   constructor() {
@@ -48,10 +49,11 @@ export class CheckoutComponent {
   }
 
   async placeOrder() {
-    if (!this.auth.isLoggedIn()) {
+    if (!this.user()) {
       this.router.navigate(['/login']);
       return;
     }
+
     if (!this.form.receiverName || !this.form.receiverPhone || !this.form.receiverAddress) {
       this.error.set('Vui lòng điền đầy đủ thông tin giao hàng');
       return;
@@ -65,7 +67,11 @@ export class CheckoutComponent {
       receiverName: this.form.receiverName,
       receiverPhone: this.form.receiverPhone,
       receiverAddress: this.form.receiverAddress,
-      note: this.form.note
+      note: this.form.note,
+      items: this.items().map((item: any) => ({
+        productId: item.productId,
+        quantity: item.quantity
+      }))
     };
 
     this.loading.set(true);
@@ -77,7 +83,8 @@ export class CheckoutComponent {
 
     if (result.success) {
       this.success.set(true);
-      // NOTE: BE doesn't return created order ID immediately in BaseResultDTO<void>.
+      this.successBoxData.set({ id: result.orderId! });
+      await this.cart.clearCart();
     } else {
       this.error.set(result.message || 'Đặt hàng thất bại. Vui lòng thử lại.');
     }

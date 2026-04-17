@@ -5,11 +5,11 @@ import { Order, OrderStatus } from '../../../core/models/order.model';
 import { User } from '../../../core/models/user.model';
 
 export type OrderActionType =
-  | 'confirm'
-  | 'prepare'
+  | 'process'
   | 'ready'
   | 'assign-shipper'
   | 'cancel'
+  | 'retry'
   | 'start'
   | 'deliver'
   | 'fail';
@@ -41,19 +41,29 @@ export class OrderActionsComponent {
     const order = this.order();
     const role = this.role();
 
-    if (role === 'ROLE_STAFF') {
-      return [
-        this.button('confirm', 'Xác nhận', order.status === 'PENDING'),
-        this.button('prepare', 'Chuẩn bị', order.status === 'CONFIRMED'),
-        this.button('ready', 'Sẵn sàng giao', order.status === 'PREPARING'),
-        this.button('assign-shipper', 'Phân công shipper', order.status === 'READY_FOR_SHIPPING'),
-        this.button('cancel', 'Hủy đơn', ['CREATED', 'PENDING', 'CONFIRMED'].includes(order.status))
-      ];
+    if (role === 'ROLE_ADMIN' || role === 'ROLE_STAFF') {
+      const hasShipper = !!order.shipperId;
+      const canEdit = !hasShipper || order.status === 'DELIVERY_FAILED';
+
+      const buttons = [];
+      if (canEdit && order.status === 'CREATED') buttons.push(this.button('process', 'Xử lý đơn', true));
+      if (canEdit && order.status === 'PROCESSING') buttons.push(this.button('ready', 'Sẵn sàng giao', true));
+      if (canEdit && ['CREATED', 'PROCESSING'].includes(order.status)) buttons.push(this.button('cancel', 'Hủy đơn', true));
+      
+      if (!hasShipper && order.status === 'READY_FOR_SHIPPING') {
+        buttons.push(this.button('assign-shipper', 'Phân công shipper', true));
+      }
+      
+      if (order.status === 'DELIVERY_FAILED') {
+        buttons.push(this.button('assign-shipper', 'Giao lại', true));
+      }
+
+      return buttons;
     }
 
     if (role === 'ROLE_SHIPPER') {
       return [
-        this.button('start', 'Nhận đơn', order.status === 'READY_FOR_SHIPPING'),
+        this.button('start', 'Nhận giao', order.status === 'READY_FOR_SHIPPING'),
         this.button('deliver', 'Giao thành công', order.status === 'SHIPPING'),
         this.button('fail', 'Giao thất bại', order.status === 'SHIPPING')
       ];
@@ -63,7 +73,11 @@ export class OrderActionsComponent {
   });
 
   protected openModal(type: OrderActionType): void {
-    this.selectedShipperId.set(this.order().shipperId ?? this.shippers()[0]?.id ?? null);
+    if (type === 'assign-shipper' && this.order().status === 'DELIVERY_FAILED') {
+      this.selectedShipperId.set(null);
+    } else {
+      this.selectedShipperId.set(this.order().shipperId ?? this.shippers()[0]?.id ?? null);
+    }
     this.modalAction.set(type);
   }
 
@@ -94,11 +108,11 @@ export class OrderActionsComponent {
 
   protected modalTitle(type: OrderActionType | null): string {
     switch (type) {
-      case 'confirm': return 'Xác nhận đơn hàng';
-      case 'prepare': return 'Chuyển sang chuẩn bị';
+      case 'process': return 'Chuyển sang xử lý';
       case 'ready': return 'Đánh dấu sẵn sàng giao';
       case 'assign-shipper': return 'Phân công shipper';
       case 'cancel': return 'Hủy đơn hàng';
+      case 'retry': return 'Đưa về sẵn sàng giao';
       case 'start': return 'Nhận đơn giao';
       case 'deliver': return 'Xác nhận giao thành công';
       case 'fail': return 'Xác nhận giao thất bại';
@@ -108,11 +122,11 @@ export class OrderActionsComponent {
 
   protected modalMessage(type: OrderActionType | null): string {
     switch (type) {
-      case 'confirm': return 'Đơn hàng sẽ được chuyển sang trạng thái CONFIRMED.';
-      case 'prepare': return 'Đơn hàng sẽ được chuyển sang trạng thái PREPARING.';
+      case 'process': return 'Đơn hàng sẽ được chuyển sang trạng thái PROCESSING.';
       case 'ready': return 'Đơn hàng sẽ được chuyển sang trạng thái READY_FOR_SHIPPING.';
       case 'assign-shipper': return 'Chọn shipper để phân công đơn hàng này.';
       case 'cancel': return 'Chỉ nên hủy đơn khi đơn chưa đi vào quá trình giao hàng.';
+      case 'retry': return 'Đơn hàng sẽ được chuyển về trạng thái READY_FOR_SHIPPING để giao lại.';
       case 'start': return 'Thao tác này sẽ bắt đầu quá trình giao hàng.';
       case 'deliver': return 'Xác nhận người nhận đã nhận được hàng.';
       case 'fail': return 'Đánh dấu đơn giao không thành công.';

@@ -25,4 +25,17 @@ export class OrderTableComponent {
   protected forwardAction(event: OrderActionEvent): void {
     this.action.emit(event);
   }
+
+  protected getStatusLabel(status: string): string {
+    switch (status) {
+      case 'CREATED': return 'Mới tạo';
+      case 'PROCESSING': return 'Đang xử lý';
+      case 'READY_FOR_SHIPPING': return 'Chờ giao hàng';
+      case 'SHIPPING': return 'Đang giao';
+      case 'DELIVERED': return 'Đã giao';
+      case 'DELIVERY_FAILED': return 'Giao thất bại';
+      case 'CANCELLED': return 'Đã hủy';
+      default: return status;
+    }
+  }
 }

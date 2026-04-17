@@ -31,19 +31,25 @@ export class OrderService {
   readonly allOrders = computed(() => this.ordersSignal());
   readonly shipperOrders = computed(() => this.ordersSignal());
 
-  async createOrder(request: CreateOrderRequest): Promise<{ success: boolean; message: string }> {
+  async createOrder(request: CreateOrderRequest): Promise<{ success: boolean; message: string; orderId?: number; }> {
     try {
       const res = await firstValueFrom(
-        this.api.post<BaseResultDTO<void>>('/orders', request)
+        this.api.post<BaseResultDTO<any>>('/orders', request)
       );
       if (res.success) {
         await this.loadMyOrders();
+        return { 
+          success: res.success, 
+          message: res.message,
+          orderId: res.data?.id
+        };
       }
-      return { success: res.success, message: res.message };
+      return { success: false, message: res.message };
     } catch (err: any) {
       return { success: false, message: err?.error?.message || 'Tạo đơn hàng thất bại' };
     }
   }
+
 
   getOrderById(id: number): Order | undefined {
     return this.ordersSignal().find(o => o.id === id);
@@ -81,27 +87,47 @@ export class OrderService {
     }
   }
 
-  async confirmOrder(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/staff/orders/${orderId}/confirm`);
-  }
-
-  async prepareOrder(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/staff/orders/${orderId}/prepare`);
+  async processOrder(orderId: number): Promise<{ success: boolean; message: string }> {
+    const basePath = this.isAdmin() ? '/admin' : '/staff';
+    return this.updateOrderViaApi(`${basePath}/orders/${orderId}/process`);
   }
 
   async readyForShipping(orderId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/staff/orders/${orderId}/ready`);
+    const basePath = this.isAdmin() ? '/admin' : '/staff';
+    return this.updateOrderViaApi(`${basePath}/orders/${orderId}/ready`);
   }
 
   async assignShipper(orderId: number, shipperId: number): Promise<{ success: boolean; message: string }> {
-    return this.updateOrderViaApi(`/staff/orders/${orderId}/assign-shipper`, { shipperId });
+    const basePath = this.isAdmin() ? '/admin' : '/staff';
+    return this.updateOrderViaApi(`${basePath}/orders/${orderId}/assign-shipper`, { shipperId });
   }
 
   async cancelOrder(orderId: number): Promise<{ success: boolean; message: string }> {
-    if (this.auth.user()?.roles.some(role => role.name === 'ROLE_STAFF')) {
-      return this.updateOrderViaApi(`/staff/orders/${orderId}/cancel`);
+    const user = this.auth.user();
+    if (!user) return { success: false, message: 'Bạn chưa đăng nhập' };
+
+    const isAdmin = this.isAdmin();
+    const isStaff = user.roles.some(role => role.name === 'ROLE_STAFF');
+    const isCustomer = user.roles.some(role => role.name === 'ROLE_CUSTOMER');
+
+    if (isAdmin || isStaff) {
+      const basePath = isAdmin ? '/admin' : '/staff';
+      return this.updateOrderViaApi(`${basePath}/orders/${orderId}/cancel`);
+    } else if (isCustomer) {
+      const res = await this.updateOrderViaApi(`/orders/${orderId}/cancel`);
+      if (res.success) {
+        await this.loadMyOrders();
+      }
+      return res;
     }
+    
     return { success: false, message: 'Bạn không có quyền hủy đơn hàng này' };
+  }
+
+  async retryShipping(orderId: number): Promise<{ success: boolean; message: string }> {
+    const basePath = this.isAdmin() ? '/admin' : '/staff';
+    const endpoint = this.isAdmin() ? `${basePath}/orders/${orderId}/retry` : `${basePath}/orders/${orderId}/ready`;
+    return this.updateOrderViaApi(endpoint);
   }
 
   async startShipping(orderId: number): Promise<{ success: boolean; message: string }> {
@@ -121,9 +147,7 @@ export class OrderService {
     return {
       total: orders.length,
       created: orders.filter(o => o.status === 'CREATED').length,
-      pending: orders.filter(o => o.status === 'PENDING').length,
-      confirmed: orders.filter(o => o.status === 'CONFIRMED').length,
-      preparing: orders.filter(o => o.status === 'PREPARING').length,
+      processing: orders.filter(o => o.status === 'PROCESSING').length,
       readyForShipping: orders.filter(o => o.status === 'READY_FOR_SHIPPING').length,
       shipping: orders.filter(o => o.status === 'SHIPPING').length,
       delivered: orders.filter(o => o.status === 'DELIVERED').length,
@@ -156,5 +180,9 @@ export class OrderService {
     } catch (err: any) {
       return { success: false, message: err?.error?.message || 'Cập nhật đơn hàng thất bại' };
     }
+  }
+
+  private isAdmin(): boolean {
+    return this.auth.user()?.roles.some(role => role.name === 'ROLE_ADMIN') ?? false;
   }
 }

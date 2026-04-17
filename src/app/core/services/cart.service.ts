@@ -59,7 +59,11 @@ export class CartService {
     // Watch for user changes to reload the correct cart
     effect(() => {
       const user = this.auth.user();
-      this.loadCart();
+      if (user) {
+        this.mergeLocalCartToUser().then(() => this.loadCart());
+      } else {
+        this.loadCart();
+      }
     });
   }
 
@@ -104,6 +108,32 @@ export class CartService {
     } catch (err) {
       console.error('Failed to load cart from API, using localStorage fallback:', err);
       this.cartItems.set(this.loadFromStorage());
+    }
+  }
+
+  /** Merge guest cart (from localStorage) to user cart after login */
+  async mergeLocalCartToUser(): Promise<void> {
+    const guestKey = `${this.STORAGE_KEY_PREFIX}_-1`;
+    try {
+      const data = localStorage.getItem(guestKey);
+      if (data) {
+        const guestItems: CartItem[] = JSON.parse(data);
+        for (const item of guestItems) {
+          try {
+            await firstValueFrom(
+              this.api.post<BaseResultDTO<void>>('/cart/add', { 
+                productId: item.productId, 
+                quantity: item.quantity 
+              })
+            );
+          } catch (e) {
+            console.error('Failed to merge item to API cart', e);
+          }
+        }
+        localStorage.removeItem(guestKey);
+      }
+    } catch (err) {
+      console.error('Error merging local cart', err);
     }
   }
 

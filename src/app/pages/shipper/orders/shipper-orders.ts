@@ -50,10 +50,10 @@ export class ShipperOrdersComponent implements OnInit {
       }
 
       if (result.success) {
-        this.toastService.success(result.message);
+        this.toastService.success(result.message || 'Cập nhật trạng thái đơn hàng thành công');
         await this.orderService.loadShipperOrders();
       } else {
-        this.toastService.error(result.message);
+        this.toastService.error(result.message || 'Cập nhật trạng thái đơn hàng thất bại');
       }
     } finally {
       this.loadingAction.set(null);

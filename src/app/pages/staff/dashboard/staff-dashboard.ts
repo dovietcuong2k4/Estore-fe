@@ -29,7 +29,7 @@ export class StaffDashboardComponent implements OnInit {
 
   readonly pendingOrders = computed(() => {
     return this.orderService.allOrders()
-      .filter((o: Order) => o.status === 'CREATED' || o.status === 'CONFIRMED' || o.status === 'PREPARING')
+      .filter((o: Order) => o.status === 'CREATED' || o.status === 'PROCESSING')
       .slice(0, 5);
   });
 

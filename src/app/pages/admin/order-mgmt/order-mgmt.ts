@@ -7,6 +7,8 @@ import { OrderTableComponent } from '../../../shared/components/order-table/orde
 import { UserApiService } from '../../../core/services/user-api.service';
 import { firstValueFrom } from 'rxjs';
 import { User } from '../../../core/models/user.model';
+import { OrderActionEvent } from '../../../shared/components/order-actions/order-actions';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-order-mgmt',
@@ -18,12 +20,14 @@ import { User } from '../../../core/models/user.model';
 export class OrderMgmtComponent implements OnInit {
   private orderService = inject(OrderService);
   private userApiService = inject(UserApiService);
+  private toastService = inject(ToastService);
 
   readonly orders = computed(() => this.orderService.allOrders());
   readonly selectedStatus = signal<OrderStatus | 'ALL'>('ALL');
   readonly selectedShipperId = signal<number | 'ALL'>('ALL');
   readonly selectedDate = signal('');
   readonly shippers = signal<User[]>([]);
+  readonly loadingAction = signal<string | null>(null);
 
   async ngOnInit() {
     await Promise.all([
@@ -46,6 +50,40 @@ export class OrderMgmtComponent implements OnInit {
       this.shippers.set(users.filter(user => user.roles.some(role => role.name === 'ROLE_SHIPPER')));
     } catch {
       this.shippers.set([]);
+    }
+  }
+
+  async handleAction(event: OrderActionEvent): Promise<void> {
+    this.loadingAction.set(`${event.type}-${event.orderId}`);
+    try {
+      let result = { success: false, message: 'Thao tác không hợp lệ' };
+
+      switch (event.type) {
+        case 'process':
+          result = await this.orderService.processOrder(event.orderId);
+          break;
+        case 'ready':
+          result = await this.orderService.readyForShipping(event.orderId);
+          break;
+        case 'cancel':
+          result = await this.orderService.cancelOrder(event.orderId);
+          break;
+        case 'retry':
+          result = await this.orderService.retryShipping(event.orderId);
+          break;
+        case 'assign-shipper':
+          result = await this.orderService.assignShipper(event.orderId, event.shipperId!);
+          break;
+      }
+
+      if (result.success) {
+        this.toastService.success(result.message || 'Cập nhật trạng thái đơn hàng thành công');
+        await this.reload();
+      } else {
+        this.toastService.error(result.message || 'Cập nhật trạng thái đơn hàng thất bại');
+      }
+    } finally {
+      this.loadingAction.set(null);
     }
   }
 }

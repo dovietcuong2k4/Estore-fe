@@ -1,15 +1,7 @@
 <div class="orders-page">
   <div class="orders-page__container">
     <h1 class="orders-page__title">📦 Đơn hàng của tôi</h1>
-
-    @if (!isLoggedIn()) {
-      <div class="empty-state">
-        <span class="empty-state__icon">🔒</span>
-        <h2 class="empty-state__title">Vui lòng đăng nhập</h2>
-        <p class="empty-state__desc">Theo dõi và quản lý các đơn hàng của bạn</p>
-        <a routerLink="/login" class="empty-state__btn">Đăng nhập ngay</a>
-      </div>
-    } @else if (myOrders().length === 0) {
+    @if (myOrders().length === 0) {
       <div class="empty-state">
         <span class="empty-state__icon">📦</span>
         <h2 class="empty-state__title">Chưa có đơn hàng nào</h2>
@@ -48,8 +40,13 @@
                 <strong>Giao đến:</strong> {{ order.receiverName }} - {{ order.receiverPhone }}<br/>
                 {{ order.receiverAddress }}
               </div>
-              <div class="order-card__total">
-                Tổng tiền: <span>{{ formatPrice(order.totalPrice || 0) }}</span>
+              <div class="order-card__actions">
+                @if (order.status === 'CREATED') {
+                  <button (click)="cancelOrder(order.id)" class="order-card__btn order-card__btn--cancel">Hủy đơn</button>
+                }
+                <div class="order-card__total">
+                  Tổng tiền: <span>{{ formatPrice(order.totalPrice || 0) }}</span>
+                </div>
               </div>
             </div>
           </div>

@@ -9,9 +9,7 @@
       <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event); reload()">
         <option value="ALL">Tất cả trạng thái</option>
         <option value="CREATED">CREATED</option>
-        <option value="PENDING">PENDING</option>
-        <option value="CONFIRMED">CONFIRMED</option>
-        <option value="PREPARING">PREPARING</option>
+        <option value="PROCESSING">PROCESSING</option>
         <option value="READY_FOR_SHIPPING">READY_FOR_SHIPPING</option>
         <option value="SHIPPING">SHIPPING</option>
         <option value="DELIVERED">DELIVERED</option>
@@ -32,6 +30,8 @@
 
   <app-order-table
     [orders]="orders()"
-    [role]="'ROLE_ADMIN'">
+    [role]="'ROLE_ADMIN'"
+    [loadingAction]="loadingAction()"
+    (action)="handleAction($event)">
   </app-order-table>
 </div>

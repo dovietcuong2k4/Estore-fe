@@ -2,7 +2,7 @@
   <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
     <div>
       <h1 class="text-2xl font-bold text-gray-800">Quản lý đơn hàng</h1>
-      <p class="text-gray-500 mt-1">Xử lý xác nhận, chuẩn bị, sẵn sàng giao và phân công shipper.</p>
+      <p class="text-gray-500 mt-1">Xử lý đơn, sẵn sàng giao, hủy đơn và phân công shipper.</p>
     </div>
 
     <div class="flex items-center space-x-2">
@@ -13,10 +13,9 @@
         (ngModelChange)="selectedStatus.set($event)">
         <option value="ALL">Tất cả</option>
         <option value="CREATED">CREATED</option>
-        <option value="PENDING">PENDING</option>
-        <option value="CONFIRMED">CONFIRMED</option>
-        <option value="PREPARING">PREPARING</option>
+        <option value="PROCESSING">PROCESSING</option>
         <option value="READY_FOR_SHIPPING">READY_FOR_SHIPPING</option>
+        <option value="DELIVERY_FAILED">DELIVERY_FAILED</option>
       </select>
     </div>
   </div>

@@ -4,15 +4,12 @@ import { User } from './user.model';
 /** Synced with BE order status flow */
 export type OrderStatus =
   | 'CREATED'
-  | 'PENDING'
-  | 'CONFIRMED'
-  | 'PREPARING'
+  | 'PROCESSING'
   | 'READY_FOR_SHIPPING'
   | 'SHIPPING'
   | 'DELIVERED'
   | 'DELIVERY_FAILED'
-  | 'CANCELLED'
-  | 'FAILED';
+  | 'CANCELLED';
 
 export interface OrderItem {
   id: number;
@@ -42,11 +39,17 @@ export interface Order {
   shipper?: User;
 }
 
+export interface CartItemRequest {
+  productId: number;
+  quantity: number;
+}
+
 export interface CreateOrderRequest {
   receiverName: string;
   receiverPhone: string;
   receiverAddress: string;
   note?: string;
+  items?: CartItemRequest[];
 }
 
 // --- BE Response Types ---
