@@ -82,7 +82,7 @@ export class OrderService {
       );
       this.shippersSignal.set((res.data ?? []).map(mapUserResponseToUser));
     } catch (err) {
-      console.error('Failed to load shippers', err);
+      console.error('Không thể tải danh sách nhân viên giao hàng', err);
       this.shippersSignal.set([]);
     }
   }
@@ -166,7 +166,7 @@ export class OrderService {
       );
       this.ordersSignal.set((res.data ?? []).map(mapOrderResponseToOrder));
     } catch (err) {
-      console.error(`Failed to load orders from ${path}`, err);
+      console.error(`Không thể tải danh sách đơn hàng từ ${path}`, err);
       this.ordersSignal.set([]);
     }
   }

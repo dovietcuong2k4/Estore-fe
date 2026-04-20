@@ -44,3 +44,39 @@ export interface ProductImage {
   publicId?: string;
   file?: File; // For local storage before upload
 }
+
+export interface ReviewResponse {
+  id: number;
+  productId: number;
+  userId: number;
+  userFullName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface ReviewSummaryResponse {
+  averageRating: number;
+  totalReviews: number;
+  reviews: PageResponse<ReviewResponse>;
+  currentUserReview: ReviewResponse | null;
+}
+
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+}
+
+export interface ReviewRequest {
+  rating: number;
+  comment: string;
+}
+
+export interface ReviewEligibilityResponse {
+  canReview: boolean;
+  reason?: string;
+}

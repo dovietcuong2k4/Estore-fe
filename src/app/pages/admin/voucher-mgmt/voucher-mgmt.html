@@ -1,0 +1,63 @@
+<section class="admin-page voucher-page">
+  <header class="admin-page__header">
+    <div>
+      <h1 class="admin-page__title">Quản lý voucher</h1>
+      <p class="admin-page__subtitle">Quản lý mẫu voucher và gán voucher cho người dùng trong một quy trình thống nhất.</p>
+    </div>
+
+    <div class="header-actions">
+      @if (canEditVouchers()) {
+        <app-base-button variant="primary" (clicked)="openAdd()">+ Tạo voucher</app-base-button>
+      } @else {
+        <app-base-button variant="primary" [disabled]="true">+ Tạo voucher</app-base-button>
+      }
+    </div>
+  </header>
+
+  <app-filter-bar title="Bộ lọc" subtitle="Tìm theo mã voucher và lọc theo trạng thái.">
+    <div filter-fields>
+      <app-base-input
+        label="Tìm kiếm"
+        placeholder="Tìm mã voucher"
+        [value]="searchTerm()"
+        (valueChange)="searchTerm.set($event)">
+      </app-base-input>
+    </div>
+    <div filter-actions>
+      <app-base-tabs
+        [tabs]="statusTabs"
+        [activeValue]="statusFilter()"
+        (activeValueChange)="onStatusFilterChanged($event)">
+      </app-base-tabs>
+    </div>
+  </app-filter-bar>
+
+  <app-base-table title="Danh sách voucher" subtitle="Hiển thị {{ filteredCount() }} voucher.">
+    <app-voucher-table
+      [vouchers]="filteredVouchers()"
+      [canEdit]="canEditVouchers()"
+      [showDelete]="canEditVouchers()"
+      (edit)="openEdit($event)"
+      (delete)="onDelete($event)"
+      (assign)="openAssign($event)">
+    </app-voucher-table>
+  </app-base-table>
+</section>
+
+<app-voucher-modal
+  [isOpen]="isModalOpen"
+  [isSaving]="isSaving"
+  [mode]="modalMode"
+  [voucher]="editingVoucher"
+  (save)="onSave($event)"
+  (cancel)="closeVoucherModal()">
+</app-voucher-modal>
+
+<app-assign-voucher-modal
+  [isOpen]="isAssignModalOpen"
+  [voucher]="selectedVoucherForAssign"
+  [users]="users()"
+  [isSubmitting]="isAssigningUsers"
+  (cancel)="closeAssignModal()"
+  (confirm)="onAssignToUsers($event)">
+</app-assign-voucher-modal>

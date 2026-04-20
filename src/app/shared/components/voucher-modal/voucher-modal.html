@@ -1,0 +1,87 @@
+<app-base-modal
+  [open]="isOpen"
+  [title]="title"
+  subtitle="Điền thông tin voucher và lưu thay đổi."
+  eyebrow="Voucher"
+  [size]="'md'"
+  (close)="onCancel()">
+  <form modal-body class="voucher-modal-form" (ngSubmit)="onSubmit()">
+    @if (validationError) {
+      <p class="error-alert">{{ validationError }}</p>
+    }
+
+    <div class="form-grid form-grid--single">
+      <app-base-input
+        label="Mã voucher"
+        placeholder="WELCOME20"
+        [required]="true"
+        [disabled]="isSaving"
+        [value]="localData.code"
+        (valueChange)="setCode($event)">
+      </app-base-input>
+    </div>
+
+    <div class="form-grid">
+      <app-base-select
+        label="Loại giảm giá"
+        [value]="localData.discountType"
+        [disabled]="isSaving"
+        [options]="discountTypeOptions"
+        (valueChange)="setDiscountType($event)">
+      </app-base-select>
+
+      <app-base-input
+        label="Giá trị"
+        type="number"
+        placeholder="0"
+        [required]="true"
+        [disabled]="isSaving"
+        [value]="'' + localData.discountValue"
+        (valueChange)="setDiscountValue($event)">
+      </app-base-input>
+    </div>
+
+    <div class="form-grid form-grid--single">
+      <app-base-input
+        label="Số lượng"
+        type="number"
+        placeholder="0"
+        [required]="true"
+        [disabled]="isSaving"
+        [value]="'' + localData.quantity"
+        (valueChange)="setQuantity($event)">
+      </app-base-input>
+    </div>
+
+    <div class="form-grid">
+      <label class="native-field" for="voucher-start-date">
+        <span class="native-field__label">Ngày bắt đầu</span>
+        <input
+          id="voucher-start-date"
+          name="startDate"
+          type="datetime-local"
+          [disabled]="isSaving"
+          [ngModel]="localData.startDate"
+          (ngModelChange)="setStartDate($event)" />
+      </label>
+
+      <label class="native-field" for="voucher-end-date">
+        <span class="native-field__label">Ngày kết thúc</span>
+        <input
+          id="voucher-end-date"
+          name="endDate"
+          type="datetime-local"
+          [disabled]="isSaving"
+          [ngModel]="localData.endDate"
+          (ngModelChange)="setEndDate($event)" />
+      </label>
+    </div>
+  </form>
+
+  <div modal-footer>
+    <app-base-button variant="ghost" [disabled]="isSaving" (clicked)="onCancel()">Hủy</app-base-button>
+    <app-base-button variant="primary" [disabled]="isSaving" (clicked)="onSubmit()">
+      {{ isSaving ? 'Đang lưu...' : submitLabel }}
+    </app-base-button>
+  </div>
+</app-base-modal>

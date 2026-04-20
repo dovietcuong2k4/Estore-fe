@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ProductCardComponent } from '../../shared/components/product-card/product-card';
+import { CommonModule } from '@angular/common';
 import { MockDataService } from '../../core/services/mock-data.service';
 import { Product, Category } from '../../core/models/product.model';
 import { ProductApiService } from '../../core/services/product-api.service';
+import { CartService } from '../../core/services/cart.service';
+import { ProductCardComponent } from '../../shared/components/product-card/product-card';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent],
+  imports: [RouterLink, CommonModule, ProductCardComponent],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
@@ -20,10 +22,20 @@ export class HomeComponent {
 
   constructor(
     private mockData: MockDataService,
-    private productApi: ProductApiService
+    private productApi: ProductApiService,
+    private cartService: CartService,
+    private cdr: ChangeDetectorRef
   ) {
     this.categories = mockData.categories;
     this.loadProducts();
+  }
+
+  addToCart(product: Product, event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.cartService.addToCart(product.id, 1, product);
   }
 
   private loadProducts() {
@@ -49,6 +61,7 @@ export class HomeComponent {
           return dB - dA;
         })
         .slice(0, 8);
+        this.cdr.detectChanges();
     });
   }
 }

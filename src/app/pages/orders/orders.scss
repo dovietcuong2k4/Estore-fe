@@ -71,3 +71,60 @@
   &__qty { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
   &__price { color: rgba(255,255,255,0.8); font-weight: 600; font-size: 0.95rem; }
 }
+
+.orders-page {
+  &__title,
+  .empty-state__title,
+  .order-card__id {
+    font-family: 'Inter', sans-serif;
+    color: #dee5ff;
+  }
+
+  .empty-state,
+  .order-card {
+    background: rgba(20, 31, 56, 0.72);
+    box-shadow: inset 0 0 0 1px rgba(64, 72, 93, 0.28);
+  }
+
+  .empty-state__desc,
+  .order-card__date,
+  .order-card__shipping,
+  .order-item__qty,
+  .order-item__price {
+    color: #a3aac4;
+  }
+
+  .empty-state__btn {
+    background: linear-gradient(135deg, #8ff5ff, #00eefc);
+    color: #003f43;
+    border-radius: 999px;
+  }
+
+  .order-card__header,
+  .order-card__footer {
+    background: rgba(6, 14, 32, 0.24);
+    border: none;
+  }
+
+  .order-item {
+    border-bottom: 1px solid rgba(64, 72, 93, 0.2);
+  }
+
+  .order-card__btn--cancel {
+    background: rgba(215, 56, 59, 0.12);
+    color: #ffb0b3;
+  }
+
+  .order-card__total span,
+  .order-item__name:hover {
+    color: #8ff5ff;
+  }
+
+  .order-status.status--created,
+  .order-status.status--pending,
+  .order-status.status--shipping,
+  .order-status.status--delivered,
+  .order-status.status--cancelled {
+    box-shadow: inset 0 0 0 1px rgba(64, 72, 93, 0.2);
+  }
+}

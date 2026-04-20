@@ -106,7 +106,7 @@ export class CartService {
         this.saveToStorage();
       }
     } catch (err) {
-      console.error('Failed to load cart from API, using localStorage fallback:', err);
+      console.error('Không thể tải giỏ hàng từ API, chuyển sang dùng localStorage:', err);
       this.cartItems.set(this.loadFromStorage());
     }
   }
@@ -127,13 +127,13 @@ export class CartService {
               })
             );
           } catch (e) {
-            console.error('Failed to merge item to API cart', e);
+            console.error('Không thể gộp sản phẩm vào giỏ hàng API', e);
           }
         }
         localStorage.removeItem(guestKey);
       }
     } catch (err) {
-      console.error('Error merging local cart', err);
+      console.error('Lỗi khi gộp giỏ hàng local', err);
     }
   }
 
@@ -147,7 +147,7 @@ export class CartService {
         await this.loadCart();
         return;
       } catch (err) {
-        console.error('API add to cart failed, falling back to localStorage:', err);
+        console.error('Thêm vào giỏ qua API thất bại, chuyển sang localStorage:', err);
       }
     }
 
@@ -192,7 +192,7 @@ export class CartService {
         await this.loadCart();
         return;
       } catch (err) {
-        console.error('API update cart failed:', err);
+        console.error('Cập nhật giỏ hàng qua API thất bại:', err);
       }
     }
 
@@ -216,7 +216,7 @@ export class CartService {
         await this.loadCart();
         return;
       } catch (err) {
-        console.error('API delete cart item failed:', err);
+        console.error('Xóa sản phẩm khỏi giỏ qua API thất bại:', err);
       }
     }
 
@@ -236,7 +236,7 @@ export class CartService {
         this.saveToStorage();
         this.toastService.info('Đã xóa toàn bộ giỏ hàng');
       } catch (err) {
-        console.error('API clear cart failed:', err);
+        console.error('Xóa toàn bộ giỏ hàng qua API thất bại:', err);
         this.toastService.error('Xóa giỏ hàng thất bại');
       }
 

@@ -3,7 +3,7 @@
     <div class="admin-sidebar__header">
       <a routerLink="/admin" class="admin-logo">
         <span class="admin-logo__icon">⚡</span>
-        <span class="admin-logo__text">E-Store Admin</span>
+        <span class="admin-logo__text">E-Store Quản trị</span>
       </a>
     </div>
 
@@ -11,7 +11,7 @@
       <div class="admin-nav__group">
         <span class="admin-nav__label">Tổng quan</span>
         <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav__link">
-          <span class="icon">📊</span> Dashboard
+          <span class="icon">📊</span> Bảng điều khiển
         </a>
       </div>
 
@@ -28,6 +28,9 @@
         </a>
         <a routerLink="/admin/brands" routerLinkActive="active" class="admin-nav__link">
           <span class="icon">🏷️</span> Hãng sản xuất
+        </a>
+        <a routerLink="/admin/vouchers" routerLinkActive="active" class="admin-nav__link">
+          <span class="icon">🎟️</span> Voucher
         </a>
       </div>
 
@@ -56,13 +59,14 @@
   <main class="admin-main">
     <div class="admin-header">
       <div class="admin-header__search">
-        <input type="text" placeholder="Tìm kiếm trong admin..." />
+        <input type="text" placeholder="Tìm kiếm trong quản trị..." />
       </div>
       <div class="admin-header__actions">
         <button class="action-btn">🔔</button>
         <button class="action-btn">⚙️</button>
       </div>
     </div>
+
     <div class="admin-content">
       <router-outlet></router-outlet>
     </div>

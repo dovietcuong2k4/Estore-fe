@@ -1,27 +1,46 @@
-<div class="dashboard">
-  <div class="dashboard__header">
-    <h1 class="dashboard__title">Danh sách Danh mục</h1>
-    <p class="dashboard__subtitle">Xem danh sách các danh mục sản phẩm trong hệ thống (Quyền Read-only)</p>
-  </div>
+<section class="admin-page">
+  <header class="admin-page__header">
+    <div>
+      <h1 class="admin-page__title">Quản lý danh mục</h1>
+      <p class="admin-page__subtitle">Chế độ xem danh mục sản phẩm với cùng chuẩn hiển thị như khu vực quản trị.</p>
+    </div>
+  </header>
 
-  <div class="content-panel">
+  <app-filter-bar title="Bộ lọc" subtitle="Tìm theo tên danh mục hoặc mô tả.">
+    <div filter-fields>
+      <app-base-input
+        label="Tìm kiếm danh mục"
+        placeholder="Nhập từ khóa"
+        [value]="searchTerm"
+        (valueChange)="searchTerm = $event">
+      </app-base-input>
+    </div>
+  </app-filter-bar>
+
+  <app-base-table title="Danh sách danh mục" subtitle="{{ filteredCategories.length }} danh mục hiển thị.">
     <div class="table-responsive">
-      <table class="table">
+      <table class="admin-table">
         <thead>
           <tr>
-            <th>#</th>
+            <th>ID</th>
             <th>Tên danh mục</th>
+            <th>Mô tả</th>
           </tr>
         </thead>
         <tbody>
-          @for (cat of categories; track cat.id) {
+          @for (category of filteredCategories; track category.id) {
             <tr>
-              <td>{{ cat.id }}</td>
-              <td>{{ cat.name }}</td>
+              <td><span class="category-id">#{{ category.id }}</span></td>
+              <td><span class="category-name">{{ category.name }}</span></td>
+              <td><span class="category-desc">{{ category.description || 'Không có mô tả' }}</span></td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="empty-cell">Không có danh mục phù hợp.</td>
             </tr>
           }
         </tbody>
       </table>
     </div>
-  </div>
-</div>
+  </app-base-table>
+</section>

@@ -4,16 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { CategoryModalComponent } from '../../../shared/components/category-modal/category-modal.component';
 import { ToastService } from '../../../core/services/toast.service';
+import { BaseTableComponent } from '../../../shared/components/ui/base-table/base-table';
+import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
+import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
+import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
 
 @Component({
   selector: 'app-category-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule, CategoryModalComponent],
+  imports: [CommonModule, FormsModule, CategoryModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent],
   templateUrl: './category-mgmt.html',
-  styleUrls: ['./category-mgmt.scss']
+  styleUrls: ['../dashboard/dashboard.scss', './category-mgmt.scss']
 })
 export class CategoryMgmtComponent {
   categories: any[] = [];
+  searchTerm = '';
   isModalOpen = false;
   isSaving = false;
   selectedCategory: any = null;
@@ -84,5 +89,18 @@ export class CategoryMgmtComponent {
         }
       });
     }
+  }
+
+  get filteredCategories(): any[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      return this.categories;
+    }
+
+    return this.categories.filter(category => {
+      const name = String(category.name || '').toLowerCase();
+      const description = String(category.description || '').toLowerCase();
+      return name.includes(term) || description.includes(term);
+    });
   }
 }

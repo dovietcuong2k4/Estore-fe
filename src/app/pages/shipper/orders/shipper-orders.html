@@ -1,89 +1,97 @@
-<div class="p-4 md:p-6 pb-20">
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Quản lý giao hàng</h1>
-    <p class="text-gray-500 mt-1 text-sm md:text-base">Theo dõi các đơn đã được phân công và cập nhật kết quả giao.</p>
-  </div>
+<section class="shipper-orders-page">
+  <app-base-card>
+    <div class="page-hero">
+      <div>
+        <p class="page-hero__kicker">Vận hành / Giao hàng</p>
+        <h1 class="page-hero__title">Danh sách đơn cần giao</h1>
+        <p class="page-hero__subtitle">Tập trung vào thông tin giao nhận quan trọng và xử lý trạng thái nhanh ngay trên từng đơn.</p>
+      </div>
+      <app-base-badge tone="info">{{ resultCount() }} đơn</app-base-badge>
+    </div>
+  </app-base-card>
 
-  <div class="mb-6 flex overflow-x-auto pb-2 scrollbar-hide space-x-2">
-    <button 
-      class="px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors"
-      [ngClass]="selectedStatus() === 'ALL' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-      (click)="selectedStatus.set('ALL')">
-      Tất cả
-    </button>
-    <button 
-      class="px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors"
-      [ngClass]="selectedStatus() === 'READY_FOR_SHIPPING' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-      (click)="selectedStatus.set('READY_FOR_SHIPPING')">
-      Chờ lấy hàng
-    </button>
-    <button 
-      class="px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors"
-      [ngClass]="selectedStatus() === 'SHIPPING' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-      (click)="selectedStatus.set('SHIPPING')">
-      Đang giao
-    </button>
-    <button 
-      class="px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors"
-      [ngClass]="selectedStatus() === 'DELIVERED' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-      (click)="selectedStatus.set('DELIVERED')">
-      Đã giao
-    </button>
-  </div>
+  <app-base-card title="Bộ lọc nhanh" subtitle="Lọc trạng thái và tìm theo tên, số điện thoại, địa chỉ hoặc mã đơn.">
+    <div class="filters-grid">
+      <app-base-input
+        label="Tìm đơn"
+        placeholder="VD: #1024, Nguyễn Văn A, 09..."
+        [value]="searchKeyword()"
+        (valueChange)="updateSearch($event)">
+      </app-base-input>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" *ngIf="filteredOrders().length > 0; else emptyState">
-    @for (order of filteredOrders(); track order.id) {
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-        <div class="p-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
-          <span class="font-bold text-gray-800">#{{ order.id }}</span>
-          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
-                [ngClass]="{
-                  'bg-indigo-100 text-indigo-800': order.status === 'READY_FOR_SHIPPING',
-                  'bg-blue-100 text-blue-800': order.status === 'SHIPPING',
-                  'bg-green-100 text-green-800': order.status === 'DELIVERED',
-                  'bg-red-100 text-red-800': order.status === 'DELIVERY_FAILED'
-                }">
-            {{
-              order.status === 'READY_FOR_SHIPPING' ? 'Chờ giao hàng'
-              : order.status === 'SHIPPING' ? 'Đang giao'
-              : order.status === 'DELIVERED' ? 'Đã giao'
-              : order.status === 'DELIVERY_FAILED' ? 'Giao thất bại'
-              : order.status
-            }}
-          </span>
-        </div>
-        
-        <div class="p-4 flex-grow space-y-3">
-          <div class="flex items-start">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+      <app-base-select
+        label="Trạng thái"
+        [options]="statusOptions"
+        [value]="selectedStatus()"
+        (valueChange)="setStatus($event)">
+      </app-base-select>
+
+      <app-base-button class="reset-button" variant="ghost" type="button" (clicked)="resetFilters()">Đặt lại bộ lọc</app-base-button>
+    </div>
+
+    <div class="status-tabs" role="tablist" aria-label="Lọc trạng thái đơn giao">
+      @for (option of statusOptions; track option.value) {
+        <button
+          type="button"
+          class="status-tab"
+          [class.status-tab--active]="selectedStatus() === option.value"
+          (click)="setStatus(option.value)">
+          <span>{{ option.label }}</span>
+          <span class="status-tab__count">{{ countByStatus(option.value) }}</span>
+        </button>
+      }
+    </div>
+  </app-base-card>
+
+  @if (filteredOrders().length > 0) {
+    <section class="orders-grid" aria-label="Đơn hàng đã phân công">
+      @for (order of filteredOrders(); track order.id) {
+        <app-base-card class="order-card" [compact]="true">
+          <div class="order-card__header">
             <div>
-              <p class="font-medium text-gray-800">{{ order.receiverName }}</p>
-              <p class="text-sm text-gray-600">{{ order.receiverPhone }}</p>
+              <p class="order-card__id">Đơn #{{ order.id }}</p>
+              <p class="order-card__time">Tạo lúc: {{ formatDate(order.orderDate) }}</p>
+            </div>
+            <app-base-badge [tone]="statusTone(order.status)">{{ statusLabel(order.status) }}</app-base-badge>
+          </div>
+
+          <div class="order-card__content">
+            <div class="order-meta">
+              <p class="order-meta__label">Khách hàng</p>
+              <p class="order-meta__value">{{ order.receiverName }}</p>
+              <p class="order-meta__sub">{{ order.receiverPhone }}</p>
+            </div>
+
+            <div class="order-meta order-meta--address">
+              <p class="order-meta__label">Địa chỉ giao hàng</p>
+              <p class="order-meta__value">{{ order.receiverAddress || 'Không có địa chỉ' }}</p>
             </div>
           </div>
-          
-          <div class="flex items-start">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400 mr-2 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            <p class="text-sm text-gray-700 leading-snug">{{ order.receiverAddress || 'Không có địa chỉ' }}</p>
-          </div>
-        </div>
 
-        <div class="p-4 bg-gray-50 border-t border-gray-100">
-          <app-order-actions
-            [order]="order"
-            [role]="'ROLE_SHIPPER'"
-            [loadingAction]="loadingAction()"
-            (action)="handleAction($event)">
-          </app-order-actions>
-        </div>
+          @if (shipperActions(order).length > 0) {
+            <div class="order-card__actions">
+              @for (action of shipperActions(order); track action.type) {
+                <app-base-button
+                  [variant]="action.variant"
+                  [fullWidth]="true"
+                  [disabled]="isOrderActionBusy(order.id)"
+                  (clicked)="triggerAction(order.id, action.type)">
+                  {{ isActionLoading(order.id, action.type) ? 'Đang xử lý...' : action.label }}
+                </app-base-button>
+              }
+            </div>
+          } @else {
+            <p class="order-card__note">Đơn này hiện không có thao tác khả dụng cho nhân viên giao hàng.</p>
+          }
+        </app-base-card>
+      }
+    </section>
+  } @else {
+    <app-base-card>
+      <div class="empty-state">
+        <p class="empty-state__title">Không có đơn phù hợp</p>
+        <p class="empty-state__text">Thử đổi trạng thái lọc hoặc xóa từ khóa tìm kiếm để xem thêm đơn giao.</p>
       </div>
-    }
-  </div>
-</div>
-
-<ng-template #emptyState>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center mt-4">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
-    <p class="text-gray-500 text-lg font-medium">Không có đơn hàng nào cần giao.</p>
-  </div>
-</ng-template>
+    </app-base-card>
+  }
+</section>

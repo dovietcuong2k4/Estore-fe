@@ -3,7 +3,7 @@
     <div class="shipper-sidebar__header">
       <a routerLink="/shipper" class="shipper-logo">
         <span class="shipper-logo__icon">🚚</span>
-        <span class="shipper-logo__text">E-Store Shipper</span>
+        <span class="shipper-logo__text">E-Store Giao hàng</span>
       </a>
     </div>
 
@@ -23,7 +23,7 @@
         </div>
         <div class="shipper-user__info">
           <div class="shipper-user__name">{{ auth.user()?.fullName }}</div>
-          <div class="shipper-user__role">Shipper</div>
+          <div class="shipper-user__role">Nhân viên giao hàng</div>
         </div>
       </div>
       <button (click)="auth.logout()" class="btn-store">🚪 Đăng xuất</button>

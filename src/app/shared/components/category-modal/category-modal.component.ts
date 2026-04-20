@@ -1,12 +1,14 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { BaseButtonComponent } from '../ui/base-button/base-button';
+import { BaseInputComponent } from '../ui/base-input/base-input';
 
 @Component({
   selector: 'app-category-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [BaseButtonComponent, BaseInputComponent],
   templateUrl: './category-modal.html'
+  , styleUrl: './category-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryModalComponent implements OnChanges {
   @Input() isOpen = false;
@@ -51,7 +53,19 @@ export class CategoryModalComponent implements OnChanges {
     this.cancel.emit();
   }
 
+  setName(value: string) {
+    this.localData.name = value;
+  }
+
+  setIconUrl(value: string) {
+    this.localData.iconUrl = value;
+  }
+
   onImageError() {
     this.localData.iconUrl = 'https://via.placeholder.com/150?text=Invalid+Image';
+  }
+
+  get modalTitle(): string {
+    return this.isEditing ? 'Cập nhật danh mục' : 'Thêm danh mục';
   }
 }

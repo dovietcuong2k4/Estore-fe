@@ -1,0 +1,48 @@
+<app-base-modal
+  [open]="isOpen"
+  title="Gán voucher cho người dùng"
+  subtitle="Chọn một hoặc nhiều người dùng để nhận voucher này."
+  eyebrow="Voucher"
+  [size]="'md'"
+  (close)="close()">
+  <div modal-body class="assign-modal-body">
+    <div class="voucher-highlight">
+      <span class="voucher-highlight__code">{{ voucher?.code || 'Không có' }}</span>
+      <span class="voucher-highlight__value">{{ formatVoucherValue(voucher) }}</span>
+    </div>
+
+    <app-base-input
+      label="Tìm người dùng"
+      placeholder="Tìm theo tên hoặc email"
+      [value]="searchTerm()"
+      [disabled]="isSubmitting"
+      (valueChange)="setSearchTerm($event)">
+    </app-base-input>
+
+    <div class="user-list" role="listbox" aria-label="Danh sách người dùng">
+      @for (user of filteredUsers(); track user.id) {
+        <button
+          type="button"
+          class="user-option"
+          [class.user-option--selected]="isUserSelected(user.id)"
+          [disabled]="isSubmitting"
+          (click)="toggleUser(user.id)">
+          <span class="user-option__meta">
+            <strong>{{ user.fullName }}</strong>
+            <small>{{ user.email }}</small>
+          </span>
+          <span class="user-option__check">{{ isUserSelected(user.id) ? 'Đã chọn' : 'Chọn' }}</span>
+        </button>
+      } @empty {
+        <p class="user-empty">Không tìm thấy người dùng.</p>
+      }
+    </div>
+  </div>
+
+  <div modal-footer>
+    <app-base-button variant="ghost" [disabled]="isSubmitting" (clicked)="close()">Hủy</app-base-button>
+    <app-base-button variant="primary" [disabled]="isSubmitting || selectedUserIds().length === 0" (clicked)="submit()">
+      {{ isSubmitting ? 'Đang gán...' : 'Xác nhận' }}
+    </app-base-button>
+  </div>
+</app-base-modal>

@@ -16,9 +16,9 @@ const connection = await mysql.createConnection({
 });
 
 for (const p of mockData.products) {
-  console.log(`🔍 Crawling: ${p.name}`);
+  console.log(`🔍 Đang tìm ảnh cho: ${p.name}`);
 
-  // 1. search ảnh
+  // 1. Tìm ảnh
   const res = await fetch(
     `https://api.unsplash.com/search/photos?query=${encodeURIComponent(p.name)}&per_page=3`,
     {
@@ -34,14 +34,14 @@ for (const p of mockData.products) {
 
   if (!data.results.length) continue;
 
-  // 🔥 lấy id thật từ DB
+  // Lấy id thật từ DB
     const [rows] = await connection.execute(
     'SELECT id FROM products WHERE name = ?',
     [p.name]
     );
 
     if (!rows.length) {
-    console.log(`❌ Không tìm thấy product: ${p.name}`);
+    console.log(`❌ Không tìm thấy sản phẩm: ${p.name}`);
     continue;
     }
 
@@ -54,12 +54,12 @@ for (const p of mockData.products) {
 
     if (!imageUrl) continue;
 
-    // upload cloudinary
+    // Tải ảnh lên Cloudinary
     const uploaded = await cloudinary.uploader.upload(imageUrl, {
         folder: 'products'
     });
 
-    // insert DB (🔥 dùng productId thay vì p.id)
+    // Ghi vào DB (dùng productId thay vì p.id)
     await connection.execute(
         `INSERT INTO product_images (product_id, image_url, public_id, is_thumbnail, sort_order)
         VALUES (?, ?, ?, ?, ?)`,
@@ -75,7 +75,7 @@ for (const p of mockData.products) {
     index++;
     }
 
-    console.log(`✅ Done: ${p.name}`);
+  console.log(`✅ Hoàn tất: ${p.name}`);
 }
 
 
@@ -87,7 +87,7 @@ for (const p of mockData.products) {
 // );
 
 // for (const p of products) {
-//   console.log(`🔍 Crawling: ${p.name}`);
+//   console.log(`🔍 Đang tìm ảnh cho: ${p.name}`);
 
 //   const res = await fetch(
 //     `https://api.unsplash.com/search/photos?query=${encodeURIComponent(p.name)}&per_page=3`,
@@ -114,11 +114,11 @@ for (const p of mockData.products) {
 //       });
 
 //       await connection.execute(
-//         `INSERT INTO product_images 
+//         `INSERT INTO product_images
 //         (product_id, image_url, public_id, is_thumbnail, sort_order)
 //         VALUES (?, ?, ?, ?, ?)`,
 //         [
-//           p.id, // 🔥 dùng trực tiếp từ DB
+//           p.id, // dùng trực tiếp từ DB
 //           uploaded.secure_url,
 //           uploaded.public_id,
 //           index === 0,
@@ -128,11 +128,11 @@ for (const p of mockData.products) {
 
 //       index++;
 //     } catch (err) {
-//       console.error('❌ Upload lỗi:', err.message);
+//       console.error('❌ Tải ảnh lên lỗi:', err.message);
 //     }
 //   }
 
-//   console.log(`✅ Done: ${p.name}`);
+//   console.log(`✅ Hoàn tất: ${p.name}`);
 // }
 
 await connection.end();

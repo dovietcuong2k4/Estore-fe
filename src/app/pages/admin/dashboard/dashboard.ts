@@ -5,11 +5,15 @@ import { MockDataService } from '../../../core/services/mock-data.service';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { ProductApiService } from '../../../core/services/product-api.service';
+import { BaseCardComponent } from '../../../shared/components/ui/base-card/base-card';
+import { BaseTableComponent } from '../../../shared/components/ui/base-table/base-table';
+import { BaseBadgeComponent } from '../../../shared/components/ui/base-badge/base-badge';
+import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, BaseCardComponent, BaseTableComponent, BaseBadgeComponent, BaseButtonComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
@@ -37,7 +41,21 @@ export class DashboardComponent {
     return new Intl.NumberFormat('vi-VN').format(price) + '₫';
   }
 
-  getStatusClass(status: string): string {
-    return `status--${status.toLowerCase()}`;
+  getStatusTone(status: string): 'success' | 'warning' | 'error' | 'info' | 'neutral' {
+    switch (status) {
+      case 'DELIVERED':
+        return 'success';
+      case 'PROCESSING':
+      case 'READY_FOR_SHIPPING':
+        return 'warning';
+      case 'CANCELLED':
+      case 'DELIVERY_FAILED':
+        return 'error';
+      case 'CREATED':
+      case 'SHIPPING':
+        return 'info';
+      default:
+        return 'neutral';
+    }
   }
 }

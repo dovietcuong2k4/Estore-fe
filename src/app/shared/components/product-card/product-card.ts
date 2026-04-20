@@ -12,6 +12,9 @@ import { CartService } from '../../../core/services/cart.service';
 })
 export class ProductCardComponent {
   @Input({ required: true }) product!: Product;
+  @Input() variant: 'default' | 'featured' | 'compact' = 'default';
+  @Input() size: 'sm' | 'md' | 'lg' | 'xl' = 'md';
+  @Input() highlight: boolean = false;
 
   constructor(private cartService: CartService) {}
 

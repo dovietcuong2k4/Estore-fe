@@ -4,15 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { BrandModalComponent } from '../../../shared/components/brand-modal/brand-modal.component';
 import { ToastService } from '../../../core/services/toast.service';
+import { BaseTableComponent } from '../../../shared/components/ui/base-table/base-table';
+import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
+import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
+import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
 
 @Component({
   selector: 'app-brand-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule, BrandModalComponent],
-  templateUrl: './brand-mgmt.html'
+  imports: [CommonModule, FormsModule, BrandModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent],
+  templateUrl: './brand-mgmt.html',
+  styleUrls: ['../dashboard/dashboard.scss', './brand-mgmt.scss']
 })
 export class BrandMgmtComponent {
   brands: any[] = [];
+  searchTerm = '';
   isModalOpen = false;
   isSaving = false;
   selectedBrand: any = null;
@@ -79,5 +85,14 @@ export class BrandMgmtComponent {
         error: () => this.toastService.error('Không thể xóa hãng này')
       });
     }
+  }
+
+  get filteredBrands(): any[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      return this.brands;
+    }
+
+    return this.brands.filter(brand => String(brand.name || '').toLowerCase().includes(term));
   }
 }

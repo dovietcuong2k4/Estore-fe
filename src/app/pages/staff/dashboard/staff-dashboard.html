@@ -1,94 +1,122 @@
-<div class="dashboard">
-  <header class="dashboard-header">
-    <h1 class="dashboard-title">Staff Dashboard</h1>
-    <p class="dashboard-subtitle">Monitor products and process orders efficiently.</p>
+<div class="staff-page">
+  <header class="staff-hero">
+    <div>
+      <p class="staff-hero__kicker">Tổng quan vận hành</p>
+      <h1 class="staff-hero__title">Bảng điều khiển nhân viên</h1>
+      <p class="staff-hero__subtitle">Theo dõi đơn hàng theo thời gian thực, phát hiện rủi ro tồn kho sớm và bàn giao công việc liền mạch.</p>
+    </div>
+
+    <div class="staff-hero__actions">
+      <app-base-button variant="secondary" type="button" (clicked)="refresh()">Làm mới dữ liệu</app-base-button>
+      <a routerLink="/staff/orders" class="staff-hero__link">Mở đơn hàng</a>
+    </div>
   </header>
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-card__icon icon--created">📦</div>
-      <div class="stat-card__content">
-        <span class="stat-card__label">New Orders</span>
-        <span class="stat-card__value">{{ orderStats().created }}</span>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card__icon icon--pending">⌛</div>
-      <div class="stat-card__content">
-        <span class="stat-card__label">Processing</span>
-        <span class="stat-card__value">{{ orderStats().processing }}</span>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card__icon icon--lowstock">⚠️</div>
-      <div class="stat-card__content">
-        <span class="stat-card__label">Low Stock</span>
-        <span class="stat-card__value">{{ lowStockProducts().length }}</span>
-      </div>
-    </div>
-  </div>
+  <section class="metric-grid">
+    @for (metric of dashboardMetrics(); track metric.key) {
+      <app-base-card class="metric-card" [class]="'metric-card metric-card--' + metric.tone" [compact]="true" [flat]="true">
+        <p class="metric-card__label">{{ metric.label }}</p>
+
+        <div class="metric-card__headline">
+          <strong class="metric-card__value">{{ metric.value < 10 ? '0' + metric.value : metric.value }}</strong>
+
+          @if (metric.badge) {
+            <span class="metric-card__badge">{{ metric.badge }}</span>
+          } @else {
+            <span class="metric-card__trend" [class.metric-card__trend--up]="metric.trend >= 0" [class.metric-card__trend--down]="metric.trend < 0">
+              {{ metric.trend >= 0 ? '+' : '' }}{{ metric.trend }}{{ metric.suffix }}
+            </span>
+          }
+        </div>
+
+        <div class="metric-card__bar" role="presentation">
+          <span [style.width.%]="metric.progress"></span>
+        </div>
+      </app-base-card>
+    }
+  </section>
 
   <div class="dashboard-grid">
-    <section class="dashboard-section section--orders">
-      <div class="section-header">
-        <h2 class="section-title">Active Orders</h2>
-        <a routerLink="/staff/orders" class="section-link">View All</a>
+    <app-base-card class="dashboard-panel" title="Đơn chờ xử lý" subtitle="Các đơn cần nhân viên xử lý trước khi chuyển sang giao hàng.">
+      <div card-actions>
+        <a routerLink="/staff/orders" class="panel-link">Xem tất cả</a>
       </div>
-      <div class="table-container">
-        <table class="dashboard-table">
+
+      <app-base-table>
+        <table class="data-table">
           <thead>
             <tr>
-              <th>Order ID</th>
-              <th>Customer</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th>Mã đơn</th>
+              <th>Khách hàng</th>
+              <th>Tổng tiền</th>
+              <th>Trạng thái</th>
+              <th class="align-right">Thao tác</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let order of pendingOrders()">
-              <td>#{{ order.id }}</td>
-              <td>{{ order.receiverName }}</td>
-              <td>{{ formatPrice(order.totalPrice || 0) }}</td>
-              <td>
-                <span class="status-badge" [ngClass]="getStatusClass(order.status)">
-                  {{ order.status }}
-                </span>
-              </td>
-              <td>
-                <a [routerLink]="['/staff/orders']" class="btn-action">Process</a>
-              </td>
-            </tr>
-            <tr *ngIf="pendingOrders().length === 0">
-              <td colspan="5" class="text-center py-8 text-slate-400">No active orders to process.</td>
-            </tr>
+            @for (order of pendingOrders(); track order.id) {
+              <tr>
+                <td class="data-table__id">#{{ order.id }}</td>
+                <td>
+                  <div class="customer-block">
+                    <strong>{{ order.receiverName }}</strong>
+                    <span>{{ order.receiverPhone }}</span>
+                  </div>
+                </td>
+                <td class="data-table__price">{{ formatPrice(order.totalPrice || 0) }}</td>
+                <td><app-base-badge [tone]="getStatusTone(order.status)">{{ order.status }}</app-base-badge></td>
+                <td class="align-right"><a routerLink="/staff/orders" class="panel-link panel-link--solid">Xử lý</a></td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5"><div class="empty-state">Hiện chưa có đơn nào cần xử lý.</div></td>
+              </tr>
+            }
           </tbody>
         </table>
-      </div>
-    </section>
+      </app-base-table>
+    </app-base-card>
 
-    <section class="dashboard-section section--inventory">
-      <div class="section-header">
-        <h2 class="section-title">Low Stock Alert</h2>
-        <a routerLink="/staff/products" class="section-link">Manage Inventory</a>
-      </div>
-      <div class="inventory-list">
-        <div class="inventory-item" *ngFor="let product of lowStockProducts()">
-          <div class="product-info">
-            <img [src]="product.image" [alt]="product.name" class="product-thumb">
-            <div class="product-meta">
-              <span class="product-name">{{ product.name }}</span>
-              <span class="product-category">Category ID: {{ product.categoryId }}</span>
+    <app-base-card class="dashboard-panel dashboard-panel--inventory">
+      <div class="inventory-panel">
+        <div class="inventory-panel__header">
+          <div>
+            <p class="inventory-panel__eyebrow">CẢNH BÁO TỒN KHO</p>
+            <h2 class="inventory-panel__title">Theo dõi tồn kho</h2>
+            <p class="inventory-panel__subtitle">Hiển thị 5 sản phẩm có tồn kho thấp nhất để xử lý kịp thời.</p>
+          </div>
+        </div>
+
+        <div class="inventory-list">
+          @for (product of lowStockProducts(); track product.id) {
+            <div class="inventory-item">
+              <div class="product-info">
+                <img [src]="product.image" [alt]="product.name" class="product-thumb">
+                <div class="product-meta">
+                  <strong class="product-name">{{ product.name }}</strong>
+                  <span class="product-stock">Còn {{ product.stockQuantity }} sản phẩm</span>
+                </div>
+              </div>
+
+              <button class="inventory-item__action" type="button" (click)="openInventoryEditModal(product)" aria-label="Sửa sản phẩm">
+                +
+              </button>
             </div>
-          </div>
-          <div class="stock-status" [class.stock--critical]="product.stockQuantity < 5">
-            {{ product.stockQuantity }} left
-          </div>
-        </div>
-        <div *ngIf="lowStockProducts().length === 0" class="text-center py-8 text-slate-400">
-          All products are well stocked.
+          } @empty {
+            <div class="empty-state">Tất cả sản phẩm đều còn hàng tốt.</div>
+          }
         </div>
       </div>
-    </section>
+    </app-base-card>
   </div>
 </div>
+
+<app-product-modal
+  [isVisible]="isProductModalOpen"
+  [isDetail]="false"
+  [product]="selectedProduct"
+  [categories]="categories"
+  [brands]="brands"
+  (close)="closeProductModal()"
+  (save)="saveInventoryProduct($event)"
+></app-product-modal>

@@ -59,12 +59,13 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/admin/layout/admin-layout').then(m => m.AdminLayoutComponent),
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', loadComponent: () => import('./pages/admin/dashboard/dashboard').then(m => m.DashboardComponent), title: 'Dashboard - Admin' },
-      { path: 'products', loadComponent: () => import('./pages/admin/product-mgmt/product-mgmt').then(m => m.ProductMgmtComponent), title: 'Quản lý Sản phẩm - Admin' },
-      { path: 'categories', loadComponent: () => import('./pages/admin/category-mgmt/category-mgmt').then(m => m.CategoryMgmtComponent), title: 'Quản lý Danh mục - Admin' },
-      { path: 'brands', loadComponent: () => import('./pages/admin/brand-mgmt/brand-mgmt').then(m => m.BrandMgmtComponent), title: 'Quản lý Hãng - Admin' },
-      { path: 'orders', loadComponent: () => import('./pages/admin/order-mgmt/order-mgmt').then(m => m.OrderMgmtComponent), title: 'Quản lý Đơn hàng - Admin' },
-      { path: 'users', loadComponent: () => import('./pages/admin/user-mgmt/user-mgmt').then(m => m.UserMgmtComponent), title: 'Quản lý Người dùng - Admin' }
+      { path: 'dashboard', loadComponent: () => import('./pages/admin/dashboard/dashboard').then(m => m.DashboardComponent), title: 'Bảng điều khiển - Quản trị' },
+      { path: 'products', loadComponent: () => import('./pages/admin/product-mgmt/product-mgmt').then(m => m.ProductMgmtComponent), title: 'Quản lý sản phẩm - Quản trị' },
+      { path: 'categories', loadComponent: () => import('./pages/admin/category-mgmt/category-mgmt').then(m => m.CategoryMgmtComponent), title: 'Quản lý danh mục - Quản trị' },
+      { path: 'brands', loadComponent: () => import('./pages/admin/brand-mgmt/brand-mgmt').then(m => m.BrandMgmtComponent), title: 'Quản lý hãng - Quản trị' },
+      { path: 'orders', loadComponent: () => import('./pages/admin/order-mgmt/order-mgmt').then(m => m.OrderMgmtComponent), title: 'Quản lý đơn hàng - Quản trị' },
+      { path: 'users', loadComponent: () => import('./pages/admin/user-mgmt/user-mgmt').then(m => m.UserMgmtComponent), title: 'Quản lý người dùng - Quản trị' },
+      { path: 'vouchers', loadComponent: () => import('./pages/admin/voucher-mgmt/voucher-mgmt').then(m => m.VoucherMgmtComponent), title: 'Quản lý voucher - Quản trị' }
     ]
   },
   {
@@ -72,11 +73,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/staff/layout/staff-layout').then(m => m.StaffLayoutComponent),
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', loadComponent: () => import('./pages/staff/dashboard/staff-dashboard').then(m => m.StaffDashboardComponent), title: 'Dashboard - Nhân viên' },
-      { path: 'products', loadComponent: () => import('./pages/staff/product-mgmt/staff-product-mgmt').then(m => m.StaffProductMgmtComponent), title: 'Quản lý Sản phẩm - Nhân viên' },
+      { path: 'dashboard', loadComponent: () => import('./pages/staff/dashboard/staff-dashboard').then(m => m.StaffDashboardComponent), title: 'Bảng điều khiển - Nhân viên' },
+      { path: 'products', loadComponent: () => import('./pages/staff/product-mgmt/staff-product-mgmt').then(m => m.StaffProductMgmtComponent), title: 'Quản lý sản phẩm - Nhân viên' },
       { path: 'categories', loadComponent: () => import('./pages/staff/category-mgmt/staff-category-mgmt').then(m => m.StaffCategoryMgmtComponent), title: 'Danh mục - Nhân viên' },
       { path: 'brands', loadComponent: () => import('./pages/staff/brand-mgmt/staff-brand-mgmt').then(m => m.StaffBrandMgmtComponent), title: 'Hãng sản xuất - Nhân viên' },
-      { path: 'orders', loadComponent: () => import('./pages/staff/order-mgmt/staff-order-mgmt').then(m => m.StaffOrderMgmtComponent), title: 'Quản lý Đơn hàng - Nhân viên' }
+      { path: 'orders', loadComponent: () => import('./pages/staff/order-mgmt/staff-order-mgmt').then(m => m.StaffOrderMgmtComponent), title: 'Quản lý đơn hàng - Nhân viên' },
+      { path: 'vouchers', loadComponent: () => import('./pages/admin/voucher-mgmt/voucher-mgmt').then(m => m.VoucherMgmtComponent), title: 'Quản lý voucher - Nhân viên' }
     ]
   },
   {
@@ -84,7 +86,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/shipper/layout/shipper-layout').then(m => m.ShipperLayoutComponent),
     children: [
       { path: '', redirectTo: 'orders', pathMatch: 'full' },
-      { path: 'orders', loadComponent: () => import('./pages/shipper/orders/shipper-orders').then(m => m.ShipperOrdersComponent), title: 'Quản lý Giao hàng - Shipper' }
+      { path: 'orders', loadComponent: () => import('./pages/shipper/orders/shipper-orders').then(m => m.ShipperOrdersComponent), title: 'Quản lý giao hàng - Nhân viên giao hàng' }
     ]
   },
   {

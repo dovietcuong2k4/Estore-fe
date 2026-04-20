@@ -1,30 +1,47 @@
-<div class="p-6">
-  <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+<section class="admin-page">
+  <header class="admin-page__header">
     <div>
-      <h1 class="text-2xl font-bold text-gray-800">Quản lý đơn hàng</h1>
-      <p class="text-gray-500 mt-1">Xử lý đơn, sẵn sàng giao, hủy đơn và phân công shipper.</p>
+      <h1 class="admin-page__title">Quản lý đơn hàng</h1>
+      <p class="admin-page__subtitle">Xử lý đơn, chuyển trạng thái, hủy đơn và phân công nhân viên giao hàng trong một không gian làm việc tập trung.</p>
+    </div>
+  </header>
+
+  <app-filter-bar title="Bộ lọc đơn hàng" subtitle="Lọc theo trạng thái, nhân viên giao hàng và ngày tạo.">
+    <div class="order-filter-grid" filter-fields>
+      <app-base-select
+        label="Trạng thái"
+        [options]="statusOptions"
+        [value]="selectedStatus()"
+        (valueChange)="setStatus($event)">
+      </app-base-select>
+
+      <app-base-input
+        label="Ngày tạo"
+        type="date"
+        [value]="selectedDate()"
+        (valueChange)="setDate($event)">
+      </app-base-input>
+
+      <app-base-select
+        label="Nhân viên giao hàng"
+        [options]="shipperOptions()"
+        [value]="selectedShipperId()"
+        (valueChange)="setShipper($event)">
+      </app-base-select>
     </div>
 
-    <div class="flex items-center space-x-2">
-      <label class="text-sm font-medium text-gray-600">Trạng thái:</label>
-      <select 
-        class="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 shadow-sm outline-none"
-        [ngModel]="selectedStatus()" 
-        (ngModelChange)="selectedStatus.set($event)">
-        <option value="ALL">Tất cả</option>
-        <option value="CREATED">CREATED</option>
-        <option value="PROCESSING">PROCESSING</option>
-        <option value="READY_FOR_SHIPPING">READY_FOR_SHIPPING</option>
-        <option value="DELIVERY_FAILED">DELIVERY_FAILED</option>
-      </select>
+    <div filter-actions>
+      <app-base-button variant="ghost" type="button" (clicked)="resetFilters()">Đặt lại</app-base-button>
     </div>
-  </div>
+  </app-filter-bar>
 
-  <app-order-table
-    [orders]="filteredOrders()"
-    [role]="'ROLE_STAFF'"
-    [shippers]="shippers()"
-    [loadingAction]="loadingAction()"
-    (action)="handleAction($event)">
-  </app-order-table>
-</div>
+  <app-base-table title="Danh sách đơn hàng" subtitle="{{ orderCount() }} đơn hàng trong kết quả lọc.">
+    <app-order-table
+      [orders]="filteredOrders()"
+      [role]="'ROLE_STAFF'"
+      [shippers]="shippers()"
+      [loadingAction]="loadingAction()"
+      (action)="handleAction($event)">
+    </app-order-table>
+  </app-base-table>
+</section>

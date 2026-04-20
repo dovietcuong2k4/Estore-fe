@@ -1,49 +1,59 @@
-<div class="p-6">
-  <div class="flex justify-between items-end mb-6">
+<section class="admin-page">
+  <header class="admin-page__header">
     <div>
-      <h1 class="text-2xl font-bold text-gray-800">Quản lý Hãng sản xuất</h1>
-      <p class="text-gray-500 mt-1">Xem và cập nhật thông tin hãng sản xuất</p>
+      <h1 class="admin-page__title">Quản lý hãng sản xuất</h1>
+      <p class="admin-page__subtitle">Cập nhật thông tin thương hiệu và logo hiển thị.</p>
     </div>
-    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 transition font-medium flex items-center" (click)="openAdd()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-      Thêm hãng mới
-    </button>
-  </div>
+    <app-base-button variant="primary" (clicked)="openAdd()">Thêm hãng mới</app-base-button>
+  </header>
 
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse min-w-[600px]">
+  <app-filter-bar title="Bộ lọc" subtitle="Tìm theo tên thương hiệu.">
+    <div filter-fields>
+      <app-base-input
+        label="Tên hãng"
+        placeholder="Nhập tên hãng"
+        [value]="searchTerm"
+        (valueChange)="searchTerm = $event">
+      </app-base-input>
+    </div>
+  </app-filter-bar>
+
+  <app-base-table title="Danh sách hãng" subtitle="{{ filteredBrands.length }} hãng hiển thị.">
+    <div class="table-responsive">
+      <table class="admin-table">
         <thead>
-          <tr class="bg-gray-50 border-b border-gray-100 text-sm font-semibold text-gray-600 uppercase tracking-wide">
-            <th class="py-4 px-6 w-24">Logo</th>
-            <th class="py-4 px-6">Tên hãng</th>
-            <th class="py-4 px-6 text-right w-48">Thao tác</th>
+          <tr>
+            <th class="logo-col">Logo</th>
+            <th>Tên hãng</th>
+            <th class="text-right">Thao tác</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100 text-gray-700">
-          @for (brand of brands; track brand.id) {
-            <tr class="hover:bg-gray-50 transition-colors">
-              <td class="py-4 px-6">
-                <img [src]="brand.imageUrl || 'https://via.placeholder.com/40'" 
-                     class="w-10 h-10 object-contain rounded-md border border-gray-200 bg-white" />
+        <tbody>
+          @for (brand of filteredBrands; track brand.id) {
+            <tr>
+              <td>
+                <div class="brand-logo-wrap">
+                  <img [src]="brand.imageUrl || 'https://via.placeholder.com/40'" alt="{{ brand.name }}" />
+                </div>
               </td>
-              <td class="py-4 px-6 font-medium">{{ brand.name }}</td>
-              <td class="py-4 px-6 text-right space-x-2">
-                <button (click)="openEdit(brand)" class="px-3 py-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors font-medium text-sm">Sửa</button>
-                <button (click)="delete(brand.id)" class="px-3 py-1.5 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors font-medium text-sm">Xóa</button>
+              <td><span class="brand-name">{{ brand.name }}</span></td>
+              <td class="text-right">
+                <div class="action-btns">
+                  <app-base-button variant="ghost" (clicked)="openEdit(brand)">Sửa</app-base-button>
+                  <app-base-button variant="danger" (clicked)="delete(brand.id)">Xóa</app-base-button>
+                </div>
               </td>
             </tr>
-          }
-          @if (brands.length === 0) {
-             <tr>
-               <td colspan="3" class="py-8 text-center text-gray-500">Không có hãng sản xuất nào.</td>
-             </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="empty-cell">Không có hãng sản xuất phù hợp.</td>
+            </tr>
           }
         </tbody>
       </table>
     </div>
-  </div>
-</div>
+  </app-base-table>
+</section>
 
 <app-brand-modal
   [isOpen]="isModalOpen"

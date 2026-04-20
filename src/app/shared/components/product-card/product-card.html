@@ -1,4 +1,11 @@
-<a [routerLink]="['/products', product.id]" class="product-card">
+<a [routerLink]="['/products', product.id]" 
+   class="product-card"
+  [class.product-card--featured]="variant === 'featured'"
+  [class.product-card--compact]="variant === 'compact'"
+  [class.product-card--highlight]="highlight"
+  [class.product-card--sm]="size === 'sm'"
+  [class.product-card--lg]="size === 'lg'"
+  [class.product-card--xl]="size === 'xl'">
   <!-- Image -->
   <div class="product-card__image-wrapper">
     <img [src]="product.image" [alt]="product.name" class="product-card__image" loading="lazy" />

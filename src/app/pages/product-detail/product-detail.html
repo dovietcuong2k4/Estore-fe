@@ -113,6 +113,7 @@
         <button class="tabs__tab" [class.active]="activeTab() === 'specs'" (click)="activeTab.set('specs')">Thông số kỹ thuật</button>
         <button class="tabs__tab" [class.active]="activeTab() === 'desc'" (click)="activeTab.set('desc')">Mô tả sản phẩm</button>
         <button class="tabs__tab" [class.active]="activeTab() === 'warranty'" (click)="activeTab.set('warranty')">Bảo hành</button>
+        <button class="tabs__tab" [class.active]="activeTab() === 'reviews'" (click)="activeTab.set('reviews')">Đánh giá ({{ reviewSummary()?.totalReviews || 0 }})</button>
       </div>
       <div class="tabs__content">
         @if (activeTab() === 'specs') {
@@ -140,6 +141,105 @@
             <p>• Bảo hành chính hãng tại các trung tâm ủy quyền trên toàn quốc</p>
             <p>• Hỗ trợ đổi mới trong 30 ngày đầu nếu có lỗi từ nhà sản xuất</p>
             <p>• Kiểm tra tình trạng bảo hành qua hotline: 1900 1234 56</p>
+          </div>
+        }
+        @if (activeTab() === 'reviews') {
+          <div class="reviews-container">
+            <!-- Review Summary -->
+            <div class="reviews-summary" *ngIf="reviewSummary() as summary">
+              <div class="reviews-summary__avg">
+                <span class="avg-score">{{ summary.averageRating || 0 }}</span>
+                <div class="avg-stars">
+                   <span class="stars">★</span>
+                </div>
+                <span class="total-count">{{ summary.totalReviews }} đánh giá</span>
+              </div>
+              <div class="reviews-summary__bars">
+                <!-- Simple bar representation would go here if we had data, for now just text or empty -->
+              </div>
+            </div>
+
+            <!-- Write Review / Eligibility -->
+            <div class="review-compose" id="review-form">
+              <ng-container *ngIf="authService.isLoggedIn(); else loginPrompt">
+                <div class="eligibility-msg" *ngIf="eligibility()?.canReview === false && !isEditing()">
+                  <p>⚠️ {{ eligibility()?.reason }}</p>
+                </div>
+
+                <div class="review-form" *ngIf="eligibility()?.canReview || isEditing()">
+                  <h3>{{ isEditing() ? 'Chỉnh sửa đánh giá của bạn' : 'Viết đánh giá của bạn' }}</h3>
+                  
+                  <div class="star-picker">
+                    <span *ngFor="let s of [1,2,3,4,5]" 
+                          class="star" 
+                          [class.active]="reviewForm().rating >= s"
+                          (click)="setRating(s)">★</span>
+                    <span class="rating-text" *ngIf="reviewForm().rating > 0">
+                      {{ reviewForm().rating === 1 ? 'Rất tệ' : reviewForm().rating === 2 ? 'Tệ' : reviewForm().rating === 3 ? 'Bình thường' : reviewForm().rating === 4 ? 'Tốt' : 'Rất tốt' }}
+                    </span>
+                  </div>
+
+                  <textarea [(ngModel)]="reviewForm().comment" 
+                            placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..."
+                            rows="4"></textarea>
+
+                  <div class="form-actions">
+                    <button class="btn-cancel" *ngIf="isEditing()" (click)="resetReviewForm()">Hủy</button>
+                    <button class="btn-submit" 
+                            [disabled]="reviewForm().rating === 0 || submittingReview()"
+                            (click)="submitReview()">
+                      {{ submittingReview() ? 'Đang gửi...' : (isEditing() ? 'Cập nhật' : 'Gửi đánh giá') }}
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-template #loginPrompt>
+                <div class="login-prompt">
+                  <p>Vui lòng <a routerLink="/login">đăng nhập</a> để đánh giá sản phẩm.</p>
+                </div>
+              </ng-template>
+            </div>
+
+            <!-- Review List -->
+            <div class="reviews-list">
+              <div class="loading-overlay" *ngIf="reviewLoading()">Đang tải...</div>
+              
+              <ng-container *ngIf="reviewSummary()?.reviews?.content?.length; else noReviews">
+                <div class="review-item" *ngFor="let r of reviewSummary()?.reviews?.content">
+                  <div class="review-item__header">
+                    <div class="user-info">
+                      <div class="avatar">{{ r.userFullName.charAt(0) }}</div>
+                      <div class="meta">
+                        <span class="name">{{ r.userFullName }}</span>
+                        <span class="date">{{ r.createdAt | date:'dd/MM/yyyy' }}</span>
+                      </div>
+                    </div>
+                    <div class="user-actions" *ngIf="authService.user()?.id === r.userId">
+                      <button (click)="editReview()">✏️ Sửa</button>
+                      <button (click)="deleteReview()">🗑️ Xóa</button>
+                    </div>
+                  </div>
+                  <div class="review-item__rating">
+                    <span class="star" *ngFor="let s of [1,2,3,4,5]" [class.filled]="r.rating >= s">★</span>
+                  </div>
+                  <div class="review-item__content">
+                    <p>{{ r.comment }}</p>
+                  </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" *ngIf="reviewSummary()?.reviews as page">
+                  <button [disabled]="page.number === 0" (click)="onPageChange(page.number - 1)">Trước</button>
+                  <span>Trang {{ page.number + 1 }} / {{ page.totalPages || 1 }}</span>
+                  <button [disabled]="page.number >= (page.totalPages - 1)" (click)="onPageChange(page.number + 1)">Sau</button>
+                </div>
+              </ng-container>
+
+              <ng-template #noReviews>
+                <p class="no-reviews" *ngIf="!reviewLoading()">Chưa có đánh giá nào cho sản phẩm này.</p>
+              </ng-template>
+            </div>
           </div>
         }
       </div>

@@ -1,61 +1,69 @@
 <div class="staff-layout">
   <aside class="staff-sidebar">
-    <div class="staff-sidebar__header">
-      <a routerLink="/staff" class="staff-logo">
-        <span class="staff-logo__icon">🛠️</span>
-        <span class="staff-logo__text">E-Store Staff</span>
+    <div class="staff-sidebar__brand">
+      <a routerLink="/staff/dashboard" class="staff-logo">
+        <span class="staff-logo__mark">🛠️</span>
+        <span class="staff-logo__text">E-Store Nhân viên</span>
       </a>
+      <p class="staff-sidebar__caption">Không gian vận hành</p>
     </div>
 
     <nav class="staff-nav">
-      <div class="staff-nav__group">
-        <span class="staff-nav__label">Overview</span>
-        <a routerLink="/staff/dashboard" routerLinkActive="active" class="staff-nav__link">
-          <span class="icon">📊</span> Dashboard
-        </a>
-      </div>
+      <span class="staff-nav__label">Tổng quan</span>
+      <a routerLink="/staff/dashboard" routerLinkActive="active" class="staff-nav__link">
+        <span class="staff-nav__icon">📊</span>
+        <span>Bảng điều khiển</span>
+      </a>
 
-      <div class="staff-nav__group">
-        <span class="staff-nav__label">Operations</span>
-        <a routerLink="/staff/orders" routerLinkActive="active" class="staff-nav__link">
-          <span class="icon">📦</span> Order Management
-        </a>
-        <a routerLink="/staff/products" routerLinkActive="active" class="staff-nav__link">
-          <span class="icon">🛍️</span> Product Management
-        </a>
-        <a routerLink="/staff/categories" routerLinkActive="active" class="staff-nav__link">
-          <span class="icon">📁</span> Category Management
-        </a>
-        <a routerLink="/staff/brands" routerLinkActive="active" class="staff-nav__link">
-          <span class="icon">🏷️</span> Brand Management
-        </a>
-      </div>
+      <span class="staff-nav__label">Vận hành</span>
+      <a routerLink="/staff/orders" routerLinkActive="active" class="staff-nav__link">
+        <span class="staff-nav__icon">📦</span>
+        <span>Đơn hàng</span>
+      </a>
+      <a routerLink="/staff/products" routerLinkActive="active" class="staff-nav__link">
+        <span class="staff-nav__icon">🛍️</span>
+        <span>Sản phẩm</span>
+      </a>
+      <a routerLink="/staff/categories" routerLinkActive="active" class="staff-nav__link">
+        <span class="staff-nav__icon">📁</span>
+        <span>Danh mục</span>
+      </a>
+      <a routerLink="/staff/brands" routerLinkActive="active" class="staff-nav__link">
+        <span class="staff-nav__icon">🏷️</span>
+        <span>Hãng</span>
+      </a>
+      <a routerLink="/staff/vouchers" routerLinkActive="active" class="staff-nav__link">
+        <span class="staff-nav__icon">🎟️</span>
+        <span>Voucher</span>
+      </a>
     </nav>
 
     <div class="staff-sidebar__footer">
       <div class="staff-user">
-        <div class="staff-user__avatar">
-          {{ auth.user()?.fullName?.charAt(0) }}
-        </div>
-        <div class="staff-user__info">
-          <div class="staff-user__name">{{ auth.user()?.fullName }}</div>
-          <div class="staff-user__role">Staff Role</div>
+        <div class="staff-user__avatar">{{ auth.user()?.fullName?.charAt(0) }}</div>
+        <div class="staff-user__meta">
+          <strong class="staff-user__name">{{ auth.user()?.fullName }}</strong>
+          <span class="staff-user__role">Vai trò nhân viên</span>
         </div>
       </div>
-      <button (click)="auth.logout()" class="btn-store">🚪 Đăng xuất</button>
+      <app-base-button variant="secondary" type="button" [fullWidth]="true" (clicked)="auth.logout()">Đăng xuất</app-base-button>
     </div>
   </aside>
 
   <main class="staff-main">
-    <div class="staff-header">
-      <div class="staff-header__search">
-        <input type="text" placeholder="Search for orders or products..." />
+    <header class="staff-topbar">
+      <app-base-input
+        class="staff-topbar__search"
+        label="Tìm kiếm nhanh"
+        placeholder="Tìm đơn hàng, sản phẩm hoặc khách hàng..."
+        [value]="''">
+      </app-base-input>
+      <div class="staff-topbar__actions">
+        <button type="button" class="icon-chip" aria-label="Thông báo">🔔</button>
+        <button type="button" class="icon-chip" aria-label="Tin nhắn">💬</button>
       </div>
-      <div class="staff-header__actions">
-        <button class="action-btn">🔔</button>
-        <button class="action-btn">💬</button>
-      </div>
-    </div>
+    </header>
+
     <div class="staff-content">
       <router-outlet></router-outlet>
     </div>

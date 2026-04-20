@@ -1,145 +1,58 @@
-.btn-add-user {
-  background: #818cf8;
-  color: #fff;
-  border: none;
-  padding: 0.85rem 1.75rem;
-  border-radius: 14px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(129, 140, 248, 0.3);
-
-  svg {
-    transition: transform 0.3s;
-  }
-
-  &:hover {
-    background: #6366f1;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-    
-    svg {
-      transform: rotate(90deg);
-    }
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
-
 .id-badge {
-  color: rgba(255, 255, 255, 0.3);
-  font-family: monospace;
+  color: rgba(163, 170, 196, 0.65);
   font-weight: 600;
+  font-size: 0.82rem;
 }
 
 .user-info-cell {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.15rem;
 }
 
 .user-avatar-mini {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #818cf8, #6366f1);
-  border-radius: 10px;
+  background: rgba(110, 168, 254, 0.2);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: #b8d5ff;
   font-weight: 700;
-  font-size: 0.9rem;
-  box-shadow: 0 4px 10px rgba(129, 140, 248, 0.2);
+  font-size: 0.88rem;
 }
 
 .user-name {
-  color: #fff;
+  color: var(--kv-text);
   font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .email-cell {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.95rem;
+  color: var(--kv-text-muted);
+  font-size: 0.86rem;
+  font-weight: 500;
 }
 
 .role-badges {
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
   flex-wrap: wrap;
-}
-
-.role-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-
-  &--role_admin {
-    background: rgba(248, 113, 113, 0.1);
-    color: #f87171;
-    border: 1px solid rgba(248, 113, 113, 0.2);
-  }
-
-  &--role_staff {
-    background: rgba(129, 140, 248, 0.1);
-    color: #818cf8;
-    border: 1px solid rgba(129, 140, 248, 0.2);
-  }
-
-  &--role_shipper {
-    background: rgba(52, 211, 153, 0.1);
-    color: #34d199;
-    border: 1px solid rgba(52, 211, 153, 0.2);
-  }
-
-  &--role_customer {
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
 }
 
 .action-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 0.75rem;
-  padding-right: 1.5rem;
+  gap: 8px;
 }
 
-.btn-action {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: rgba(255, 255, 255, 0.03);
+.text-right {
+  text-align: right;
+}
 
-  &--edit {
-    color: #818cf8;
-    &:hover {
-      background: rgba(129, 140, 248, 0.1);
-      border-color: rgba(129, 140, 248, 0.3);
-      transform: translateY(-2px);
-    }
-  }
-
-  &--delete {
-    color: #f87171;
-    &:hover {
-      background: rgba(248, 113, 113, 0.1);
-      border-color: rgba(248, 113, 113, 0.3);
-      transform: translateY(-2px);
-    }
-  }
+.empty-cell {
+  text-align: center;
+  color: var(--kv-text-muted);
+  padding: 24px;
 }

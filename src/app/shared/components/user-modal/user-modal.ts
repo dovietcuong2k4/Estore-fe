@@ -22,10 +22,10 @@ export class UserModalComponent implements OnChanges {
   errorMessage: string | null = null;
 
   readonly roleOptions: { value: RoleName; label: string }[] = [
-    { value: 'ROLE_ADMIN', label: 'Admin' },
-    { value: 'ROLE_STAFF', label: 'Staff' },
-    { value: 'ROLE_SHIPPER', label: 'Shipper' },
-    { value: 'ROLE_CUSTOMER', label: 'User' }
+    { value: 'ROLE_ADMIN', label: 'Quản trị viên' },
+    { value: 'ROLE_STAFF', label: 'Nhân viên' },
+    { value: 'ROLE_SHIPPER', label: 'Nhân viên giao hàng' },
+    { value: 'ROLE_CUSTOMER', label: 'Khách hàng' }
   ];
 
   constructor(

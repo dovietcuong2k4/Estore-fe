@@ -1,44 +1,67 @@
-<div class="dashboard">
-  <div class="dashboard__header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+<section class="admin-page">
+  <header class="admin-page__header">
     <div>
-      <h1 class="dashboard__title">Quản lý Sản phẩm</h1>
-      <p class="dashboard__subtitle">Xem và quản lý danh sách sản phẩm trong kho</p>
+      <h1 class="admin-page__title">Quản lý sản phẩm</h1>
+      <p class="admin-page__subtitle">Tổ chức danh mục sản phẩm và tồn kho theo chuẩn vận hành.</p>
     </div>
-    <button class="btn-primary" (click)="openAddModal()" style="padding: 0.6rem 1.25rem; background: #818cf8; color: #fff; border-radius: 8px; font-weight: 600;">+ Thêm sản phẩm</button>
-  </div>
+    <app-base-button variant="primary" (clicked)="openAddModal()">+ Thêm sản phẩm</app-base-button>
+  </header>
 
-  <div class="content-panel">
+  <app-filter-bar title="Bộ lọc" subtitle="Tìm nhanh theo tên sản phẩm hoặc danh mục.">
+    <div filter-fields>
+      <app-base-input
+        label="Tìm kiếm"
+        placeholder="Nhập tên sản phẩm hoặc danh mục"
+        [value]="searchTerm"
+        (valueChange)="searchTerm = $event">
+      </app-base-input>
+    </div>
+  </app-filter-bar>
+
+  <app-base-table title="Danh sách sản phẩm" subtitle="{{ filteredProducts.length }} sản phẩm hiển thị.">
     <div class="table-responsive">
-      <table class="table">
+      <table class="admin-table">
         <thead>
           <tr>
-            <th>Hình ảnh</th>
+            <th class="col-image">Hình ảnh</th>
             <th>Tên sản phẩm</th>
             <th>Danh mục</th>
             <th>Giá bán</th>
             <th>Tồn kho</th>
-            <th>Thao tác</th>
+            <th class="text-right">Thao tác</th>
           </tr>
         </thead>
         <tbody>
-          @for (product of products; track product.id) {
-            <tr (click)="openDetailModal(product)" style="cursor: pointer;">
-              <td><img [src]="product.image" style="width: 40px; height: 40px; border-radius: 6px; object-fit: cover;" /></td>
-              <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ product.name }}</td>
+          @for (product of filteredProducts; track product.id) {
+            <tr (click)="openDetailModal(product)" class="row-clickable">
+              <td>
+                <img [src]="product.image" class="product-thumb" alt="{{ product.name }}" />
+              </td>
+              <td class="ellipsis">{{ product.name }}</td>
               <td>{{ getCategory(product) }}</td>
               <td class="text-success font-semibold">{{ formatPrice(product.price) }}</td>
-              <td>{{ product.stockQuantity }}</td>
               <td>
-                <button (click)="openEditModal(product); $event.stopPropagation()" style="background: none; border: none; color: #818cf8; cursor: pointer; margin-right: 0.5rem;">Sửa</button>
-                <button (click)="deleteProduct(product.id); $event.stopPropagation()" style="background: none; border: none; color: #ef4444; cursor: pointer;">Xóa</button>
+                <app-base-badge [tone]="getStockTone(product.stockQuantity)">
+                  {{ product.stockQuantity }}
+                </app-base-badge>
               </td>
+              <td class="text-right">
+                <div class="table-actions">
+                  <app-base-button variant="ghost" (clicked)="openEditModal(product); $event.stopPropagation()">Sửa</app-base-button>
+                  <app-base-button variant="danger" (clicked)="deleteProduct(product.id); $event.stopPropagation()">Xóa</app-base-button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-cell">Không tìm thấy sản phẩm phù hợp.</td>
             </tr>
           }
         </tbody>
       </table>
     </div>
-  </div>
-</div>
+  </app-base-table>
+</section>
 
 <app-product-modal
   [isVisible]="isModalOpen || isDetailModalOpen"

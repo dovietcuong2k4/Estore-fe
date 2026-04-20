@@ -3,11 +3,12 @@ import { Component, input, output } from '@angular/core';
 import { Order } from '../../../core/models/order.model';
 import { User } from '../../../core/models/user.model';
 import { OrderActionEvent, OrderActionsComponent } from '../order-actions/order-actions';
+import { BaseBadgeComponent } from '../ui/base-badge/base-badge';
 
 @Component({
   selector: 'app-order-table',
   standalone: true,
-  imports: [CommonModule, OrderActionsComponent],
+  imports: [CommonModule, OrderActionsComponent, BaseBadgeComponent],
   templateUrl: './order-table.html',
   styleUrl: './order-table.scss'
 })
@@ -36,6 +37,19 @@ export class OrderTableComponent {
       case 'DELIVERY_FAILED': return 'Giao thất bại';
       case 'CANCELLED': return 'Đã hủy';
       default: return status;
+    }
+  }
+
+  protected getStatusTone(status: string): 'success' | 'warning' | 'error' | 'info' | 'neutral' {
+    switch (status) {
+      case 'CREATED': return 'info';
+      case 'PROCESSING': return 'warning';
+      case 'READY_FOR_SHIPPING': return 'neutral';
+      case 'SHIPPING': return 'info';
+      case 'DELIVERED': return 'success';
+      case 'DELIVERY_FAILED':
+      case 'CANCELLED': return 'error';
+      default: return 'neutral';
     }
   }
 }

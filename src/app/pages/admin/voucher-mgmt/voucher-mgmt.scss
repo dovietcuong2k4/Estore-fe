@@ -1,0 +1,22 @@
+.voucher-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+  display: grid;
+  gap: 24px;
+}
+
+.header-actions {
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 720px) {
+  .voucher-page {
+    gap: 16px;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+}

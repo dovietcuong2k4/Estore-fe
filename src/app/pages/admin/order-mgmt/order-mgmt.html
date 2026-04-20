@@ -1,37 +1,43 @@
-<div class="page">
-  <div class="page-header">
+<section class="admin-page">
+  <header class="admin-page__header">
     <div>
-      <h1>Quản lý đơn hàng</h1>
-      <p>Admin chỉ xem và lọc đơn hàng theo trạng thái, shipper và ngày tạo.</p>
+      <h1 class="admin-page__title">Quản lý đơn hàng</h1>
+      <p class="admin-page__subtitle">Theo dõi trạng thái, điều phối nhân viên giao hàng và xử lý nhanh theo bộ lọc.</p>
     </div>
+  </header>
 
-    <div class="filters">
-      <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event); reload()">
-        <option value="ALL">Tất cả trạng thái</option>
-        <option value="CREATED">CREATED</option>
-        <option value="PROCESSING">PROCESSING</option>
-        <option value="READY_FOR_SHIPPING">READY_FOR_SHIPPING</option>
-        <option value="SHIPPING">SHIPPING</option>
-        <option value="DELIVERED">DELIVERED</option>
-        <option value="DELIVERY_FAILED">DELIVERY_FAILED</option>
-        <option value="CANCELLED">CANCELLED</option>
-      </select>
+  <app-filter-bar title="Bộ lọc đơn hàng" subtitle="Lọc theo trạng thái, nhân viên giao hàng và ngày tạo.">
+    <div class="order-filter-grid" filter-fields>
+      <app-base-select
+        label="Trạng thái"
+        [value]="selectedStatus()"
+        [options]="statusOptions"
+        (valueChange)="onStatusChanged($event)">
+      </app-base-select>
 
-      <select [ngModel]="selectedShipperId()" (ngModelChange)="selectedShipperId.set($event); reload()">
-        <option value="ALL">Tất cả shipper</option>
-        @for (shipper of shippers(); track shipper.id) {
-          <option [ngValue]="shipper.id">{{ shipper.fullName }}</option>
-        }
-      </select>
+      <app-base-input
+        label="Ngày tạo"
+        type="date"
+        [value]="selectedDate()"
+        (valueChange)="onDateChanged($event)">
+      </app-base-input>
 
-      <input type="date" [ngModel]="selectedDate()" (ngModelChange)="selectedDate.set($event); reload()">
+      <app-base-select
+        label="Nhân viên giao hàng"
+        [value]="selectedShipperId()"
+        [options]="shipperOptions()"
+        (valueChange)="onShipperChanged($event)">
+      </app-base-select>
     </div>
-  </div>
+  </app-filter-bar>
 
-  <app-order-table
-    [orders]="orders()"
-    [role]="'ROLE_ADMIN'"
-    [loadingAction]="loadingAction()"
-    (action)="handleAction($event)">
-  </app-order-table>
-</div>
+  <app-base-table title="Danh sách đơn hàng" subtitle="{{ orders().length }} đơn hàng trong kết quả lọc.">
+    <app-order-table
+      [orders]="orders()"
+      [role]="'ROLE_ADMIN'"
+      [loadingAction]="loadingAction()"
+      [shippers]="shippers()"
+      (action)="handleAction($event)">
+    </app-order-table>
+  </app-base-table>
+</section>

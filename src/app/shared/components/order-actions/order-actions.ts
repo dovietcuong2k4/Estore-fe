@@ -20,10 +20,13 @@ export interface OrderActionEvent {
   shipperId?: number;
 }
 
+import { BaseButtonComponent } from '../ui/base-button/base-button';
+import { BaseModalComponent } from '../ui/base-modal/base-modal';
+
 @Component({
   selector: 'app-order-actions',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BaseButtonComponent, BaseModalComponent],
   templateUrl: './order-actions.html',
   styleUrl: './order-actions.scss'
 })
@@ -51,7 +54,7 @@ export class OrderActionsComponent {
       if (canEdit && ['CREATED', 'PROCESSING'].includes(order.status)) buttons.push(this.button('cancel', 'Hủy đơn', true));
       
       if (!hasShipper && order.status === 'READY_FOR_SHIPPING') {
-        buttons.push(this.button('assign-shipper', 'Phân công shipper', true));
+        buttons.push(this.button('assign-shipper', 'Phân công nhân viên giao hàng', true));
       }
       
       if (order.status === 'DELIVERY_FAILED') {
@@ -110,7 +113,7 @@ export class OrderActionsComponent {
     switch (type) {
       case 'process': return 'Chuyển sang xử lý';
       case 'ready': return 'Đánh dấu sẵn sàng giao';
-      case 'assign-shipper': return 'Phân công shipper';
+      case 'assign-shipper': return 'Phân công nhân viên giao hàng';
       case 'cancel': return 'Hủy đơn hàng';
       case 'retry': return 'Đưa về sẵn sàng giao';
       case 'start': return 'Nhận đơn giao';
@@ -122,11 +125,11 @@ export class OrderActionsComponent {
 
   protected modalMessage(type: OrderActionType | null): string {
     switch (type) {
-      case 'process': return 'Đơn hàng sẽ được chuyển sang trạng thái PROCESSING.';
-      case 'ready': return 'Đơn hàng sẽ được chuyển sang trạng thái READY_FOR_SHIPPING.';
-      case 'assign-shipper': return 'Chọn shipper để phân công đơn hàng này.';
+      case 'process': return 'Đơn hàng sẽ được chuyển sang trạng thái Đang xử lý.';
+      case 'ready': return 'Đơn hàng sẽ được chuyển sang trạng thái Sẵn sàng giao.';
+      case 'assign-shipper': return 'Chọn nhân viên giao hàng để phân công đơn hàng này.';
       case 'cancel': return 'Chỉ nên hủy đơn khi đơn chưa đi vào quá trình giao hàng.';
-      case 'retry': return 'Đơn hàng sẽ được chuyển về trạng thái READY_FOR_SHIPPING để giao lại.';
+      case 'retry': return 'Đơn hàng sẽ được chuyển về trạng thái Sẵn sàng giao để giao lại.';
       case 'start': return 'Thao tác này sẽ bắt đầu quá trình giao hàng.';
       case 'deliver': return 'Xác nhận người nhận đã nhận được hàng.';
       case 'fail': return 'Đánh dấu đơn giao không thành công.';

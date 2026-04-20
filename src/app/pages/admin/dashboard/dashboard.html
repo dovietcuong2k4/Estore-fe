@@ -1,48 +1,41 @@
-<div class="dashboard">
-  <div class="dashboard__header">
-    <h1 class="dashboard__title">Tổng quan E-Store</h1>
-    <p class="dashboard__subtitle">Thống kê hoạt động kinh doanh mới nhất</p>
-  </div>
-
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-card__icon stat-card__icon--revenue">💰</div>
-      <div class="stat-card__info">
-        <span class="stat-card__label">Tổng doanh thu</span>
-        <span class="stat-card__value">{{ formatPrice(orderStats().totalRevenue) }}</span>
-      </div>
+<section class="admin-page">
+  <header class="admin-page__header">
+    <div>
+      <h1 class="admin-page__title">Bảng điều khiển quản trị</h1>
+      <p class="admin-page__subtitle">Theo dõi doanh thu, đơn hàng và sức khỏe vận hành theo thời gian thực.</p>
     </div>
-    
-    <div class="stat-card">
-      <div class="stat-card__icon stat-card__icon--orders">📦</div>
-      <div class="stat-card__info">
-        <span class="stat-card__label">Tổng đơn hàng</span>
-        <span class="stat-card__value">{{ orderStats().total }}</span>
-      </div>
-    </div>
+    <app-base-button variant="secondary" routerLink="/admin/orders">Xem đơn hàng</app-base-button>
+  </header>
 
-    <div class="stat-card">
-      <div class="stat-card__icon stat-card__icon--products">🛍️</div>
-      <div class="stat-card__info">
-        <span class="stat-card__label">Sản phẩm</span>
-        <span class="stat-card__value">{{ productCount }}</span>
-      </div>
-    </div>
+  <section class="stats-grid">
+    <app-base-card [compact]="true" [flat]="true">
+      <article class="metric">
+        <span class="metric__label">Tổng doanh thu</span>
+        <strong class="metric__value">{{ formatPrice(orderStats().totalRevenue) }}</strong>
+      </article>
+    </app-base-card>
+    <app-base-card [compact]="true" [flat]="true">
+      <article class="metric">
+        <span class="metric__label">Tổng đơn hàng</span>
+        <strong class="metric__value">{{ orderStats().total }}</strong>
+      </article>
+    </app-base-card>
+    <app-base-card [compact]="true" [flat]="true">
+      <article class="metric">
+        <span class="metric__label">Sản phẩm</span>
+        <strong class="metric__value">{{ productCount }}</strong>
+      </article>
+    </app-base-card>
+    <app-base-card [compact]="true" [flat]="true">
+      <article class="metric">
+        <span class="metric__label">Người dùng</span>
+        <strong class="metric__value">{{ userCount }}</strong>
+      </article>
+    </app-base-card>
+  </section>
 
-    <div class="stat-card">
-      <div class="stat-card__icon stat-card__icon--users">👥</div>
-      <div class="stat-card__info">
-        <span class="stat-card__label">Người dùng</span>
-        <span class="stat-card__value">{{ userCount }}</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="dashboard__content">
-    <div class="content-panel">
-      <div class="content-panel__header">
-        <h2 class="content-panel__title">Đơn hàng hiện tại</h2>
-      </div>
+  <section class="dashboard-grid">
+    <app-base-card title="Trạng thái đơn hàng" subtitle="Số lượng theo từng trạng thái nghiệp vụ.">
       <div class="order-status-grid">
         <div class="status-box">
           <span class="status-box__count">{{ orderStats().created }}</span>
@@ -54,7 +47,7 @@
         </div>
         <div class="status-box">
           <span class="status-box__count text-info">{{ orderStats().shipping }}</span>
-          <span class="status-box__label">Đang giao hàng</span>
+          <span class="status-box__label">Đang giao</span>
         </div>
         <div class="status-box">
           <span class="status-box__count text-success">{{ orderStats().delivered }}</span>
@@ -65,16 +58,14 @@
           <span class="status-box__label">Đã hủy</span>
         </div>
       </div>
-    </div>
+    </app-base-card>
 
-    <div class="content-panel">
-      <div class="content-panel__header">
-        <h2 class="content-panel__title">Đơn hàng gần đây</h2>
-        <a routerLink="/admin/orders" class="content-panel__link">Xem tất cả</a>
+    <app-base-table title="Đơn hàng gần đây" subtitle="Theo dõi nhanh các đơn hàng mới nhất.">
+      <div table-actions>
+        <app-base-button variant="ghost" routerLink="/admin/orders">Xem tất cả</app-base-button>
       </div>
-      
       <div class="table-responsive">
-        <table class="table">
+        <table class="admin-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -88,13 +79,15 @@
               <tr>
                 <td>#{{ order.id }}</td>
                 <td>{{ order.receiverName }}</td>
-                <td class="text-success font-semibold">{{ formatPrice(order.totalPrice || 0) }}</td>
-                <td><span class="badge" [class]="getStatusClass(order.status)">{{ order.status }}</span></td>
+                <td class="font-semibold text-success">{{ formatPrice(order.totalPrice || 0) }}</td>
+                <td>
+                  <app-base-badge [tone]="getStatusTone(order.status)">{{ order.status }}</app-base-badge>
+                </td>
               </tr>
             }
           </tbody>
         </table>
       </div>
-    </div>
-  </div>
-</div>
+    </app-base-table>
+  </section>
+</section>

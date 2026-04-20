@@ -1,27 +1,221 @@
-.page {
+.shipper-orders-page {
   display: grid;
-  gap: 20px;
+  gap: 16px;
+  padding-bottom: 24px;
 }
 
-.page-header {
+.page-hero {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+}
+
+.page-hero__kicker {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--kv-text-muted);
+}
+
+.page-hero__title {
+  margin: 8px 0 0;
+  font-size: clamp(1.45rem, 2vw, 1.9rem);
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+
+.page-hero__subtitle {
+  margin: 8px 0 0;
+  color: var(--kv-text-muted);
+  max-width: 760px;
+}
+
+.filters-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
   align-items: end;
 }
 
-h1 {
-  margin: 0;
+.reset-button {
+  align-self: end;
 }
 
-p {
-  margin: 6px 0 0;
-  color: #64748b;
+.status-tabs {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
-select {
-  min-width: 220px;
-  border: 1px solid #cbd5e1;
+.status-tab {
+  border: none;
+  min-height: 40px;
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 0 12px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--kv-text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 0 1px rgba(64, 72, 93, 0.25);
+}
+
+.status-tab:hover {
+  color: var(--kv-text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.status-tab--active {
+  color: #003f43;
+  background: linear-gradient(135deg, var(--kv-primary) 0%, var(--kv-primary-container) 100%);
+  box-shadow: 0 10px 20px rgba(0, 238, 252, 0.2);
+}
+
+.status-tab__count {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.74rem;
+  background: rgba(6, 14, 32, 0.2);
+}
+
+.orders-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.order-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(64, 72, 93, 0.22);
+}
+
+.order-card__id {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.order-card__time {
+  margin: 4px 0 0;
+  color: var(--kv-text-muted);
+  font-size: 0.85rem;
+}
+
+.order-card__content {
+  display: grid;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.order-meta {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 0 0 1px rgba(64, 72, 93, 0.2);
+}
+
+.order-meta--address {
+  background: rgba(143, 245, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(143, 245, 255, 0.18);
+}
+
+.order-meta__label {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--kv-text-muted);
+  font-weight: 700;
+}
+
+.order-meta__value {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.order-meta__sub {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--kv-text-muted);
+}
+
+.order-card__actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(64, 72, 93, 0.22);
+}
+
+.order-card__note {
+  margin: 12px 0 0;
+  font-size: 0.86rem;
+  color: var(--kv-text-muted);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 28px 8px;
+}
+
+.empty-state__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.empty-state__text {
+  margin: 8px auto 0;
+  color: var(--kv-text-muted);
+  max-width: 520px;
+}
+
+@media (min-width: 768px) {
+  .shipper-orders-page {
+    gap: 20px;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1.5fr 1fr auto;
+  }
+
+  .orders-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1180px) {
+  .orders-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .page-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

@@ -9,13 +9,17 @@ import { firstValueFrom } from 'rxjs';
 import { User } from '../../../core/models/user.model';
 import { OrderActionEvent } from '../../../shared/components/order-actions/order-actions';
 import { ToastService } from '../../../core/services/toast.service';
+import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
+import { BaseSelectComponent } from '../../../shared/components/ui/base-select/base-select';
+import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
+import { BaseTableComponent } from '../../../shared/components/ui/base-table/base-table';
 
 @Component({
   selector: 'app-order-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule, OrderTableComponent],
+  imports: [CommonModule, FormsModule, OrderTableComponent, FilterBarComponent, BaseSelectComponent, BaseInputComponent, BaseTableComponent],
   templateUrl: './order-mgmt.html',
-  styleUrl: './order-mgmt.scss'
+  styleUrls: ['../dashboard/dashboard.scss', './order-mgmt.scss']
 })
 export class OrderMgmtComponent implements OnInit {
   private orderService = inject(OrderService);
@@ -28,6 +32,22 @@ export class OrderMgmtComponent implements OnInit {
   readonly selectedDate = signal('');
   readonly shippers = signal<User[]>([]);
   readonly loadingAction = signal<string | null>(null);
+
+  readonly statusOptions = [
+    { label: 'Tất cả trạng thái', value: 'ALL' },
+    { label: 'Mới tạo', value: 'CREATED' },
+    { label: 'Đang xử lý', value: 'PROCESSING' },
+    { label: 'Sẵn sàng giao', value: 'READY_FOR_SHIPPING' },
+    { label: 'Đang giao', value: 'SHIPPING' },
+    { label: 'Đã giao', value: 'DELIVERED' },
+    { label: 'Giao thất bại', value: 'DELIVERY_FAILED' },
+    { label: 'Đã hủy', value: 'CANCELLED' }
+  ];
+
+  readonly shipperOptions = computed(() => [
+    { label: 'Tất cả nhân viên giao hàng', value: 'ALL' as const },
+    ...this.shippers().map(shipper => ({ label: shipper.fullName, value: shipper.id }))
+  ]);
 
   async ngOnInit() {
     await Promise.all([
@@ -85,5 +105,20 @@ export class OrderMgmtComponent implements OnInit {
     } finally {
       this.loadingAction.set(null);
     }
+  }
+
+  async onStatusChanged(value: string | number): Promise<void> {
+    this.selectedStatus.set(value as OrderStatus | 'ALL');
+    await this.reload();
+  }
+
+  async onShipperChanged(value: string | number): Promise<void> {
+    this.selectedShipperId.set(value === 'ALL' ? 'ALL' : Number(value));
+    await this.reload();
+  }
+
+  async onDateChanged(value: string): Promise<void> {
+    this.selectedDate.set(value);
+    await this.reload();
   }
 }

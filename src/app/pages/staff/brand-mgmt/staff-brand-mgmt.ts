@@ -1,18 +1,24 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { BrandModalComponent } from '../../../shared/components/brand-modal/brand-modal.component';
 import { ToastService } from '../../../core/services/toast.service';
+import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
+import { BaseTableComponent } from '../../../shared/components/ui/base-table/base-table';
+import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
+import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
 
 @Component({
   selector: 'app-staff-brand-mgmt',
-  standalone: true,
-  imports: [CommonModule, FormsModule, BrandModalComponent],
-  templateUrl: './staff-brand-mgmt.html'
+  imports: [CommonModule, FormsModule, BrandModalComponent, BaseButtonComponent, BaseTableComponent, FilterBarComponent, BaseInputComponent],
+  templateUrl: './staff-brand-mgmt.html',
+  styleUrls: ['../../admin/dashboard/dashboard.scss', './staff-brand-mgmt.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StaffBrandMgmtComponent {
   brands: any[] = [];
+  searchTerm = '';
   isModalOpen = false;
   isSaving = false;
   selectedBrand: any = null;
@@ -67,5 +73,14 @@ export class StaffBrandMgmtComponent {
         this.isSaving = false;
       }
     });
+  }
+
+  get filteredBrands(): any[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      return this.brands;
+    }
+
+    return this.brands.filter(brand => String(brand.name || '').toLowerCase().includes(term));
   }
 }

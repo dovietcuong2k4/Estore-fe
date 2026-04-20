@@ -35,6 +35,7 @@ export interface Order {
   status: OrderStatus;
   items: OrderItem[];
   totalPrice?: number;
+  discountAmount?: number;
   user?: User;
   shipper?: User;
 }
@@ -49,6 +50,7 @@ export interface CreateOrderRequest {
   receiverPhone: string;
   receiverAddress: string;
   note?: string;
+  userVoucherId?: number;
   items?: CartItemRequest[];
 }
 
@@ -84,6 +86,7 @@ export interface OrderResponse {
   receivedDate: string | null;
   status: string;
   totalPrice?: number;
+  discountAmount?: number;
   orderItems: OrderItemResponse[];
 }
 
@@ -143,6 +146,7 @@ export function mapOrderResponseToOrder(res: OrderResponse): Order {
     status: res.status as OrderStatus,
     items,
     totalPrice,
+    discountAmount: res.discountAmount ?? 0,
     user: res.user ? mapUserInOrder(res.user) : undefined,
     shipper: res.shipper ? mapUserInOrder(res.shipper) : undefined
   };

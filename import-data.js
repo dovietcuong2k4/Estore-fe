@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 
-// 🔥 IMPORT FILE MOCK MỚI
+// Nhập dữ liệu mẫu
 import { mockData } from './mock-data.js';
 
 const dbConfig = {
@@ -13,10 +13,10 @@ const dbConfig = {
 async function main() {
   const connection = await mysql.createConnection(dbConfig);
 
-  console.log('🚀 Start importing...');
+  console.log('🚀 Bắt đầu nhập dữ liệu...');
 
   // =============================
-  // 1. CATEGORIES
+  // 1. DANH MỤC
   // =============================
   for (const c of mockData.categories) {
     await connection.execute(
@@ -29,7 +29,7 @@ async function main() {
   }
 
   // =============================
-  // 2. BRANDS
+  // 2. HÃNG
   // =============================
   for (const b of mockData.brands) {
     await connection.execute(
@@ -42,10 +42,10 @@ async function main() {
   }
 
   // =============================
-  // 3. PRODUCTS
+  // 3. SẢN PHẨM
   // =============================
   for (const p of mockData.products) {
-    // map category + brand theo NAME
+    // Ánh xạ danh mục + hãng theo tên
     const [catRows] = await connection.execute(
       `SELECT id FROM categories WHERE name = ? LIMIT 1`,
       [getCategoryName(p.categoryId)]
@@ -57,14 +57,14 @@ async function main() {
     );
 
     if (!catRows.length || !brandRows.length) {
-      console.log(`⚠️ Skip product: ${p.name}`);
+      console.log(`⚠️ Bỏ qua sản phẩm: ${p.name}`);
       continue;
     }
 
     const categoryId = catRows[0].id;
     const brandId = brandRows[0].id;
 
-    // insert product
+    // Thêm sản phẩm
     await connection.execute(
       `INSERT INTO products (
         name, price, cpu, ram, screen,
@@ -96,7 +96,7 @@ async function main() {
       ]
     );
 
-    // insert image
+    // Thêm ảnh
     if (p.image) {
       await connection.execute(
         `INSERT INTO product_images (product_id, image_url, is_thumbnail)
@@ -111,15 +111,15 @@ async function main() {
       );
     }
 
-    console.log(`✅ Imported: ${p.name}`);
+    console.log(`✅ Đã nhập: ${p.name}`);
   }
 
-  console.log('🎉 DONE');
+  console.log('🎉 Hoàn tất nhập dữ liệu');
   await connection.end();
 }
 
 // =============================
-// MAPPING
+// ÁNH XẠ
 // =============================
 function getCategoryName(id) {
   const map = {

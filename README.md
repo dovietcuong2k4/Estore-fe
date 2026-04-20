@@ -1,59 +1,59 @@
 # Ecommerce
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+Dự án này được tạo bằng [Angular CLI](https://github.com/angular/angular-cli) phiên bản 21.2.7.
 
-## Development server
+## Chạy môi trường phát triển
 
-To start a local development server, run:
+Để khởi động máy chủ phát triển cục bộ, chạy:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Sau khi máy chủ chạy, mở trình duyệt và truy cập `http://localhost:4200/`. Ứng dụng sẽ tự động tải lại khi bạn thay đổi mã nguồn.
 
-## Code scaffolding
+## Sinh mã khung
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Angular CLI cung cấp công cụ sinh mã khung mạnh mẽ. Để tạo component mới, chạy:
 
 ```bash
 ng generate component component-name
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Để xem đầy đủ danh sách schematic khả dụng (như `components`, `directives`, `pipes`), chạy:
 
 ```bash
 ng generate --help
 ```
 
-## Building
+## Build dự án
 
-To build the project run:
+Để build dự án, chạy:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Lệnh này sẽ biên dịch dự án và lưu kết quả vào thư mục `dist/`. Mặc định, bản build production sẽ được tối ưu hiệu năng và tốc độ.
 
-## Running unit tests
+## Chạy kiểm thử đơn vị
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Để chạy unit test bằng [Vitest](https://vitest.dev/), dùng lệnh:
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+## Chạy kiểm thử end-to-end
 
-For end-to-end (e2e) testing, run:
+Để chạy kiểm thử end-to-end (e2e), chạy:
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Angular CLI không đi kèm sẵn framework e2e theo mặc định. Bạn có thể chọn công cụ phù hợp với nhu cầu của mình.
 
-## Additional Resources
+## Tài liệu tham khảo
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Để tìm hiểu thêm về Angular CLI, bao gồm tài liệu lệnh chi tiết, xem [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli).

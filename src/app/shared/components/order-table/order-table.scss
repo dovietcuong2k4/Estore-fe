@@ -1,56 +1,107 @@
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
+  border-radius: 12px;
+
+  &::-webkit-scrollbar { height: 8px; }
 }
 
 .order-table {
   width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-}
+  min-width: 860px;
+  border-collapse: separate;
+  border-spacing: 0 8px;
 
-.order-table th,
-.order-table td {
-  padding: 14px 16px;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-  vertical-align: top;
-}
+  th {
+    padding: 0 16px 8px;
+    text-align: left;
+    color: var(--kv-text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-bottom: 2px solid rgba(143, 245, 255, 0.1);
+  }
 
-.order-table th {
-  background: #f8fafc;
-  color: #334155;
-  font-size: 13px;
-  text-transform: uppercase;
+  tbody tr {
+    background: rgba(20, 31, 56, 0.45);
+    box-shadow: inset 0 0 0 1px rgba(64, 72, 93, 0.15);
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(20, 31, 56, 0.7);
+      box-shadow: inset 0 0 0 1px rgba(143, 245, 255, 0.4), 0 8px 24px rgba(3, 8, 20, 0.3);
+    }
+  }
+
+  td {
+    padding: 1.25rem 1rem;
+    color: var(--kv-text);
+    vertical-align: middle;
+
+    &:first-child {
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+    &:last-child {
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+  }
 }
 
 .customer {
-  font-weight: 600;
-  color: #0f172a;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  &__name {
+    font-weight: 700;
+    color: var(--kv-text);
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+  }
+
+  &__phone {
+    color: var(--kv-text-muted);
+    font-size: 0.82rem;
+  }
 }
 
 .sub {
-  margin-top: 4px;
-  color: #64748b;
-  font-size: 13px;
+  color: var(--kv-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
 }
 
-.status {
-  display: inline-flex;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #dbeafe;
-  color: #1d4ed8;
+.id-badge {
+  padding: 0 8px;
+  min-height: 22px;
+  color: #cfe2ff;
+  font-family: monospace;
+  font-size: 0.76rem;
   font-weight: 600;
-  font-size: 12px;
+  text-align: center;
 }
 
 .empty-state {
   padding: 24px;
-  border-radius: 16px;
-  background: #fff;
   text-align: center;
-  color: #64748b;
+  border-radius: 12px;
+
+  &__icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    opacity: 0.5;
+  }
+
+  &__text {
+    color: var(--kv-text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
 }
+
+.align-right { text-align: right; }

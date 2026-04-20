@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KINETIC VAULT | Precision Engineered Electronics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#00eefc",
+                        "on-secondary-fixed": "#40009b",
+                        "secondary": "#ac8aff",
+                        "tertiary-fixed-dim": "#51a7fe",
+                        "on-error-container": "#ffa8a3",
+                        "on-tertiary": "#002e52",
+                        "secondary-dim": "#8455ef",
+                        "on-surface": "#dee5ff",
+                        "error-container": "#9f0519",
+                        "on-background": "#dee5ff",
+                        "on-primary-fixed": "#003f43",
+                        "secondary-fixed": "#dac9ff",
+                        "on-tertiary-fixed-variant": "#003b68",
+                        "on-tertiary-fixed": "#001930",
+                        "inverse-primary": "#006a71",
+                        "surface-container-low": "#091328",
+                        "on-surface-variant": "#a3aac4",
+                        "secondary-fixed-dim": "#ceb9ff",
+                        "inverse-surface": "#faf8ff",
+                        "surface-container-lowest": "#000000",
+                        "error-dim": "#d7383b",
+                        "surface-container-high": "#141f38",
+                        "on-primary-fixed-variant": "#005e64",
+                        "surface-bright": "#1f2b49",
+                        "on-secondary-fixed-variant": "#5f28c8",
+                        "secondary-container": "#5516be",
+                        "inverse-on-surface": "#4d556b",
+                        "primary-fixed-dim": "#00deec",
+                        "primary": "#8ff5ff",
+                        "surface-container": "#0f1930",
+                        "primary-fixed": "#00eefc",
+                        "on-secondary": "#280067",
+                        "outline-variant": "#40485d",
+                        "on-error": "#490006",
+                        "surface-variant": "#192540",
+                        "surface-container-highest": "#192540",
+                        "primary-dim": "#00deec",
+                        "surface-tint": "#8ff5ff",
+                        "tertiary-container": "#4aa2f9",
+                        "on-primary": "#005d63",
+                        "surface": "#060e20",
+                        "tertiary-fixed": "#72b5ff",
+                        "on-primary-container": "#005359",
+                        "tertiary": "#65afff",
+                        "surface-dim": "#060e20",
+                        "error": "#ff716c",
+                        "background": "#060e20",
+                        "on-tertiary-container": "#00213e",
+                        "outline": "#6d758c",
+                        "on-secondary-container": "#d9c8ff",
+                        "tertiary-dim": "#4aa2f9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+        .glass-panel {
+            background: rgba(6, 14, 32, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 70% 50%, rgba(143, 245, 255, 0.1) 0%, rgba(6, 14, 32, 0) 60%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary/30">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-cyan-400/10 shadow-[0_1px_15px_rgba(0,240,255,0.1)]">
+<div class="flex justify-between items-center px-8 py-4 w-full max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-cyan-400 font-space-grotesk tracking-tight">KINETIC VAULT</div>
+<div class="hidden md:flex items-center space-x-8 font-inter text-sm tracking-wide uppercase">
+<a class="text-cyan-400 border-b-2 border-cyan-400 pb-1" href="#">Curated</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors" href="#">Performance</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors" href="#">Infrastructure</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors" href="#">Archives</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="hover:bg-cyan-400/10 transition-all duration-300 p-2 rounded-full scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-cyan-400">shopping_cart</span>
+</button>
+<button class="hover:bg-cyan-400/10 transition-all duration-300 p-2 rounded-full scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-cyan-400">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden px-8 hero-gradient">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
+<div class="z-10">
+<span class="text-secondary font-label text-sm tracking-[0.3em] uppercase mb-4 block">Future of Computation</span>
+<h1 class="text-6xl md:text-8xl font-bold text-on-surface leading-none mb-6 tracking-tighter">
+                    NEURAL <span class="text-primary-fixed">CORE-X</span>
+</h1>
+<p class="text-on-surface-variant text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
+                    Architecture redefined. Experience the world's first liquid-cooled desktop terminal with bio-metric encryption and carbon-nanotube processing.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold px-10 py-4 rounded-full transition-all hover:shadow-[0_0_30px_rgba(0,238,252,0.4)] active:scale-95">
+                        ACQUIRE NOW
+                    </button>
+<button class="border border-primary/20 text-primary px-10 py-4 rounded-full hover:bg-primary/10 transition-all font-bold">
+                        SPECIFICATIONS
+                    </button>
+</div>
+</div>
+<div class="relative">
+<div class="absolute -inset-20 bg-tertiary-container/10 blur-[120px] rounded-full"></div>
+<img alt="Futuristic high-end computer hardware" class="relative z-10 w-full h-auto object-cover rounded-xl shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-700" data-alt="Hyper-realistic futuristic desktop computer case with glowing cyan liquid cooling tubes and intricate internal components on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOxNC57p1h02T2frsfgQjeL0VN_aNIbwOOnjE8qAMX7_flaJAupTrf8aEWu9BXbQ3ecWAQTTAYrC_PGbQJJXgnLH-es7gxtP90Yc-QZINwC4uRYcZAKQLpsf_knPkyUWt4DMzEwXBuKdPGkj4YcPMpwMY-UhYI_t924Fos-OY5JAPdOlQBfQofC2PGuIaNnkBvNkMPRtVPaaVmB-dxRyu4TtmKUFLI-lTH0vqwD-fwTH8puqOspgQ57Q9q6B1G4FEsu11-mgs6pA"/>
+</div>
+</div>
+</section>
+<!-- Top Categories -->
+<section class="py-24 px-8 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="flex items-end justify-between mb-16">
+<div>
+<h2 class="text-4xl font-bold text-on-surface">System Categories</h2>
+<div class="h-1 w-24 bg-primary mt-4"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="group bg-surface-container-highest p-8 rounded-xl border border-outline-variant/10 hover:border-primary/40 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-4xl text-primary mb-6 block" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Terminals</h3>
+<p class="text-on-surface-variant text-sm mt-2">Next-gen desktop arrays</p>
+</div>
+<div class="group bg-surface-container-highest p-8 rounded-xl border border-outline-variant/10 hover:border-primary/40 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-4xl text-primary mb-6 block" style="font-variation-settings: 'FILL' 1;">headset</span>
+<h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Audio Links</h3>
+<p class="text-on-surface-variant text-sm mt-2">Spatial frequency units</p>
+</div>
+<div class="group bg-surface-container-highest p-8 rounded-xl border border-outline-variant/10 hover:border-primary/40 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-4xl text-primary mb-6 block" style="font-variation-settings: 'FILL' 1;">watch</span>
+<h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Wearables</h3>
+<p class="text-on-surface-variant text-sm mt-2">Bio-integrated sensors</p>
+</div>
+<div class="group bg-surface-container-highest p-8 rounded-xl border border-outline-variant/10 hover:border-primary/40 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-4xl text-primary mb-6 block" style="font-variation-settings: 'FILL' 1;">memory</span>
+<h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Components</h3>
+<p class="text-on-surface-variant text-sm mt-2">Core modular upgrades</p>
+</div>
+</div>
+</div>
+</section>
+<!-- New Arrivals -->
+<section class="py-24 px-8 bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6">
+<h2 class="text-5xl font-bold text-on-surface tracking-tighter">NEW ARRIVALS</h2>
+<div class="flex gap-4">
+<button class="w-12 h-12 flex items-center justify-center rounded-full border border-outline-variant hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center rounded-full border border-outline-variant hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Product Card 1 -->
+<div class="group relative bg-surface-container-low rounded-2xl overflow-hidden p-6 hover:shadow-[0_0_40px_rgba(143,245,255,0.05)] transition-all">
+<div class="relative h-64 mb-8 bg-surface-container-lowest rounded-xl overflow-hidden">
+<img alt="Professional Headphones" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" data-alt="Matte black professional studio headphones floating in a dark studio setting with minimalist blue accent lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkt7zYmFBs71bpLrQrXtj2_CHue2HDsDcxKjOpWMB_QyGrRfhSCfBu3DWSjASlM6nUjLX2w5_4XS9zvyLJRT8pWRDbU5iisc7mSzFdcNAPcPP7IZBGIO9OxdinYTj1dTaWjZE7oRDh39QrOMqAMAcN03GYLwJZzxcVpZg8L4YNRv3fYLpgU1eaMeFkcLIQq8uaRJ1eymG3CiFJobdm_OF0HH31769lJfLmlQe1aBD1cPy2Aosp7CCcoQaXA5NU3HMlFH8i1PVe0g"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Limited</div>
+</div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-2xl font-bold text-on-surface">Sonic Aegis X</h3>
+<span class="text-primary font-bold text-xl">$599</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Active noise isolation with hyper-dynamic driver technology.</p>
+<button class="w-full bg-surface-container-highest border border-outline-variant/30 text-on-surface py-3 rounded-xl font-bold hover:bg-primary hover:text-on-primary transition-all">
+                        ADD TO ARCHIVE
+                    </button>
+</div>
+<!-- Card 2 -->
+<div class="group relative bg-surface-container-low rounded-2xl overflow-hidden p-6 hover:shadow-[0_0_40px_rgba(143,245,255,0.05)] transition-all">
+<div class="relative h-64 mb-8 bg-surface-container-lowest rounded-xl overflow-hidden">
+<img alt="High-end Tablet" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" data-alt="Sleek ultra-thin tablet with a glowing OLED screen displaying abstract colorful patterns in a dark environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ8_VKiD1Ng4gL1p_WvnytpK4GOk_amJZIlMb380U3DQ5urDcB5Fp7bwujog1QThaX-WoFyfe2IxT4xsv75-JKd-xQxz8DCA4lT3p8DajAG8IimFuUXV1ZITH6YriS_ByhVwKUJUVN3xiB_a3gxObjiqyBiK_zP0HYyfVS_vJHPqv4Edom8Ui0U5MTAT_S1EV_xOnl3r3c5SFX3jafAEoCRR7HRMTmsOGUZT7iyD57wBDR0rvI5c-bOJCEsW7YOwqBrd99nzANKw"/>
+</div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-2xl font-bold text-on-surface">Prism Slate</h3>
+<span class="text-primary font-bold text-xl">$1,299</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">16K OLED interface with haptic-response glass surface.</p>
+<button class="w-full bg-surface-container-highest border border-outline-variant/30 text-on-surface py-3 rounded-xl font-bold hover:bg-primary hover:text-on-primary transition-all">
+                        ADD TO ARCHIVE
+                    </button>
+</div>
+<!-- Card 3 -->
+<div class="group relative bg-surface-container-low rounded-2xl overflow-hidden p-6 hover:shadow-[0_0_40px_rgba(143,245,255,0.05)] transition-all">
+<div class="relative h-64 mb-8 bg-surface-container-lowest rounded-xl overflow-hidden">
+<img alt="Ergonomic Mouse" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" data-alt="Futuristic ergonomic computer mouse with semi-transparent shell showing glowing internal circuits and blue LED strips" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBG5RpJWgsWSnrBJv2DpjZXW3oC4tzGT03fHQxTT8LCPmiuMdHLFEjF3zQdhUgZ7ddgeEiqtF-Z9BEG4iSbD8nPKdEqnMx8TKywzR7tYgB93K6Jf6meApk-a_AkoTunQKBY4oBhpvXXx2LtPdeh_OqiMKeiihm2cgqDtxBoIP5Du9CHKq6AwWqLhSPKall3_TwRcaqWTHtZjUJequfgzIWvlDzFr0tnpc5Pku4mkHY_cQY8kMvTD2yiLSPDDI1s2ut5aEp1JzDGg"/>
+</div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-2xl font-bold text-on-surface">Kinetic G-1</h3>
+<span class="text-primary font-bold text-xl">$189</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Zero-latency optical tracking with magnetic glide feet.</p>
+<button class="w-full bg-surface-container-highest border border-outline-variant/30 text-on-surface py-3 rounded-xl font-bold hover:bg-primary hover:text-on-primary transition-all">
+                        ADD TO ARCHIVE
+                    </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Special Promotions Section -->
+<section class="py-24 px-8 bg-surface-container-low overflow-hidden relative">
+<div class="max-w-7xl mx-auto relative z-10">
+<h2 class="text-secondary font-label text-sm tracking-[0.4em] uppercase mb-12">Current Protocols</h2>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+<!-- Large Promo Banner -->
+<div class="lg:col-span-8 group relative rounded-3xl overflow-hidden min-h-[450px] border border-cyan-400/20 shadow-[0_0_50px_rgba(0,238,252,0.1)] transition-all duration-500 hover:border-cyan-400/40">
+<div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent z-10"></div>
+<img alt="Summer Tech Blast" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Dramatic high-angle shot of futuristic hardware glowing with neon cyan and magenta energy pulses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHXGfHq-G9L3I-_rS7VInA0Vv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-g"/>
+<div class="relative z-20 p-12 h-full flex flex-col justify-center">
+<span class="inline-block px-4 py-1 rounded-full bg-cyan-400 text-slate-950 text-[10px] font-black uppercase tracking-widest mb-6 w-fit">Active Event</span>
+<h3 class="text-6xl md:text-7xl font-black text-on-surface mb-4 leading-none tracking-tighter">SUMMER<br/>TECH BLAST</h3>
+<div class="flex items-baseline gap-4 mb-8">
+<span class="text-8xl font-black text-cyan-400 drop-shadow-[0_0_20px_rgba(0,238,252,0.5)]">40%</span>
+<span class="text-2xl font-bold text-on-surface uppercase tracking-tight">Reduction</span>
+</div>
+<button class="bg-cyan-400 text-slate-950 font-black px-12 py-4 rounded-full w-fit hover:bg-white transition-colors flex items-center gap-3">
+                            INITIALIZE DISCOUNT
+                            <span class="material-symbols-outlined">bolt</span>
+</button>
+</div>
+</div>
+<!-- Smaller Promo Banner -->
+<div class="lg:col-span-4 group relative rounded-3xl overflow-hidden min-h-[450px] border border-secondary/20 shadow-[0_0_50px_rgba(172,138,255,0.1)] transition-all duration-500 hover:border-secondary/40">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent z-10"></div>
+<img alt="Cyber Weekend Preview" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" data-alt="Close-up of sleek violet-glowing neural processors and fiber-optic cables" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_V1T2rX6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-gVv8pZf4lD3bF6z0C4C8A6X-g"/>
+<div class="relative z-20 p-10 h-full flex flex-col justify-end">
+<h3 class="text-3xl font-black text-on-surface mb-2 uppercase tracking-tighter">Cyber Weekend</h3>
+<p class="text-secondary text-sm font-bold tracking-[0.2em] mb-6 uppercase">Encrypted Early Access</p>
+<div class="text-5xl font-black text-white mb-8">50% <span class="text-lg opacity-50">OFF</span></div>
+<button class="w-full border border-secondary/50 text-secondary hover:bg-secondary hover:text-on-secondary font-black py-4 rounded-xl transition-all uppercase tracking-widest text-xs">
+                            Secure Invite
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Background decorative elements -->
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-cyan-400/5 blur-[120px] rounded-full"></div>
+<div class="absolute -bottom-24 -right-24 w-96 h-96 bg-secondary/5 blur-[120px] rounded-full"></div>
+</section>
+<!-- Best Sellers Section -->
+<section class="py-24 px-8 bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="flex items-end justify-between mb-16">
+<div>
+<h2 class="text-4xl font-bold text-on-surface">Vault Favorites</h2>
+<div class="h-1 w-24 bg-secondary mt-4"></div>
+<p class="text-on-surface-variant mt-6 max-w-lg">The most deployed hardware units across our global user network.</p>
+</div>
+<a class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all" href="#">
+                    VIEW ALL ARCHIVES <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Best Seller 1 -->
+<div class="group relative bg-surface-container-highest/50 rounded-2xl border border-outline-variant/10 p-6 hover:bg-surface-container-highest transition-colors">
+<div class="relative aspect-square mb-6 rounded-xl overflow-hidden bg-slate-900">
+<img alt="Vault Terminal" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Sleek black compact PC with glowing amber internal lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0N0J-k5D-p_WvnytpK4GOk_amJZIlMb380U3DQ5urDcB5Fp7bwujog1QThaX-WoFyfe2IxT4xsv75-JKd-xQxz8DCA4lT3p8DajAG8IimFuUXV1ZITH6YriS_ByhVwKUJUVN3xiB_a3gxObjiqyBiK_zP0HYyfVS_vJHPqv4Edom8Ui0U5MTAT_S1EV_xOnl3r3c5SFX3jafAEoCRR7HRMTmsOGUZT7iyD57wBDR0rvI5c-bOJCEsW7YOwqBrd99nzANKw"/>
+<div class="absolute top-2 left-2 bg-on-surface-variant/20 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded">#1 TOP SELLER</div>
+</div>
+<h3 class="font-bold text-on-surface text-lg">Nexus Nano-P1</h3>
+<p class="text-on-surface-variant text-sm mb-4">Edge computation unit</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-black">$899</span>
+<button class="p-2 rounded-full border border-outline-variant hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Best Seller 2 -->
+<div class="group relative bg-surface-container-highest/50 rounded-2xl border border-outline-variant/10 p-6 hover:bg-surface-container-highest transition-colors">
+<div class="relative aspect-square mb-6 rounded-xl overflow-hidden bg-slate-900">
+<img alt="Vault Audio" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Minimalist silver earbuds in a translucent case glowing blue" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR_8_VKiD1Ng4gL1p_WvnytpK4GOk_amJZIlMb380U3DQ5urDcB5Fp7bwujog1QThaX-WoFyfe2IxT4xsv75-JKd-xQxz8DCA4lT3p8DajAG8IimFuUXV1ZITH6YriS_ByhVwKUJUVN3xiB_a3gxObjiqyBiK_zP0HYyfVS_vJHPqv4Edom8Ui0U5MTAT_S1EV_xOnl3r3c5SFX3jafAEoCRR7HRMTmsOGUZT7iyD57wBDR0rvI5c-bOJCEsW7YOwqBrd99nzANKw"/>
+<div class="absolute top-2 left-2 bg-on-surface-variant/20 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded">#2 TOP SELLER</div>
+</div>
+<h3 class="font-bold text-on-surface text-lg">Pulse Links v2</h3>
+<p class="text-on-surface-variant text-sm mb-4">Haptic audio interface</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-black">$249</span>
+<button class="p-2 rounded-full border border-outline-variant hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Best Seller 3 -->
+<div class="group relative bg-surface-container-highest/50 rounded-2xl border border-outline-variant/10 p-6 hover:bg-surface-container-highest transition-colors">
+<div class="relative aspect-square mb-6 rounded-xl overflow-hidden bg-slate-900">
+<img alt="Vault Wearable" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Sleek carbon-fiber watch with holographic display" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9_VKiD1Ng4gL1p_WvnytpK4GOk_amJZIlMb380U3DQ5urDcB5Fp7bwujog1QThaX-WoFyfe2IxT4xsv75-JKd-xQxz8DCA4lT3p8DajAG8IimFuUXV1ZITH6YriS_ByhVwKUJUVN3xiB_a3gxObjiqyBiK_zP0HYyfVS_vJHPqv4Edom8Ui0U5MTAT_S1EV_xOnl3r3c5SFX3jafAEoCRR7HRMTmsOGUZT7iyD57wBDR0rvI5c-bOJCEsW7YOwqBrd99nzANKw"/>
+<div class="absolute top-2 left-2 bg-on-surface-variant/20 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded">#3 TOP SELLER</div>
+</div>
+<h3 class="font-bold text-on-surface text-lg">Bio-Tether Chrono</h3>
+<p class="text-on-surface-variant text-sm mb-4">Vitality stream monitoring</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-black">$420</span>
+<button class="p-2 rounded-full border border-outline-variant hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Best Seller 4 -->
+<div class="group relative bg-surface-container-highest/50 rounded-2xl border border-outline-variant/10 p-6 hover:bg-surface-container-highest transition-colors">
+<div class="relative aspect-square mb-6 rounded-xl overflow-hidden bg-slate-900">
+<img alt="Vault Component" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Glow-in-the-dark liquid cooling reservoir with complex metal fittings" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOxNC57p1h02T2frsfgQjeL0VN_aNIbwOOnjE8qAMX7_flaJAupTrf8aEWu9BXbQ3ecWAQTTAYrC_PGbQJJXgnLH-es7gxtP90Yc-QZINwC4uRYcZAKQLpsf_knPkyUWt4DMzEwXBuKdPGkj4YcPMpwMY-UhYI_t924Fos-OY5JAPdOlQBfQofC2PGuIaNnkBvNkMPRtVPaaVmB-dxRyu4TtmKUFLI-lTH0vqwD-fwTH8puqOspgQ57Q9q6B1G4FEsu11-mgs6pA"/>
+<div class="absolute top-2 left-2 bg-on-surface-variant/20 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded">#4 TOP SELLER</div>
+</div>
+<h3 class="font-bold text-on-surface text-lg">Cryo-Cell Reservoir</h3>
+<p class="text-on-surface-variant text-sm mb-4">Thermal regulation upgrade</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-black">$125</span>
+<button class="p-2 rounded-full border border-outline-variant hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Deal of the Day -->
+<section class="py-24 px-8 relative overflow-hidden bg-surface-container-lowest">
+<div class="absolute top-0 right-0 w-1/2 h-full bg-surface-container-high skew-x-12 translate-x-20 z-0"></div>
+<div class="max-w-7xl mx-auto relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="order-2 lg:order-1">
+<img alt="Luxury mechanical keyboard" class="rounded-2xl shadow-2xl border border-primary/20" data-alt="Mechanical keyboard with metallic finish and custom glowing keycaps on a dark desk with professional studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZjSY2mJU8qxo_aaI1atuI37hj2cSRIvzyuQcq6ih5e5SWxypvAfnegUqjYas0oxnytyhqBCwQ9zSncFZvRoTQx7YMf8Str4LlZapxZL2uvO3CQsjQS4N8NWDN_RoxyEXIIlJWpwyRyji2_NCa3AEHp1EvgtcMHFRBjwOn0QDxcfLMktaTwE74tn-gdo9hSx8W8mXwinHp9dDf9pLOvBrqdGqDxIstWOUgEPFByuKSwJ02XIVjJeeo-crrtDLaKnhHuaNZRdsjUA"/>
+</div>
+<div class="order-1 lg:order-2">
+<h2 class="text-secondary font-label text-sm tracking-[0.4em] uppercase mb-4">Deal of the Cycle</h2>
+<h3 class="text-5xl md:text-6xl font-bold text-on-surface mb-8 tracking-tighter">Obsidian Deck Pro</h3>
+<div class="flex gap-4 mb-10">
+<div class="bg-surface-container-highest p-4 rounded-xl min-w-[80px] text-center border border-outline-variant/30">
+<span class="block text-3xl font-black text-primary">08</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest">Hrs</span>
+</div>
+<div class="bg-surface-container-highest p-4 rounded-xl min-w-[80px] text-center border border-outline-variant/30">
+<span class="block text-3xl font-black text-primary">42</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest">Min</span>
+</div>
+<div class="bg-surface-container-highest p-4 rounded-xl min-w-[80px] text-center border border-outline-variant/30">
+<span class="block text-3xl font-black text-primary">15</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest">Sec</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-lg mb-10">The ultimate interface. Fully programmable haptic switches with aerospace-grade aluminum chassis. Reserved for the elite.</p>
+<div class="flex items-center gap-6">
+<div>
+<span class="block text-on-surface-variant line-through text-lg">$450</span>
+<span class="text-4xl font-black text-primary">$299</span>
+</div>
+<button class="bg-primary text-on-primary font-bold px-12 py-5 rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(143,245,255,0.2)]">
+                            CLAIM DEAL
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-950 w-full py-12 px-8 border-t border-slate-900 mt-20">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+<div>
+<div class="text-lg font-black text-slate-100 mb-6">KINETIC VAULT</div>
+<p class="text-slate-500 max-w-md mb-8">Engineering the interface of tomorrow. Our hardware is forged in precision and delivered with absolute security.</p>
+<div class="flex space-x-4">
+<a class="w-10 h-10 flex items-center justify-center rounded-full border border-slate-800 text-slate-400 hover:text-cyan-400 hover:border-cyan-400 transition-all" href="#">
+<span class="material-symbols-outlined text-sm">public</span>
+</a>
+<a class="w-10 h-10 flex items-center justify-center rounded-full border border-slate-800 text-slate-400 hover:text-cyan-400 hover:border-cyan-400 transition-all" href="#">
+<span class="material-symbols-outlined text-sm">share</span>
+</a>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div>
+<h4 class="text-slate-100 font-bold mb-6 text-xs uppercase tracking-[0.2em]">Navigation</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-500 hover:text-cyan-300 transition-colors font-inter text-sm tracking-wide uppercase" href="#">Privacy Protocol</a></li>
+<li><a class="text-slate-500 hover:text-cyan-300 transition-colors font-inter text-sm tracking-wide uppercase" href="#">Service Terms</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-slate-100 font-bold mb-6 text-xs uppercase tracking-[0.2em]">Support</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-500 hover:text-cyan-300 transition-colors font-inter text-sm tracking-wide uppercase" href="#">Encryption Standards</a></li>
+<li><a class="text-slate-500 hover:text-cyan-300 transition-colors font-inter text-sm tracking-wide uppercase" href="#">Hardware Support</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-16 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="font-inter text-sm tracking-wide uppercase text-slate-500 opacity-80 hover:opacity-100">© 2024 KINETIC VAULT. PRECISION ENGINEERED.</div>
+<div class="flex gap-6">
+<span class="text-[10px] text-cyan-400/50 font-bold uppercase tracking-widest">Verified Vault Terminal 042</span>
+</div>
+</div>
+</footer>
+</body></html>

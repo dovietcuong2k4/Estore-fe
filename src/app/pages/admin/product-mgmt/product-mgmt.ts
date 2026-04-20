@@ -7,16 +7,22 @@ import { UploadService } from '../../../core/services/upload.service';
 import { forkJoin, map } from 'rxjs';
 
 import { ProductModalComponent } from '../../../shared/components/product-modal/product-modal';
+import { BaseTableComponent } from '../../../shared/components/ui/base-table/base-table';
+import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
+import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
+import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
+import { BaseBadgeComponent } from '../../../shared/components/ui/base-badge/base-badge';
 
 @Component({
   selector: 'app-product-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductModalComponent],
+  imports: [CommonModule, FormsModule, ProductModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent, BaseBadgeComponent],
   templateUrl: './product-mgmt.html',
   styleUrls: ['../dashboard/dashboard.scss', './product-mgmt.scss']
 })
 export class ProductMgmtComponent {
   products: Product[] = [];
+  searchTerm = '';
   
   isModalOpen = false;
   isDetailModalOpen = false;
@@ -50,7 +56,29 @@ export class ProductMgmtComponent {
   }
 
   getCategory(product: Product) {
-    return product.categoryName ?? 'N/A';
+    return product.categoryName ?? 'Không có';
+  }
+
+  get filteredProducts(): Product[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      return this.products;
+    }
+
+    return this.products.filter(product =>
+      product.name.toLowerCase().includes(term) ||
+      this.getCategory(product).toLowerCase().includes(term)
+    );
+  }
+
+  getStockTone(stock: number): 'success' | 'warning' | 'error' {
+    if (stock <= 5) {
+      return 'error';
+    }
+    if (stock <= 20) {
+      return 'warning';
+    }
+    return 'success';
   }
 
   openAddModal() {    

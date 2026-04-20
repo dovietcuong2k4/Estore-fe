@@ -1,0 +1,49 @@
+<div class="table-responsive">
+  <table class="admin-table voucher-table">
+    <thead>
+      <tr>
+        <th>Mã</th>
+        <th>Giảm giá</th>
+        <th>Số lượng / Đã dùng</th>
+        <th>Ngày bắt đầu / Ngày kết thúc</th>
+        <th>Trạng thái</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (voucher of vouchers(); track voucher.id) {
+        <tr>
+          <td>
+            <span class="voucher-code">{{ voucher.code }}</span>
+          </td>
+          <td class="voucher-discount">{{ getDiscountLabel(voucher) }}</td>
+          <td class="voucher-quantity">{{ getQuantityUsedLabel(voucher) }}</td>
+          <td>
+            <div class="voucher-dates">
+              <span>{{ voucher.startDate | date:'dd/MM/yyyy' }}</span>
+              <span>{{ voucher.endDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </td>
+          <td>
+            <app-base-badge [tone]="getStatusTone(voucher)">{{ getStatusLabel(voucher) }}</app-base-badge>
+          </td>
+          <td class="text-right">
+            <div class="table-actions">
+              @if (canEdit()) {
+                <app-base-button variant="ghost" (clicked)="edit.emit(voucher)">Sửa</app-base-button>
+              }
+              @if (canEdit() && showDelete()) {
+                <app-base-button variant="danger" (clicked)="delete.emit(voucher)">Xóa</app-base-button>
+              }
+              <app-base-button variant="secondary" (clicked)="assign.emit(voucher)">Gán</app-base-button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="empty-cell">Không tìm thấy voucher nào.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
