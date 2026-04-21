@@ -30,7 +30,7 @@ export class ShipperOrdersComponent implements OnInit {
 
   readonly assignedOrders = computed(() => this.orderService.shipperOrders());
   readonly selectedStatus = signal<OrderStatus | 'ALL'>('ALL');
-  readonly searchKeyword = signal('');
+  readonly selectedDate = signal('');
   readonly loadingAction = signal<string | null>(null);
 
   readonly statusOptions: Array<{ label: string; value: OrderStatus | 'ALL' }> = [
@@ -41,25 +41,18 @@ export class ShipperOrdersComponent implements OnInit {
     { label: 'Thất bại', value: 'DELIVERY_FAILED' }
   ];
 
+  readonly dateFilteredOrders = computed(() => {
+    const selectedDate = this.selectedDate();
+    return this.assignedOrders().filter((order: Order) => !selectedDate || this.toDateOnly(order.orderDate) === selectedDate);
+  });
+
   readonly filteredOrders = computed(() => {
     const status = this.selectedStatus();
-    const keyword = this.searchKeyword().trim().toLowerCase();
-    const orders = status === 'ALL'
-      ? this.assignedOrders()
-      : this.assignedOrders().filter((order: Order) => order.status === status);
+    if (status === 'ALL') {
+      return this.dateFilteredOrders();
+    }
 
-    if (!keyword) return orders;
-
-    return orders.filter((order: Order) => {
-      const composedSearch = [
-        order.id.toString(),
-        order.receiverName,
-        order.receiverPhone,
-        order.receiverAddress
-      ].join(' ').toLowerCase();
-
-      return composedSearch.includes(keyword);
-    });
+    return this.dateFilteredOrders().filter((order: Order) => order.status === status);
   });
 
   readonly resultCount = computed(() => this.filteredOrders().length);
@@ -75,18 +68,18 @@ export class ShipperOrdersComponent implements OnInit {
     this.selectedStatus.set(value as OrderStatus | 'ALL');
   }
 
-  updateSearch(value: string): void {
-    this.searchKeyword.set(value);
+  setDate(value: string): void {
+    this.selectedDate.set(value);
   }
 
   countByStatus(status: OrderStatus | 'ALL'): number {
-    if (status === 'ALL') return this.assignedOrders().length;
-    return this.assignedOrders().filter((order: Order) => order.status === status).length;
+    if (status === 'ALL') return this.dateFilteredOrders().length;
+    return this.dateFilteredOrders().filter((order: Order) => order.status === status).length;
   }
 
   resetFilters(): void {
     this.selectedStatus.set('ALL');
-    this.searchKeyword.set('');
+    this.selectedDate.set('');
   }
 
   statusLabel(status: OrderStatus): string {
@@ -137,6 +130,13 @@ export class ShipperOrdersComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     }).format(date);
+  }
+
+  private toDateOnly(value: string): string {
+    if (!value) {
+      return '';
+    }
+    return value.includes('T') ? value.slice(0, 10) : value;
   }
 
   shipperActions(order: Order): ShipperAction[] {

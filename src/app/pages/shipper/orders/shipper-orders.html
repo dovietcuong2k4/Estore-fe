@@ -10,21 +10,21 @@
     </div>
   </app-base-card>
 
-  <app-base-card title="Bộ lọc nhanh" subtitle="Lọc trạng thái và tìm theo tên, số điện thoại, địa chỉ hoặc mã đơn.">
+  <app-base-card title="Bộ lọc nhanh" subtitle="Lọc trạng thái và thời gian tạo đơn để xử lý nhanh hơn.">
     <div class="filters-grid">
-      <app-base-input
-        label="Tìm đơn"
-        placeholder="VD: #1024, Nguyễn Văn A, 09..."
-        [value]="searchKeyword()"
-        (valueChange)="updateSearch($event)">
-      </app-base-input>
-
       <app-base-select
         label="Trạng thái"
         [options]="statusOptions"
         [value]="selectedStatus()"
         (valueChange)="setStatus($event)">
       </app-base-select>
+
+      <app-base-input
+        label="Ngày tạo"
+        type="date"
+        [value]="selectedDate()"
+        (valueChange)="setDate($event)">
+      </app-base-input>
 
       <app-base-button class="reset-button" variant="ghost" type="button" (clicked)="resetFilters()">Đặt lại bộ lọc</app-base-button>
     </div>
@@ -90,7 +90,7 @@
     <app-base-card>
       <div class="empty-state">
         <p class="empty-state__title">Không có đơn phù hợp</p>
-        <p class="empty-state__text">Thử đổi trạng thái lọc hoặc xóa từ khóa tìm kiếm để xem thêm đơn giao.</p>
+        <p class="empty-state__text">Thử đổi trạng thái hoặc thời gian lọc để xem thêm đơn giao.</p>
       </div>
     </app-base-card>
   }

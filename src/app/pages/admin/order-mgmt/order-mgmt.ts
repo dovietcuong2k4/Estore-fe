@@ -33,7 +33,7 @@ export class OrderMgmtComponent implements OnInit {
   readonly shippers = signal<User[]>([]);
   readonly loadingAction = signal<string | null>(null);
 
-  readonly statusOptions = [
+  readonly statusOptions: Array<{ label: string; value: OrderStatus | 'ALL' }> = [
     { label: 'Tất cả trạng thái', value: 'ALL' },
     { label: 'Mới tạo', value: 'CREATED' },
     { label: 'Đang xử lý', value: 'PROCESSING' },
@@ -43,6 +43,16 @@ export class OrderMgmtComponent implements OnInit {
     { label: 'Giao thất bại', value: 'DELIVERY_FAILED' },
     { label: 'Đã hủy', value: 'CANCELLED' }
   ];
+
+  readonly filteredOrders = computed(() => {
+    const status = this.selectedStatus();
+    if (status === 'ALL') {
+      return this.orders();
+    }
+    return this.orders().filter(order => order.status === status);
+  });
+
+  readonly orderCount = computed(() => this.filteredOrders().length);
 
   readonly shipperOptions = computed(() => [
     { label: 'Tất cả nhân viên giao hàng', value: 'ALL' as const },
@@ -58,7 +68,6 @@ export class OrderMgmtComponent implements OnInit {
 
   async reload(): Promise<void> {
     await this.orderService.loadAdminOrders({
-      status: this.selectedStatus() === 'ALL' ? undefined : this.selectedStatus(),
       shipperId: this.selectedShipperId() === 'ALL' ? null : Number(this.selectedShipperId()),
       date: this.selectedDate() || undefined
     });
@@ -107,9 +116,11 @@ export class OrderMgmtComponent implements OnInit {
     }
   }
 
-  async onStatusChanged(value: string | number): Promise<void> {
+  onStatusChanged(value: string | number): void {
+    if (typeof value !== 'string') {
+      return;
+    }
     this.selectedStatus.set(value as OrderStatus | 'ALL');
-    await this.reload();
   }
 
   async onShipperChanged(value: string | number): Promise<void> {
@@ -120,5 +131,20 @@ export class OrderMgmtComponent implements OnInit {
   async onDateChanged(value: string): Promise<void> {
     this.selectedDate.set(value);
     await this.reload();
+  }
+
+  async resetFilters(): Promise<void> {
+    this.selectedStatus.set('ALL');
+    this.selectedShipperId.set('ALL');
+    this.selectedDate.set('');
+    await this.reload();
+  }
+
+  countByStatus(status: OrderStatus | 'ALL'): number {
+    if (status === 'ALL') {
+      return this.orders().length;
+    }
+
+    return this.orders().filter(order => order.status === status).length;
   }
 }

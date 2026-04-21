@@ -31,7 +31,7 @@ export class StaffOrderMgmtComponent implements OnInit {
   readonly selectedShipperId = signal<number | 'ALL'>('ALL');
   readonly loadingAction = signal<string | null>(null);
 
-  readonly statusOptions = [
+  readonly statusOptions: Array<{ label: string; value: OrderStatus | 'ALL' }> = [
     { label: 'Tất cả', value: 'ALL' },
     { label: 'Mới tạo', value: 'CREATED' },
     { label: 'Đang xử lý', value: 'PROCESSING' },
@@ -42,17 +42,24 @@ export class StaffOrderMgmtComponent implements OnInit {
     { label: 'Đã hủy', value: 'CANCELLED' }
   ];
 
-  readonly filteredOrders = computed(() => {
-    const status = this.selectedStatus();
+  readonly ordersByDateAndShipper = computed(() => {
     const selectedDate = this.selectedDate();
     const shipperId = this.selectedShipperId();
 
     return this.orders().filter((order: Order) => {
-      const matchesStatus = status === 'ALL' || order.status === status;
       const matchesDate = !selectedDate || this.toDateOnly(order.orderDate) === selectedDate;
       const matchesShipper = shipperId === 'ALL' || order.shipperId === shipperId;
-      return matchesStatus && matchesDate && matchesShipper;
+      return matchesDate && matchesShipper;
     });
+  });
+
+  readonly filteredOrders = computed(() => {
+    const status = this.selectedStatus();
+    if (status === 'ALL') {
+      return this.ordersByDateAndShipper();
+    }
+
+    return this.ordersByDateAndShipper().filter((order: Order) => order.status === status);
   });
 
   readonly orderCount = computed(() => this.filteredOrders().length);
@@ -81,6 +88,14 @@ export class StaffOrderMgmtComponent implements OnInit {
     this.selectedStatus.set('ALL');
     this.selectedDate.set('');
     this.selectedShipperId.set('ALL');
+  }
+
+  countByStatus(status: OrderStatus | 'ALL'): number {
+    if (status === 'ALL') {
+      return this.ordersByDateAndShipper().length;
+    }
+
+    return this.ordersByDateAndShipper().filter((order: Order) => order.status === status).length;
   }
 
   async ngOnInit() {

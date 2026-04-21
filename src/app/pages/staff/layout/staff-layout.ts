@@ -6,7 +6,7 @@ import { BaseInputComponent } from '../../../shared/components/ui/base-input/bas
 
 @Component({
   selector: 'app-staff-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, BaseButtonComponent, BaseInputComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, BaseButtonComponent],
   templateUrl: './staff-layout.html',
   styleUrl: './staff-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
