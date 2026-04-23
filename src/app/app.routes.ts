@@ -37,6 +37,11 @@ export const routes: Routes = [
         title: 'Đơn hàng - E-Store'
       },
       {
+        path: 'profile',
+        loadComponent: () => import('./pages/profile/profile').then(m => m.ProfilePageComponent),
+        title: 'Thông tin cá nhân - E-Store'
+      },
+      {
         path: 'login',
         loadComponent: () => import('./pages/login/login').then(m => m.LoginComponent),
         title: 'Đăng nhập - E-Store'
@@ -65,7 +70,8 @@ export const routes: Routes = [
       { path: 'brands', loadComponent: () => import('./pages/admin/brand-mgmt/brand-mgmt').then(m => m.BrandMgmtComponent), title: 'Quản lý hãng - Quản trị' },
       { path: 'orders', loadComponent: () => import('./pages/admin/order-mgmt/order-mgmt').then(m => m.OrderMgmtComponent), title: 'Quản lý đơn hàng - Quản trị' },
       { path: 'users', loadComponent: () => import('./pages/admin/user-mgmt/user-mgmt').then(m => m.UserMgmtComponent), title: 'Quản lý người dùng - Quản trị' },
-      { path: 'vouchers', loadComponent: () => import('./pages/admin/voucher-mgmt/voucher-mgmt').then(m => m.VoucherMgmtComponent), title: 'Quản lý voucher - Quản trị' }
+      { path: 'vouchers', loadComponent: () => import('./pages/admin/voucher-mgmt/voucher-mgmt').then(m => m.VoucherMgmtComponent), title: 'Quản lý voucher - Quản trị' },
+      { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.ProfilePageComponent), title: 'Thông tin cá nhân - Quản trị' }
     ]
   },
   {
@@ -78,7 +84,8 @@ export const routes: Routes = [
       { path: 'categories', loadComponent: () => import('./pages/staff/category-mgmt/staff-category-mgmt').then(m => m.StaffCategoryMgmtComponent), title: 'Danh mục - Nhân viên' },
       { path: 'brands', loadComponent: () => import('./pages/staff/brand-mgmt/staff-brand-mgmt').then(m => m.StaffBrandMgmtComponent), title: 'Hãng sản xuất - Nhân viên' },
       { path: 'orders', loadComponent: () => import('./pages/staff/order-mgmt/staff-order-mgmt').then(m => m.StaffOrderMgmtComponent), title: 'Quản lý đơn hàng - Nhân viên' },
-      { path: 'vouchers', loadComponent: () => import('./pages/admin/voucher-mgmt/voucher-mgmt').then(m => m.VoucherMgmtComponent), title: 'Quản lý voucher - Nhân viên' }
+      { path: 'vouchers', loadComponent: () => import('./pages/admin/voucher-mgmt/voucher-mgmt').then(m => m.VoucherMgmtComponent), title: 'Quản lý voucher - Nhân viên' },
+      { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.ProfilePageComponent), title: 'Thông tin cá nhân - Nhân viên' }
     ]
   },
   {
@@ -86,7 +93,8 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/shipper/layout/shipper-layout').then(m => m.ShipperLayoutComponent),
     children: [
       { path: '', redirectTo: 'orders', pathMatch: 'full' },
-      { path: 'orders', loadComponent: () => import('./pages/shipper/orders/shipper-orders').then(m => m.ShipperOrdersComponent), title: 'Quản lý giao hàng - Nhân viên giao hàng' }
+      { path: 'orders', loadComponent: () => import('./pages/shipper/orders/shipper-orders').then(m => m.ShipperOrdersComponent), title: 'Quản lý giao hàng - Nhân viên giao hàng' },
+      { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.ProfilePageComponent), title: 'Thông tin cá nhân - Nhân viên giao hàng' }
     ]
   },
   {

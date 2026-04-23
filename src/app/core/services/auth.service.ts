@@ -73,6 +73,11 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  updateCurrentUser(user: User): void {
+    this.currentUser.set(user);
+    this.saveUser(user);
+  }
+
   hasRole(role: string): boolean {
     return this.currentUser()?.roles.some(r => r.name === role) ?? false;
   }

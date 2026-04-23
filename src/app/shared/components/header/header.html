@@ -51,6 +51,7 @@
           </button>
           @if (userMenuOpen()) {
             <div class="header__dropdown">
+              <a routerLink="/profile" class="header__dropdown-item" (click)="userMenuOpen.set(false)">👤 Thông tin cá nhân</a>
               <a routerLink="/orders" class="header__dropdown-item" (click)="userMenuOpen.set(false)">📦 Đơn hàng của tôi</a>
               <hr class="header__dropdown-divider" />
               <button class="header__dropdown-item header__dropdown-item--danger" (click)="logout()">🚪 Đăng xuất</button>
@@ -76,6 +77,7 @@
       <a routerLink="/cart" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">🛒 Giỏ hàng ({{ cartCount() }})</a>
       <a routerLink="/contact" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">📧 Liên hệ</a>
       @if (isLoggedIn()) {
+        <a routerLink="/profile" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">👤 Thông tin cá nhân</a>
         <a routerLink="/orders" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">📦 Đơn hàng</a>
         <button class="header__mobile-link header__mobile-link--danger" (click)="logout(); mobileMenuOpen.set(false)">🚪 Đăng xuất</button>
       } @else {

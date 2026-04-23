@@ -12,7 +12,6 @@ export interface User {
   phone: string;
   address: string;
   roles: Role[];
-  avatar?: string;
 }
 
 /** Matches BE UserResponse exactly */

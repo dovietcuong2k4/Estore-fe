@@ -1,0 +1,46 @@
+<section class="dynamic-form">
+  @for (field of visibleFields(); track field.name) {
+    <div class="dynamic-form__field" [class.dynamic-form__field--error]="hasClientError(field)">
+      <label class="dynamic-form__label" [for]="field.name">
+        {{ field.label }}
+        @if (field.required) {
+          <span class="required">*</span>
+        }
+      </label>
+
+      @if (field.type === 'TEXTAREA') {
+        <textarea
+          [id]="field.name"
+          class="dynamic-form__control dynamic-form__control--textarea"
+          [placeholder]="field.placeholder || ''"
+          [readonly]="isReadonly(field)"
+          [value]="valueOf(field.name)"
+          (input)="onInput(field.name, $any($event.target).value)"></textarea>
+      } @else if (field.type === 'TAGS') {
+        <input
+          [id]="field.name"
+          class="dynamic-form__control"
+          type="text"
+          [readonly]="true"
+          [value]="valueOf(field.name)" />
+      } @else {
+        <input
+          [id]="field.name"
+          class="dynamic-form__control"
+          [type]="inputType(field)"
+          [placeholder]="field.placeholder || ''"
+          [readonly]="isReadonly(field)"
+          [value]="valueOf(field.name)"
+          (input)="onInput(field.name, $any($event.target).value)" />
+      }
+
+      @if (hasClientError(field)) {
+        <small class="dynamic-form__error">{{ errorMessage(field) }}</small>
+      }
+
+      @if (!field.editable) {
+        <small class="dynamic-form__hint">Trường này chỉ xem, không thể chỉnh sửa.</small>
+      }
+    </div>
+  }
+</section>
