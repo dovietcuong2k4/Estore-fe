@@ -46,6 +46,12 @@
     </app-base-card>
   </section>
 
+  <section class="chart-section">
+    <app-base-card>
+      <app-revenue-chart [orders]="allOrders()"></app-revenue-chart>
+    </app-base-card>
+  </section>
+
   <section class="dashboard-grid">
     <app-base-card title="Trạng thái đơn hàng" subtitle="Số lượng theo từng trạng thái nghiệp vụ.">
       <div class="order-status-grid">

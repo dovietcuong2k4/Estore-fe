@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from '../../../core/services/order.service';
 import { MockDataService } from '../../../core/services/mock-data.service';
@@ -10,20 +10,23 @@ import { BaseTableComponent } from '../../../shared/components/ui/base-table/bas
 import { BaseBadgeComponent } from '../../../shared/components/ui/base-badge/base-badge';
 import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
 import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
+import { RevenueChartComponent } from '../../../shared/components/ui/revenue-chart/revenue-chart';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, BaseCardComponent, BaseTableComponent, BaseBadgeComponent, BaseButtonComponent, IconComponent],
+  imports: [CommonModule, RouterLink, BaseCardComponent, BaseTableComponent, BaseBadgeComponent, BaseButtonComponent, IconComponent, RevenueChartComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   readonly orderStats = computed(() => this.orderService.getOrderStats());
   products: Product[] = [];
   get productCount() { return this.products.length; }
   get userCount() { return this.mockData.mockUsers.length; }
   
+  readonly allOrders = computed(() => this.orderService.allOrders());
+
   readonly recentOrders = computed(() => {
     return this.orderService.allOrders().slice(0, 5);
   });
@@ -32,7 +35,12 @@ export class DashboardComponent {
     private orderService: OrderService,
     private mockData: MockDataService,
     private productApi: ProductApiService
-  ) {
+  ) {}
+
+  async ngOnInit() {
+    // Gọi API lấy toàn bộ đơn hàng cho dashboard
+    await this.orderService.loadAdminOrders();
+
     this.productApi.getProducts('', 0, 500).subscribe(products => {
       this.products = products;
     });
