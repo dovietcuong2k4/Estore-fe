@@ -3,6 +3,7 @@
     <app-base-button
       [variant]="(button.type === 'cancel' || button.type === 'fail') ? 'danger' : 'ghost'"
       [disabled]="!button.enabled || isLoading(button.type)"
+      [icon]="isLoading(button.type) ? null : button.icon"
       (clicked)="openModal(button.type)">
       @if (isLoading(button.type)) {
         <span class="flex items-center">

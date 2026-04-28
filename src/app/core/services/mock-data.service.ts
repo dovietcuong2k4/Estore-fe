@@ -5,11 +5,11 @@ import { User } from '../models/user.model';
 @Injectable({ providedIn: 'root' })
 export class MockDataService {
   readonly categories: Category[] = [
-    { id: 1, name: 'Laptop', icon: '💻', productCount: 20 },
-    { id: 2, name: 'PC & Máy tính bàn', icon: '🖥️', productCount: 10 },
-    { id: 3, name: 'Phụ kiện', icon: '🎧', productCount: 8 },
-    { id: 4, name: 'Màn hình', icon: '🖥️', productCount: 7 },
-    { id: 5, name: 'Bàn phím & Chuột', icon: '⌨️', productCount: 5 },
+    { id: 1, name: 'Laptop', icon: 'laptop', productCount: 20 },
+    { id: 2, name: 'PC & Máy tính bàn', icon: 'pc', productCount: 10 },
+    { id: 3, name: 'Phụ kiện', icon: 'headphones', productCount: 8 },
+    { id: 4, name: 'Màn hình', icon: 'monitor', productCount: 7 },
+    { id: 5, name: 'Bàn phím & Chuột', icon: 'keyboard', productCount: 5 },
   ];
 
   readonly brands: Brand[] = [

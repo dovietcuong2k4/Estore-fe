@@ -4,7 +4,7 @@
       <h1 class="admin-page__title">Quản lý hãng sản xuất</h1>
       <p class="admin-page__subtitle">Cập nhật thông tin thương hiệu và logo hiển thị.</p>
     </div>
-    <app-base-button variant="primary" (clicked)="openAdd()">Thêm hãng mới</app-base-button>
+    <app-base-button variant="primary" icon="plus" (clicked)="openAdd()">Thêm hãng mới</app-base-button>
   </header>
 
   <app-filter-bar title="Bộ lọc" subtitle="Tìm theo tên thương hiệu.">
@@ -39,8 +39,8 @@
               <td><span class="brand-name">{{ brand.name }}</span></td>
               <td class="text-right">
                 <div class="action-btns">
-                  <app-base-button variant="ghost" (clicked)="openEdit(brand)">Sửa</app-base-button>
-                  <app-base-button variant="danger" (clicked)="delete(brand.id)">Xóa</app-base-button>
+                  <app-base-button variant="ghost" icon="edit" (clicked)="openEdit(brand)">Sửa</app-base-button>
+                  <app-base-button variant="danger" icon="trash" (clicked)="delete(brand.id)">Xóa</app-base-button>
                 </div>
               </td>
             </tr>

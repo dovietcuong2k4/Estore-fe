@@ -14,7 +14,7 @@
     }
     <div class="product-card__overlay">
       <button class="product-card__cart-btn" (click)="addToCart($event)">
-        🛒 Thêm vào giỏ
+        <app-icon name="shopping-cart" size="16"></app-icon> Thêm vào giỏ
       </button>
     </div>
   </div>
@@ -34,7 +34,15 @@
     </div>
 
     <div class="product-card__rating">
-      <span class="product-card__stars">{{ ratingStars }}</span>
+      <div class="product-card__stars">
+        @for (star of stars; track $index) {
+          <app-icon 
+            [name]="star.type === 'half' ? 'star-half' : 'star'" 
+            size="14" 
+            [className]="star.type === 'empty' ? 'star--empty' : 'star--full'"
+          ></app-icon>
+        }
+      </div>
       <span class="product-card__reviews">({{ product.reviewCount }})</span>
     </div>
 

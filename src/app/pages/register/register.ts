@@ -1,13 +1,14 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 import { AuthService } from '../../core/services/auth.service';
 import { RegisterRequest } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, IconComponent],
   templateUrl: './register.html',
   styleUrl: '../login/login.scss'
 })

@@ -45,7 +45,15 @@
         <h1 class="product-info__name">{{ product.name }}</h1>
 
         <div class="product-info__rating">
-          <span class="stars">{{ ratingStars }}</span>
+          <div class="stars">
+            @for (star of stars; track $index) {
+              <app-icon 
+                [name]="star.type === 'half' ? 'star-half' : 'star'" 
+                size="16" 
+                [className]="star.type === 'empty' ? 'star--empty' : 'star--full'"
+              ></app-icon>
+            }
+          </div>
           <span class="reviews">{{ product.reviewCount }} đánh giá</span>
           <span class="sold">| Đã bán {{ product.soldQuantity }}</span>
         </div>
@@ -83,26 +91,26 @@
           </div>
           <span class="stock-info">
             @if (product.stockQuantity > 0) {
-              ✅ Còn {{ product.stockQuantity }} sản phẩm
+              <app-icon name="check-circle" size="16" className="text-success"></app-icon> Còn {{ product.stockQuantity }} sản phẩm
             } @else {
-              ❌ Hết hàng
+              <app-icon name="x" size="16" className="text-error"></app-icon> Hết hàng
             }
           </span>
         </div>
 
         <div class="product-info__buttons">
           <button class="btn-add-cart" (click)="addToCart()" [disabled]="product.stockQuantity === 0">
-            🛒 {{ isInCart() ? 'Đã thêm - Thêm nữa' : 'Thêm vào giỏ hàng' }}
+            <app-icon name="shopping-cart" size="20"></app-icon> {{ isInCart() ? 'Đã thêm - Thêm nữa' : 'Thêm vào giỏ hàng' }}
           </button>
           <button class="btn-buy-now" (click)="buyNow()" [disabled]="product.stockQuantity === 0">
-            ⚡ Mua ngay
+            <app-icon name="bolt" size="20"></app-icon> Mua ngay
           </button>
         </div>
 
         <div class="product-info__guarantee">
-          <span>🛡️ Bảo hành chính hãng {{ product.warrantyInfo }}</span>
-          <span>🚚 Miễn phí giao hàng</span>
-          <span>↩️ Đổi trả 30 ngày</span>
+          <span><app-icon name="shield" size="16"></app-icon> Bảo hành chính hãng {{ product.warrantyInfo }}</span>
+          <span><app-icon name="truck" size="16"></app-icon> Miễn phí giao hàng</span>
+          <span><app-icon name="refresh-ccw" size="16"></app-icon> Đổi trả 30 ngày</span>
         </div>
       </div>
     </div>
@@ -150,7 +158,7 @@
               <div class="reviews-summary__avg">
                 <span class="avg-score">{{ summary.averageRating || 0 }}</span>
                 <div class="avg-stars">
-                   <span class="stars">★</span>
+                   <app-icon name="star" size="20" className="star--full"></app-icon>
                 </div>
                 <span class="total-count">{{ summary.totalReviews }} đánh giá</span>
               </div>
@@ -163,7 +171,7 @@
             <div class="review-compose" id="review-form">
               <ng-container *ngIf="authService.isLoggedIn(); else loginPrompt">
                 <div class="eligibility-msg" *ngIf="eligibility()?.canReview === false && !isEditing()">
-                  <p>⚠️ {{ eligibility()?.reason }}</p>
+                  <p><app-icon name="alert-triangle" size="18"></app-icon> {{ eligibility()?.reason }}</p>
                 </div>
 
                 <div class="review-form" *ngIf="eligibility()?.canReview || isEditing()">
@@ -173,7 +181,9 @@
                     <span *ngFor="let s of [1,2,3,4,5]" 
                           class="star" 
                           [class.active]="reviewForm().rating >= s"
-                          (click)="setRating(s)">★</span>
+                          (click)="setRating(s)">
+                      <app-icon name="star" size="24" [className]="reviewForm().rating >= s ? 'star--full' : 'star--empty'"></app-icon>
+                    </span>
                     <span class="rating-text" *ngIf="reviewForm().rating > 0">
                       {{ reviewForm().rating === 1 ? 'Rất tệ' : reviewForm().rating === 2 ? 'Tệ' : reviewForm().rating === 3 ? 'Bình thường' : reviewForm().rating === 4 ? 'Tốt' : 'Rất tốt' }}
                     </span>
@@ -216,12 +226,15 @@
                       </div>
                     </div>
                     <div class="user-actions" *ngIf="authService.user()?.id === r.userId">
-                      <button (click)="editReview()">✏️ Sửa</button>
-                      <button (click)="deleteReview()">🗑️ Xóa</button>
+                      <button (click)="editReview()"><app-icon name="edit" size="16"></app-icon> Sửa</button>
+                      <button (click)="deleteReview()"><app-icon name="trash" size="16"></app-icon> Xóa</button>
                     </div>
                   </div>
                   <div class="review-item__rating">
-                    <span class="star" *ngFor="let s of [1,2,3,4,5]" [class.filled]="r.rating >= s">★</span>
+                    <app-icon *ngFor="let s of [1,2,3,4,5]" 
+                              name="star" 
+                              size="14" 
+                              [className]="r.rating >= s ? 'star--full' : 'star--empty'"></app-icon>
                   </div>
                   <div class="review-item__content">
                     <p>{{ r.comment }}</p>

@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar__section">
-        <h3 class="sidebar__title">🔍 Tìm kiếm</h3>
+        <h3 class="sidebar__title"><app-icon name="search" size="18"></app-icon> Tìm kiếm</h3>
         <input
           #searchInput
           type="text"
@@ -15,21 +15,21 @@
       </div>
 
       <div class="sidebar__section">
-        <h3 class="sidebar__title">📂 Danh mục</h3>
+        <h3 class="sidebar__title"><app-icon name="folder" size="18"></app-icon> Danh mục</h3>
         <div class="sidebar__list">
           <button class="sidebar__item" [class.active]="selectedCategory() === null" (click)="setCategory(null)">
             Tất cả <span class="sidebar__count">{{ allProducts().length }}</span>
           </button>
           @for (cat of categories; track cat.id) {
             <button class="sidebar__item" [class.active]="selectedCategory() === cat.id" (click)="setCategory(cat.id)">
-              {{ cat.icon }} {{ cat.name }} <span class="sidebar__count">{{ cat.productCount }}</span>
+              <app-icon [name]="cat.icon" size="16"></app-icon> {{ cat.name }} <span class="sidebar__count">{{ cat.productCount }}</span>
             </button>
           }
         </div>
       </div>
 
       <div class="sidebar__section">
-        <h3 class="sidebar__title">🏷️ Thương hiệu</h3>
+        <h3 class="sidebar__title"><app-icon name="tag" size="18"></app-icon> Thương hiệu</h3>
         <div class="sidebar__list">
           <button class="sidebar__item" [class.active]="selectedBrand() === null" (click)="setBrand(null)">
             Tất cả
@@ -43,7 +43,9 @@
       </div>
 
       @if (selectedCategory() || selectedBrand() || searchQuery()) {
-        <button class="sidebar__clear" (click)="clearFilters()">✕ Xóa bộ lọc</button>
+        <button class="sidebar__clear" (click)="clearFilters()">
+          <app-icon name="close" size="14"></app-icon> Xóa bộ lọc
+        </button>
       }
     </aside>
 
@@ -58,8 +60,8 @@
           <span class="toolbar__sort-label">Sắp xếp:</span>
           <button class="toolbar__sort-btn" [class.active]="sortBy() === 'popular'" (click)="setSort('popular')">Phổ biến</button>
           <button class="toolbar__sort-btn" [class.active]="sortBy() === 'newest'" (click)="setSort('newest')">Mới nhất</button>
-          <button class="toolbar__sort-btn" [class.active]="sortBy() === 'price-asc'" (click)="setSort('price-asc')">Giá ↑</button>
-          <button class="toolbar__sort-btn" [class.active]="sortBy() === 'price-desc'" (click)="setSort('price-desc')">Giá ↓</button>
+          <button class="toolbar__sort-btn" [class.active]="sortBy() === 'price-asc'" (click)="setSort('price-asc')">Giá <app-icon name="arrow-up" size="12"></app-icon></button>
+          <button class="toolbar__sort-btn" [class.active]="sortBy() === 'price-desc'" (click)="setSort('price-desc')">Giá <app-icon name="arrow-down" size="12"></app-icon></button>
           <button class="toolbar__sort-btn" [class.active]="sortBy() === 'discount'" (click)="setSort('discount')">Giảm giá</button>
         </div>
       </div>
@@ -87,7 +89,7 @@
         }
       } @else {
         <div class="empty">
-          <span class="empty__icon">🔍</span>
+          <span class="empty__icon"><app-icon name="search" size="48"></app-icon></span>
           <h3 class="empty__title">Không tìm thấy sản phẩm</h3>
           <p class="empty__desc">Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
           <button class="empty__btn" (click)="clearFilters()">Xóa bộ lọc</button>

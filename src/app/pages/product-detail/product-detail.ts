@@ -9,13 +9,14 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, CommonModule, FormsModule],
+  imports: [RouterLink, ProductCardComponent, CommonModule, FormsModule, IconComponent],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss'
 })
@@ -172,9 +173,17 @@ export class ProductDetailComponent implements OnInit {
     return Math.round(((this.product.originalPrice - this.product.price) / this.product.originalPrice) * 100);
   }
 
-  get ratingStars(): string {
+  get stars(): { type: 'full' | 'half' | 'empty' }[] {
     const r = this.product?.rating ?? 0;
-    return '★'.repeat(Math.floor(r)) + (r % 1 >= 0.5 ? '½' : '') + '☆'.repeat(5 - Math.floor(r) - (r % 1 >= 0.5 ? 1 : 0));
+    const full = Math.floor(r);
+    const half = r % 1 >= 0.5 ? 1 : 0;
+    const empty = 5 - full - half;
+    
+    return [
+      ...Array(full).fill({ type: 'full' }),
+      ...Array(half).fill({ type: 'half' }),
+      ...Array(empty).fill({ type: 'empty' })
+    ];
   }
 
   formatPrice(price: number): string {

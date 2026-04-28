@@ -1,5 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 import { OrderService } from '../../core/services/order.service';
 import { AuthService } from '../../core/services/auth.service';
 import { DatePipe } from '@angular/common';
@@ -9,7 +10,7 @@ import { Order } from '../../core/models/order.model';
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [RouterLink, DatePipe, FormsModule],
+  imports: [RouterLink, DatePipe, FormsModule, IconComponent],
   templateUrl: './orders.html',
   styleUrl: './orders.scss'
 })

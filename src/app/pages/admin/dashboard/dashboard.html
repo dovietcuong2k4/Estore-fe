@@ -4,32 +4,44 @@
       <h1 class="admin-page__title">Bảng điều khiển quản trị</h1>
       <p class="admin-page__subtitle">Theo dõi doanh thu, đơn hàng và sức khỏe vận hành theo thời gian thực.</p>
     </div>
-    <app-base-button variant="secondary" routerLink="/admin/orders">Xem đơn hàng</app-base-button>
+    <app-base-button variant="secondary" icon="package" routerLink="/admin/orders">Xem đơn hàng</app-base-button>
   </header>
 
   <section class="stats-grid">
     <app-base-card [compact]="true" [flat]="true">
       <article class="metric">
-        <span class="metric__label">Tổng doanh thu</span>
-        <strong class="metric__value">{{ formatPrice(orderStats().totalRevenue) }}</strong>
+        <div class="metric__icon-box color-revenue"><app-icon name="dollar-sign" size="24"></app-icon></div>
+        <div class="metric__content">
+          <span class="metric__label">Tổng doanh thu</span>
+          <strong class="metric__value">{{ formatPrice(orderStats().totalRevenue) }}</strong>
+        </div>
       </article>
     </app-base-card>
     <app-base-card [compact]="true" [flat]="true">
       <article class="metric">
-        <span class="metric__label">Tổng đơn hàng</span>
-        <strong class="metric__value">{{ orderStats().total }}</strong>
+        <div class="metric__icon-box color-orders"><app-icon name="package" size="24"></app-icon></div>
+        <div class="metric__content">
+          <span class="metric__label">Tổng đơn hàng</span>
+          <strong class="metric__value">{{ orderStats().total }}</strong>
+        </div>
       </article>
     </app-base-card>
     <app-base-card [compact]="true" [flat]="true">
       <article class="metric">
-        <span class="metric__label">Sản phẩm</span>
-        <strong class="metric__value">{{ productCount }}</strong>
+        <div class="metric__icon-box color-products"><app-icon name="shopping-bag" size="24"></app-icon></div>
+        <div class="metric__content">
+          <span class="metric__label">Sản phẩm</span>
+          <strong class="metric__value">{{ productCount }}</strong>
+        </div>
       </article>
     </app-base-card>
     <app-base-card [compact]="true" [flat]="true">
       <article class="metric">
-        <span class="metric__label">Người dùng</span>
-        <strong class="metric__value">{{ userCount }}</strong>
+        <div class="metric__icon-box color-users"><app-icon name="users" size="24"></app-icon></div>
+        <div class="metric__content">
+          <span class="metric__label">Người dùng</span>
+          <strong class="metric__value">{{ userCount }}</strong>
+        </div>
       </article>
     </app-base-card>
   </section>

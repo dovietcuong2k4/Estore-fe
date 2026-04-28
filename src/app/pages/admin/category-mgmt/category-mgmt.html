@@ -4,7 +4,7 @@
       <h1 class="admin-page__title">Quản lý danh mục</h1>
       <p class="admin-page__subtitle">Phân loại sản phẩm theo nhóm để điều hướng rõ ràng hơn.</p>
     </div>
-    <app-base-button variant="primary" (clicked)="openAdd()">Thêm danh mục mới</app-base-button>
+    <app-base-button variant="primary" icon="plus" (clicked)="openAdd()">Thêm danh mục mới</app-base-button>
   </header>
 
   <app-filter-bar title="Bộ lọc" subtitle="Tìm theo tên danh mục hoặc mô tả.">
@@ -37,8 +37,8 @@
               <td><span class="category-desc">{{ category.description || 'Không có mô tả' }}</span></td>
               <td class="text-right">
                 <div class="action-btns">
-                  <app-base-button variant="ghost" (clicked)="openEdit(category)">Sửa</app-base-button>
-                  <app-base-button variant="danger" (clicked)="delete(category.id)">Xóa</app-base-button>
+                  <app-base-button variant="ghost" icon="edit" (clicked)="openEdit(category)">Sửa</app-base-button>
+                  <app-base-button variant="danger" icon="trash" (clicked)="delete(category.id)">Xóa</app-base-button>
                 </div>
               </td>
             </tr>

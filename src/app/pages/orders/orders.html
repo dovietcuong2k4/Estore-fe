@@ -1,9 +1,9 @@
 <div class="orders-page">
   <div class="orders-page__container">
-    <h1 class="orders-page__title">📦 Đơn hàng của tôi</h1>
+    <h1 class="orders-page__title"><app-icon name="package" size="32"></app-icon> Đơn hàng của tôi</h1>
     @if (myOrders().length === 0) {
       <div class="empty-state">
-        <span class="empty-state__icon">📦</span>
+        <span class="empty-state__icon"><app-icon name="package" size="64"></app-icon></span>
         <h2 class="empty-state__title">Chưa có đơn hàng nào</h2>
         <p class="empty-state__desc">Bạn chưa thực hiện đơn hàng nào trên E-Store.</p>
         <a routerLink="/products" class="empty-state__btn">Tiếp tục mua sắm</a>

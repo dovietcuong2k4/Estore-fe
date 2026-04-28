@@ -4,7 +4,7 @@
       <h1 class="admin-page__title">Quản lý sản phẩm</h1>
       <p class="admin-page__subtitle">Tổ chức danh mục sản phẩm và tồn kho theo chuẩn vận hành.</p>
     </div>
-    <app-base-button variant="primary" (clicked)="openAddModal()">+ Thêm sản phẩm</app-base-button>
+    <app-base-button variant="primary" icon="plus" (clicked)="openAddModal()">Thêm sản phẩm</app-base-button>
   </header>
 
   <app-filter-bar title="Bộ lọc" subtitle="Tìm nhanh theo tên sản phẩm hoặc danh mục.">
@@ -47,8 +47,8 @@
               </td>
               <td class="text-right">
                 <div class="table-actions">
-                  <app-base-button variant="ghost" (clicked)="openEditModal(product); $event.stopPropagation()">Sửa</app-base-button>
-                  <app-base-button variant="danger" (clicked)="deleteProduct(product.id); $event.stopPropagation()">Xóa</app-base-button>
+                  <app-base-button variant="ghost" icon="edit" (clicked)="openEditModal(product); $event.stopPropagation()">Sửa</app-base-button>
+                  <app-base-button variant="danger" icon="trash" (clicked)="deleteProduct(product.id); $event.stopPropagation()">Xóa</app-base-button>
                 </div>
               </td>
             </tr>

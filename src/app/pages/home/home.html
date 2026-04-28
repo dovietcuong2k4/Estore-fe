@@ -38,7 +38,7 @@
       <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
         @for (cat of categories; track cat.id) {
           <a [routerLink]="['/products']" [queryParams]="{category: cat.id}" class="group bg-surface-container-highest p-8 rounded-xl border border-outline-variant/10 hover:border-primary/40 transition-all cursor-pointer block">
-            <span class="material-symbols-outlined text-4xl text-primary mb-6 block" style="font-variation-settings: 'FILL' 1;">{{ cat.icon || 'memory' }}</span>
+            <app-icon [name]="cat.icon" size="40" className="text-primary mb-6 block"></app-icon>
             <h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">{{ cat.name }}</h3>
             <p class="text-on-surface-variant text-sm mt-2">{{ cat.productCount }} sản phẩm</p>
           </a>
@@ -78,7 +78,7 @@
             </div>
             <a routerLink="/products" [queryParams]="{category: 1}" class="bg-cyan-400 text-slate-950 font-black px-12 py-4 rounded-full w-fit hover:bg-white transition-colors flex items-center gap-3 cursor-pointer">
               NHẬN ƯU ĐÃI
-              <span class="material-symbols-outlined">bolt</span>
+              <app-icon name="bolt" size="18"></app-icon>
             </a>
           </div>
         </div>
@@ -110,7 +110,7 @@
           <p class="text-on-surface-variant mt-6 max-w-lg">Những thiết bị được tin dùng nhất trong hệ sinh thái của chúng tôi.</p>
         </div>
         <a routerLink="/products" [queryParams]="{sort: 'popular'}" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
-          XEM TẤT CẢ <span class="material-symbols-outlined">arrow_forward</span>
+          XEM TẤT CẢ <app-icon name="arrow-right" size="20"></app-icon>
         </a>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -162,11 +162,11 @@
 
             <div class="flex items-center gap-6 flex-wrap mt-12">
               <button (click)="addToCart(deal, $event)" class="bg-primary text-on-primary font-bold px-12 py-5 rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(143,245,255,0.25)] flex items-center gap-3">
-                <span class="material-symbols-outlined">bolt</span>
+                <app-icon name="bolt" size="20"></app-icon>
                 NHẬN ƯU ĐÃI NGAY
               </button>
               <a [routerLink]="['/products', deal.id]" class="text-on-surface-variant hover:text-primary transition-colors font-bold flex items-center gap-2">
-                Chi tiết sản phẩm <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                Chi tiết sản phẩm <app-icon name="arrow-right" size="16"></app-icon>
               </a>
             </div>
           </div>

@@ -2,7 +2,7 @@
   <aside class="admin-sidebar">
     <div class="admin-sidebar__header">
       <a routerLink="/admin" class="admin-logo">
-        <span class="admin-logo__icon">⚡</span>
+        <span class="admin-logo__icon"><app-icon name="bolt" size="24"></app-icon></span>
         <span class="admin-logo__text">E-Store Quản trị</span>
       </a>
     </div>
@@ -11,36 +11,36 @@
       <div class="admin-nav__group">
         <span class="admin-nav__label">Tổng quan</span>
         <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav__link">
-          <span class="icon">📊</span> Bảng điều khiển
+          <app-icon name="pie-chart" size="18" className="nav-icon"></app-icon> Bảng điều khiển
         </a>
       </div>
 
       <div class="admin-nav__group">
         <span class="admin-nav__label">Quản lý bán hàng</span>
         <a routerLink="/admin/orders" routerLinkActive="active" class="admin-nav__link">
-          <span class="icon">📦</span> Đơn hàng
+          <app-icon name="package" size="18" className="nav-icon"></app-icon> Đơn hàng
         </a>
         <a routerLink="/admin/products" routerLinkActive="active" class="admin-nav__link">
-          <span class="icon">🛍️</span> Sản phẩm
+          <app-icon name="shopping-bag" size="18" className="nav-icon"></app-icon> Sản phẩm
         </a>
         <a routerLink="/admin/categories" routerLinkActive="active" class="admin-nav__link">
-          <span class="icon">📁</span> Danh mục
+          <app-icon name="folder" size="18" className="nav-icon"></app-icon> Danh mục
         </a>
         <a routerLink="/admin/brands" routerLinkActive="active" class="admin-nav__link">
-          <span class="icon">🏷️</span> Hãng sản xuất
+          <app-icon name="tag" size="18" className="nav-icon"></app-icon> Hãng sản xuất
         </a>
         <a routerLink="/admin/vouchers" routerLinkActive="active" class="admin-nav__link">
-          <span class="icon">🎟️</span> Voucher
+          <app-icon name="ticket" size="18" className="nav-icon"></app-icon> Voucher
         </a>
       </div>
 
       <div class="admin-nav__group">
         <span class="admin-nav__label">Quản lý hệ thống</span>
         <a routerLink="/admin/profile" routerLinkActive="active" class="admin-nav__link">
-          <span class="icon">👤</span> Thông tin cá nhân
+          <app-icon name="user" size="18" className="nav-icon"></app-icon> Thông tin cá nhân
         </a>
         <a routerLink="/admin/users" routerLinkActive="active" class="admin-nav__link">
-          <span class="icon">👥</span> Người dùng
+          <app-icon name="users" size="18" className="nav-icon"></app-icon> Người dùng
         </a>
       </div>
     </nav>
@@ -55,7 +55,9 @@
           <div class="admin-user__role">{{ auth.user()?.roles?.[0]?.name }}</div>
         </div>
       </div>
-      <button (click)="auth.logout()" class="btn-store">🚪 Đăng xuất</button>
+      <button (click)="auth.logout()" class="btn-store">
+        <app-icon name="log-out" size="18"></app-icon> Đăng xuất
+      </button>
     </div>
   </aside>
 

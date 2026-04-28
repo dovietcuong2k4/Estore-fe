@@ -9,11 +9,12 @@ import { BaseCardComponent } from '../../../shared/components/ui/base-card/base-
 import { BaseTableComponent } from '../../../shared/components/ui/base-table/base-table';
 import { BaseBadgeComponent } from '../../../shared/components/ui/base-badge/base-badge';
 import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
+import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, BaseCardComponent, BaseTableComponent, BaseBadgeComponent, BaseButtonComponent],
+  imports: [CommonModule, RouterLink, BaseCardComponent, BaseTableComponent, BaseBadgeComponent, BaseButtonComponent, IconComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })

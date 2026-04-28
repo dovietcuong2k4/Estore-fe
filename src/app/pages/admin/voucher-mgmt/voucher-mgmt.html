@@ -7,9 +7,9 @@
 
     <div class="header-actions">
       @if (canEditVouchers()) {
-        <app-base-button variant="primary" (clicked)="openAdd()">+ Tạo voucher</app-base-button>
+        <app-base-button variant="primary" icon="plus" (clicked)="openAdd()">Tạo voucher</app-base-button>
       } @else {
-        <app-base-button variant="primary" [disabled]="true">+ Tạo voucher</app-base-button>
+        <app-base-button variant="primary" icon="plus" [disabled]="true">Tạo voucher</app-base-button>
       }
     </div>
   </header>

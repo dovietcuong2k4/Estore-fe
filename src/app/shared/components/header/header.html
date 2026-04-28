@@ -2,7 +2,7 @@
   <div class="header__container">
     <!-- Logo -->
     <a routerLink="/" class="header__logo">
-      <span class="header__logo-icon">⚡</span>
+      <span class="header__logo-icon"><app-icon name="bolt" size="24"></app-icon></span>
       <span class="header__logo-text">E-Store</span>
     </a>
 
@@ -13,7 +13,7 @@
       <a routerLink="/contact" routerLinkActive="active" class="header__nav-link">Liên hệ</a>
       @if (isAdmin()) {
         <a routerLink="/admin/dashboard" routerLinkActive="active" class="header__nav-link header__nav-link--admin">
-          ⚙️ Quản trị
+          <app-icon name="settings" size="16"></app-icon> Quản trị
         </a>
       }
     </nav>
@@ -28,7 +28,7 @@
         (input)="searchQuery.set($any($event.target).value)"
       />
       <a class="header__search-btn" type="submit">
-        🔍
+        <app-icon name="search" size="18"></app-icon>
       </a>
     </form>
 
@@ -36,7 +36,7 @@
     <div class="header__actions">
       <!-- Cart -->
       <a routerLink="/cart" class="header__cart">
-        <span class="header__cart-icon">🛒</span>
+        <span class="header__cart-icon"><app-icon name="shopping-cart" size="22"></app-icon></span>
         @if (cartCount() > 0) {
           <span class="header__cart-badge">{{ cartCount() }}</span>
         }
@@ -51,10 +51,10 @@
           </button>
           @if (userMenuOpen()) {
             <div class="header__dropdown">
-              <a routerLink="/profile" class="header__dropdown-item" (click)="userMenuOpen.set(false)">👤 Thông tin cá nhân</a>
-              <a routerLink="/orders" class="header__dropdown-item" (click)="userMenuOpen.set(false)">📦 Đơn hàng của tôi</a>
+              <a routerLink="/profile" class="header__dropdown-item" (click)="userMenuOpen.set(false)"><app-icon name="user" size="16"></app-icon> Thông tin cá nhân</a>
+              <a routerLink="/orders" class="header__dropdown-item" (click)="userMenuOpen.set(false)"><app-icon name="package" size="16"></app-icon> Đơn hàng của tôi</a>
               <hr class="header__dropdown-divider" />
-              <button class="header__dropdown-item header__dropdown-item--danger" (click)="logout()">🚪 Đăng xuất</button>
+              <button class="header__dropdown-item header__dropdown-item--danger" (click)="logout()"><app-icon name="log-out" size="16"></app-icon> Đăng xuất</button>
             </div>
           }
         </div>
@@ -64,7 +64,7 @@
 
       <!-- Mobile menu toggle -->
       <button class="header__mobile-toggle" (click)="toggleMobileMenu()">
-        @if (mobileMenuOpen()) { ✕ } @else { ☰ }
+        @if (mobileMenuOpen()) { <app-icon name="close" size="24"></app-icon> } @else { <app-icon name="menu" size="24"></app-icon> }
       </button>
     </div>
   </div>
@@ -72,17 +72,17 @@
   <!-- Mobile Menu -->
   @if (mobileMenuOpen()) {
     <div class="header__mobile-menu">
-      <a routerLink="/" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">🏠 Trang chủ</a>
-      <a routerLink="/products" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">🛍️ Sản phẩm</a>
-      <a routerLink="/cart" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">🛒 Giỏ hàng ({{ cartCount() }})</a>
-      <a routerLink="/contact" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">📧 Liên hệ</a>
+      <a routerLink="/" class="header__mobile-link" (click)="mobileMenuOpen.set(false)"><app-icon name="home" size="18"></app-icon> Trang chủ</a>
+      <a routerLink="/products" class="header__mobile-link" (click)="mobileMenuOpen.set(false)"><app-icon name="shopping-bag" size="18"></app-icon> Sản phẩm</a>
+      <a routerLink="/cart" class="header__mobile-link" (click)="mobileMenuOpen.set(false)"><app-icon name="shopping-cart" size="18"></app-icon> Giỏ hàng ({{ cartCount() }})</a>
+      <a routerLink="/contact" class="header__mobile-link" (click)="mobileMenuOpen.set(false)"><app-icon name="mail" size="18"></app-icon> Liên hệ</a>
       @if (isLoggedIn()) {
-        <a routerLink="/profile" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">👤 Thông tin cá nhân</a>
-        <a routerLink="/orders" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">📦 Đơn hàng</a>
-        <button class="header__mobile-link header__mobile-link--danger" (click)="logout(); mobileMenuOpen.set(false)">🚪 Đăng xuất</button>
+        <a routerLink="/profile" class="header__mobile-link" (click)="mobileMenuOpen.set(false)"><app-icon name="user" size="18"></app-icon> Thông tin cá nhân</a>
+        <a routerLink="/orders" class="header__mobile-link" (click)="mobileMenuOpen.set(false)"><app-icon name="package" size="18"></app-icon> Đơn hàng</a>
+        <button class="header__mobile-link header__mobile-link--danger" (click)="logout(); mobileMenuOpen.set(false)"><app-icon name="log-out" size="18"></app-icon> Đăng xuất</button>
       } @else {
-        <a routerLink="/login" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">🔑 Đăng nhập</a>
-        <a routerLink="/register" class="header__mobile-link" (click)="mobileMenuOpen.set(false)">📝 Đăng ký</a>
+        <a routerLink="/login" class="header__mobile-link" (click)="mobileMenuOpen.set(false)"><app-icon name="log-in" size="18"></app-icon> Đăng nhập</a>
+        <a routerLink="/register" class="header__mobile-link" (click)="mobileMenuOpen.set(false)"><app-icon name="user-plus" size="18"></app-icon> Đăng ký</a>
       }
     </div>
   }

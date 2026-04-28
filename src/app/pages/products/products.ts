@@ -2,6 +2,7 @@ import { Component, signal, computed, OnInit, ChangeDetectorRef, ElementRef, Vie
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card';
+import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 import { MockDataService } from '../../core/services/mock-data.service';
 import { Product, Category, Brand } from '../../core/models/product.model';
 import { ProductApiService } from '../../core/services/product-api.service';
@@ -9,7 +10,7 @@ import { ProductApiService } from '../../core/services/product-api.service';
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [FormsModule, ProductCardComponent],
+  imports: [FormsModule, ProductCardComponent, IconComponent],
   templateUrl: './products.html',
   styleUrl: './products.scss'
 })

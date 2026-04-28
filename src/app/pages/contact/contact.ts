@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 import { firstValueFrom } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { BaseResultDTO } from '../../core/models/user.model';
@@ -16,7 +17,7 @@ interface ContactRequest {
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, IconComponent],
   templateUrl: './contact.html',
   styleUrl: './contact.scss'
 })

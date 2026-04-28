@@ -149,7 +149,20 @@
     margin-bottom: 2rem; 
     flex-wrap: wrap;
     
-    .stars { color: var(--kv-primary); font-size: 1.15rem; letter-spacing: 2px; }
+    .stars { 
+      display: flex;
+      gap: 2px;
+      color: var(--kv-primary);
+
+      .star--full {
+        fill: var(--kv-primary);
+      }
+      
+      .star--empty {
+        color: var(--kv-text-muted);
+        opacity: 0.3;
+      }
+    }
     .reviews, .sold { color: var(--kv-text-muted); font-size: 0.95rem; font-weight: 600; }
     .sep { color: rgba(163, 170, 196, 0.3); }
   }
@@ -297,6 +310,12 @@
   color: var(--kv-text-muted); 
   font-size: 0.95rem; 
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .text-success { color: #4ade80; }
+  .text-error { color: #f87171; }
 }
 
 .btn-add-cart, .btn-buy-now {
@@ -527,16 +546,21 @@
       gap: 0.75rem;
       
       .star { 
-        font-size: 2.2rem; 
-        color: rgba(143, 245, 255, 0.1); 
         cursor: pointer; 
         transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        color: rgba(143, 245, 255, 0.1);
         
-        &:hover { transform: scale(1.25) rotate(5deg); color: rgba(143, 245, 255, 0.3); } 
-        &.active { 
-          color: var(--kv-primary); 
+        &:hover { transform: scale(1.25) rotate(5deg); } 
+        
+        .star--full {
+          color: var(--kv-primary);
+          fill: var(--kv-primary);
           filter: drop-shadow(0 0 10px rgba(143, 245, 255, 0.5));
-        } 
+        }
+
+        .star--empty {
+          color: rgba(143, 245, 255, 0.1);
+        }
       }
       
       .rating-text { 
@@ -713,14 +737,16 @@
       gap: 4px; 
       margin-bottom: 1.25rem; 
       
-      .star { 
-        color: rgba(143, 245, 255, 0.1); 
-        font-size: 1rem; 
-        &.filled { 
-          color: var(--kv-primary); 
-          filter: drop-shadow(0 0 5px rgba(143, 245, 255, 0.5));
-        } 
+      .star--full { 
+        color: var(--kv-primary); 
+        fill: var(--kv-primary);
+        filter: drop-shadow(0 0 5px rgba(143, 245, 255, 0.5));
       } 
+
+      .star--empty {
+        color: var(--kv-text-muted);
+        opacity: 0.3;
+      }
     }
     
     &__content { 

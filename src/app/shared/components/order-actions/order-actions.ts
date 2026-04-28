@@ -138,6 +138,16 @@ export class OrderActionsComponent {
   }
 
   private button(type: OrderActionType, label: string, enabled: boolean) {
-    return { type, label, enabled };
+    const icons: Record<OrderActionType, string> = {
+      'process': 'edit',
+      'ready': 'check-circle',
+      'cancel': 'x',
+      'assign-shipper': 'truck',
+      'start': 'truck',
+      'deliver': 'check',
+      'fail': 'alert-circle',
+      'retry': 'refresh-ccw'
+    };
+    return { type, label, enabled, icon: icons[type] };
   }
 }

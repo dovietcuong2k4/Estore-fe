@@ -2,11 +2,12 @@ import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
+import { IconComponent } from '../ui/icon/icon.component';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, IconComponent],
   templateUrl: './product-card.html',
   styleUrl: './product-card.scss'
 })
@@ -27,12 +28,17 @@ export class ProductCardComponent {
     return Math.round(((this.product.originalPrice - this.product.price) / this.product.originalPrice) * 100);
   }
 
-  get ratingStars(): string {
+  get stars(): { type: 'full' | 'half' | 'empty' }[] {
     const rating = this.product.rating ?? 0;
     const full = Math.floor(rating);
     const half = rating % 1 >= 0.5 ? 1 : 0;
     const empty = 5 - full - half;
-    return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+    
+    return [
+      ...Array(full).fill({ type: 'full' }),
+      ...Array(half).fill({ type: 'half' }),
+      ...Array(empty).fill({ type: 'empty' })
+    ];
   }
 
   addToCart(event: Event) {

@@ -11,7 +11,7 @@
         <h3 class="contact-info__title">Thông tin liên hệ</h3>
         
         <div class="info-item">
-          <span class="info-item__icon">📍</span>
+          <span class="info-item__icon"><app-icon name="map-pin" size="24"></app-icon></span>
           <div>
             <span class="info-item__label">Địa chỉ</span>
             <p class="info-item__value">123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</p>
@@ -19,7 +19,7 @@
         </div>
 
         <div class="info-item">
-          <span class="info-item__icon">📞</span>
+          <span class="info-item__icon"><app-icon name="phone" size="24"></app-icon></span>
           <div>
             <span class="info-item__label">Điện thoại</span>
             <p class="info-item__value">1900 1234 56<br>090 123 4567</p>
@@ -27,7 +27,7 @@
         </div>
 
         <div class="info-item">
-          <span class="info-item__icon">📧</span>
+          <span class="info-item__icon"><app-icon name="mail" size="24"></app-icon></span>
           <div>
             <span class="info-item__label">Email</span>
             <p class="info-item__value">support&#64;estore.vn<br>contact&#64;estore.vn</p>
@@ -35,7 +35,7 @@
         </div>
 
         <div class="info-item">
-          <span class="info-item__icon">⏰</span>
+          <span class="info-item__icon"><app-icon name="clock" size="24"></app-icon></span>
           <div>
             <span class="info-item__label">Giờ làm việc</span>
             <p class="info-item__value">Thứ 2 - Thứ 7: 8:00 - 21:00<br>Chủ nhật: 9:00 - 18:00</p>
@@ -47,7 +47,7 @@
       <div class="contact-form-wrapper">
         @if (success()) {
           <div class="success-box">
-            <span class="success-box__icon">✅</span>
+            <span class="success-box__icon"><app-icon name="check-circle" size="64"></app-icon></span>
             <h2 class="success-box__title">Gửi thành công!</h2>
             <p class="success-box__desc">Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi lại bạn sớm nhất có thể.</p>
             <button class="btn-primary" style="margin-top: 1rem;" (click)="resetForm()">Gửi tin nhắn khác</button>
@@ -86,7 +86,8 @@
             }
 
             <button type="submit" class="btn-primary" [disabled]="submitting()">
-              {{ submitting() ? 'Đang gửi...' : 'Gửi tin nhắn 🚀' }}
+              {{ submitting() ? 'Đang gửi...' : 'Gửi tin nhắn ' }}
+              <app-icon name="send" size="18"></app-icon>
             </button>
           </form>
         }

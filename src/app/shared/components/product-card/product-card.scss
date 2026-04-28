@@ -161,9 +161,18 @@
   }
 
   &__stars {
+    display: flex;
+    gap: 1px;
     color: var(--kv-primary);
-    font-size: 0.75rem;
-    letter-spacing: 1px;
+
+    .star--full {
+      fill: var(--kv-primary);
+    }
+    
+    .star--empty {
+      color: var(--kv-text-muted);
+      opacity: 0.3;
+    }
   }
 
   &__reviews {

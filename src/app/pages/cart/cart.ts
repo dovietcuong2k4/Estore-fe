@@ -1,11 +1,12 @@
 import { Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, IconComponent],
   templateUrl: './cart.html',
   styleUrl: './cart.scss'
 })

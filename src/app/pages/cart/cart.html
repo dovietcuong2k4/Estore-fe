@@ -1,13 +1,13 @@
 <div class="cart-page">
   <div class="cart-page__container">
-    <h1 class="cart-page__title">🛒 Giỏ hàng</h1>
+    <h1 class="cart-page__title"><app-icon name="shopping-cart" size="32"></app-icon> Giỏ hàng</h1>
 
     @if (isEmpty()) {
       <div class="empty-cart">
-        <span class="empty-cart__icon">🛒</span>
+        <span class="empty-cart__icon"><app-icon name="shopping-cart" size="64"></app-icon></span>
         <h2 class="empty-cart__title">Giỏ hàng trống</h2>
         <p class="empty-cart__desc">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm</p>
-        <a routerLink="/products" class="empty-cart__btn">🛍️ Tiếp tục mua sắm</a>
+        <a routerLink="/products" class="empty-cart__btn"><app-icon name="shopping-bag" size="20"></app-icon> Tiếp tục mua sắm</a>
       </div>
     } @else {
       <div class="cart-layout">
@@ -15,7 +15,7 @@
         <div class="cart-items">
           <div class="cart-items__header">
             <span>Sản phẩm ({{ items().length }})</span>
-            <button class="clear-btn" (click)="clearAll()">🗑️ Xóa tất cả</button>
+            <button class="clear-btn" (click)="clearAll()"><app-icon name="trash" size="16"></app-icon> Xóa tất cả</button>
           </div>
 
           @for (item of items(); track item.id) {
@@ -35,7 +35,7 @@
               </div>
               <div class="cart-item__total">
                 <span class="cart-item__total-price">{{ formatPrice((item.product?.price || 0) * item.quantity) }}</span>
-                <button class="cart-item__remove" (click)="remove(item.id)">✕</button>
+                <button class="cart-item__remove" (click)="remove(item.id)"><app-icon name="close" size="18"></app-icon></button>
               </div>
             </div>
           }
@@ -58,9 +58,9 @@
             <span class="total-price">{{ formatPrice(totalPrice()) }}</span>
           </div>
           <a routerLink="/checkout" class="cart-summary__checkout">
-            ⚡ Tiến hành đặt hàng
+            <app-icon name="bolt" size="20"></app-icon> Tiến hành đặt hàng
           </a>
-          <a routerLink="/products" class="cart-summary__continue">← Tiếp tục mua sắm</a>
+          <a routerLink="/products" class="cart-summary__continue"><app-icon name="arrow-left" size="16"></app-icon> Tiếp tục mua sắm</a>
         </div>
       </div>
     }

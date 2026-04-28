@@ -2,7 +2,7 @@
   <div class="auth-card" style="max-width: 500px;">
     <div class="auth-card__header">
       <div class="auth-card__logo">
-        <span class="auth-card__logo-icon">⚡</span>
+        <span class="auth-card__logo-icon"><app-icon name="bolt" size="28"></app-icon></span>
         <span class="auth-card__logo-text">E-Store</span>
       </div>
       <h1 class="auth-card__title">Đăng ký tài khoản</h1>
@@ -46,7 +46,7 @@
       </div>
 
       <button type="submit" class="auth-form__btn" [disabled]="loading()">
-        {{ loading() ? 'Đang xử lý...' : '📝 Đăng ký' }}
+        <app-icon name="user-plus" size="18"></app-icon> {{ loading() ? 'Đang xử lý...' : 'Đăng ký' }}
       </button>
     </form>
     

@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-base-button',
+  standalone: true,
+  imports: [IconComponent],
   template: `
     <button
       class="ui-button"
@@ -13,6 +16,9 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       [attr.type]="type()"
       [disabled]="disabled()"
       (click)="clicked.emit($event)">
+      @if (icon()) {
+        <app-icon [name]="icon()!" size="18"></app-icon>
+      }
       <span class="ui-button__content"><ng-content></ng-content></span>
     </button>
   `,
@@ -31,6 +37,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       font-weight: 600;
       letter-spacing: 0.02em;
       transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
     }
     .ui-button:hover:not(:disabled) { transform: translateY(-1px); }
     .ui-button:disabled { cursor: not-allowed; opacity: 0.55; transform: none; }
@@ -71,8 +78,9 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 export class BaseButtonComponent {
   readonly variant = input<'primary' | 'secondary' | 'ghost' | 'danger'>('primary');
   readonly type = input<'button' | 'submit' | 'reset'>('button');
+  readonly icon = input<string | null>(null);
   readonly disabled = input(false);
   readonly fullWidth = input(false);
 
   readonly clicked = output<MouseEvent>();
-}
+}

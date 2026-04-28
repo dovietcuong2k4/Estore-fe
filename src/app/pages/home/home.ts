@@ -6,11 +6,12 @@ import { Product, Category } from '../../core/models/product.model';
 import { ProductApiService } from '../../core/services/product-api.service';
 import { CartService } from '../../core/services/cart.service';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card';
+import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, CommonModule, ProductCardComponent],
+  imports: [RouterLink, CommonModule, ProductCardComponent, IconComponent],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
