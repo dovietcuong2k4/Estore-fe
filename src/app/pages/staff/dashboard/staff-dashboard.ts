@@ -10,6 +10,7 @@ import { BaseBadgeComponent } from '../../../shared/components/ui/base-badge/bas
 import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
 import { BaseCardComponent } from '../../../shared/components/ui/base-card/base-card';
 import { BaseTableComponent } from '../../../shared/components/ui/base-table/base-table';
+import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
 
 interface DashboardMetric {
   key: 'created' | 'processing' | 'lowStock' | 'shipping';
@@ -24,7 +25,7 @@ interface DashboardMetric {
 
 @Component({
   selector: 'app-staff-dashboard',
-  imports: [CommonModule, RouterLink, BaseBadgeComponent, BaseButtonComponent, BaseCardComponent, BaseTableComponent, ProductModalComponent],
+  imports: [CommonModule, RouterLink, BaseBadgeComponent, BaseButtonComponent, BaseCardComponent, BaseTableComponent, ProductModalComponent, IconComponent],
   templateUrl: './staff-dashboard.html',
   styleUrl: './staff-dashboard.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

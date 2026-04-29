@@ -9,11 +9,12 @@ import { BaseButtonComponent } from '../../../shared/components/ui/base-button/b
 import { BaseTableComponent } from '../../../shared/components/ui/base-table/base-table';
 import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
 import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
+import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
 
 @Component({
   selector: 'app-staff-product-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductModalComponent, BaseBadgeComponent, BaseButtonComponent, BaseTableComponent, FilterBarComponent, BaseInputComponent],
+  imports: [CommonModule, FormsModule, ProductModalComponent, BaseBadgeComponent, BaseButtonComponent, BaseTableComponent, FilterBarComponent, BaseInputComponent, IconComponent],
   templateUrl: './staff-product-mgmt.html',
   styleUrls: ['../../admin/dashboard/dashboard.scss', './staff-product-mgmt.scss']
 })
