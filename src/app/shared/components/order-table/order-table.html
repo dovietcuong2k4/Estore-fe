@@ -14,7 +14,7 @@
       </thead>
       <tbody>
         @for (order of orders(); track order.id) {
-          <tr>
+          <tr (click)="openDetails(order)">
             <td class="id-badge">#{{ order.id }}</td>
             <td>
               <div class="customer">
@@ -34,7 +34,7 @@
                 <app-base-badge tone="neutral">Chưa phân công</app-base-badge>
               }
             </td>
-            <td class="text-center">
+            <td class="text-center" (click)="$event.stopPropagation()">
               <app-order-actions
                 [order]="order"
                 [role]="role()"
@@ -53,3 +53,9 @@
     </div>
   }
 </div>
+
+<app-order-details-modal
+  [open]="isModalOpen()"
+  [order]="selectedOrder()"
+  (close)="closeDetails()">
+</app-order-details-modal>

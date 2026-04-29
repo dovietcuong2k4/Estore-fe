@@ -1,0 +1,90 @@
+<app-base-modal
+  [open]="open()"
+  size="lg"
+  [title]="'Chi tiết đơn hàng #' + (order()?.id || '')"
+  [eyebrow]="'Thông tin đơn hàng'"
+  [showFooter]="true"
+  (close)="close.emit()">
+  
+  <div modal-body>
+    @if (order()) {
+      <div class="order-details-grid">
+        <!-- Customer Info -->
+        <div class="info-card">
+          <h3 class="info-card__title">Thông tin giao hàng</h3>
+          <div class="info-card__content">
+            <p><strong>Người nhận:</strong> {{ order()?.receiverName }}</p>
+            <p><strong>Số điện thoại:</strong> {{ order()?.receiverPhone }}</p>
+            <p><strong>Địa chỉ:</strong> {{ order()?.receiverAddress }}</p>
+            @if (order()?.note) {
+              <p><strong>Ghi chú:</strong> <span class="text-warning">{{ order()?.note }}</span></p>
+            }
+          </div>
+        </div>
+
+        <!-- Status & Shipper Info -->
+        <div class="info-card">
+          <h3 class="info-card__title">Trạng thái & Vận chuyển</h3>
+          <div class="info-card__content">
+            <p>
+              <strong>Trạng thái:</strong> 
+              <app-base-badge [tone]="getStatusTone(order()?.status)">{{ getStatusLabel(order()?.status) }}</app-base-badge>
+            </p>
+            <p><strong>Ngày đặt hàng:</strong> {{ order()?.orderDate | date:'dd/MM/yyyy HH:mm' }}</p>
+            @if (order()?.shipper) {
+              <p><strong>Nhân viên giao hàng:</strong> 
+                <app-base-badge tone="info">{{ order()?.shipper?.fullName }}</app-base-badge>
+              </p>
+              <p><strong>SĐT Shipper:</strong> {{ order()?.shipper?.phone }}</p>
+            } @else {
+              <p><strong>Nhân viên giao hàng:</strong> <span class="text-muted">Chưa phân công</span></p>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Items List -->
+      <div class="order-items-section">
+        <h3 class="section-title">Danh sách sản phẩm</h3>
+        <div class="items-list">
+          @for (item of order()?.items; track item.id) {
+            <div class="item-row">
+              <div class="item-image">
+                <img [src]="item.product?.image || 'assets/images/placeholder.jpg'" [alt]="item.product?.name">
+              </div>
+              <div class="item-info">
+                <h4 class="item-name">{{ item.product?.name }}</h4>
+                <p class="item-meta">{{ formatPrice(item.price) }} x {{ item.quantity }}</p>
+              </div>
+              <div class="item-total">
+                {{ formatPrice(item.price * item.quantity) }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Financial Summary -->
+      <div class="order-summary">
+        <div class="summary-row">
+          <span>Tạm tính</span>
+          <span>{{ formatPrice(getSubtotal()) }}</span>
+        </div>
+        @if (order()?.discountAmount) {
+          <div class="summary-row summary-row--discount">
+            <span>Giảm giá (Voucher)</span>
+            <span>-{{ formatPrice(order()!.discountAmount!) }}</span>
+          </div>
+        }
+        <div class="summary-row summary-row--total">
+          <span>Tổng cộng thanh toán</span>
+          <span>{{ formatPrice(order()?.totalPrice || 0) }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div modal-footer>
+    <app-base-button variant="ghost" (clicked)="close.emit()">Đóng</app-base-button>
+  </div>
+</app-base-modal>
