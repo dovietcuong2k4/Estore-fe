@@ -7,11 +7,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { VoucherService } from '../../core/services/voucher.service';
 import { CreateOrderRequest } from '../../core/models/order.model';
 import { UserVoucher } from '../../core/models/voucher.model';
+import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, IconComponent],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss'
 })

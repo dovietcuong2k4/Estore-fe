@@ -1,131 +1,151 @@
 <div class="checkout-page">
   <div class="checkout-page__container">
     @if (success()) {
-      <div class="success-box">
-        <span class="success-box__icon">✅</span>
-        <h2 class="success-box__title">Đặt hàng thành công!</h2>
-        <p class="success-box__desc">Đơn hàng của bạn đã được ghi nhận.</p>
-        
-        <div class="success-box__info" style="margin: 1.5rem 0; padding: 1rem; background: #f8fafc; border-radius: 8px; text-align: left;">
-          <p style="margin-bottom: 0.5rem">Mã đơn hàng: <strong>#{{ successBoxData()?.id }}</strong></p>
-        </div>
+    <div class="success-box">
+      <span class="success-box__icon">
+        <app-icon name="check-circle" [size]="72" style="color: #fff;"></app-icon>
+      </span>
+      <h2 class="success-box__title">Đặt hàng thành công!</h2>
+      <p class="success-box__desc">Đơn hàng của bạn đã được ghi nhận.</p>
 
-        <p class="success-box__desc">Chúng tôi sẽ liên hệ xác nhận đơn hàng sớm nhất.</p>
-        <div class="success-box__actions">
-          <a routerLink="/orders" class="success-box__btn success-box__btn--primary">📦 Theo dõi đơn hàng</a>
-          <a routerLink="/products" class="success-box__btn">🛍️ Tiếp tục mua sắm</a>
-        </div>
+      <div class="success-box__info"
+        style="margin: 1.5rem 0; padding: 1rem; background: #f8fafc; border-radius: 8px; text-align: left;">
+        <p style="margin-bottom: 0.5rem">Mã đơn hàng: <strong>#{{ successBoxData()?.id }}</strong></p>
       </div>
+
+      <p class="success-box__desc">Chúng tôi sẽ liên hệ xác nhận đơn hàng sớm nhất.</p>
+      <div class="success-box__actions">
+        <a routerLink="/orders" class="success-box__btn success-box__btn--primary">
+          <app-icon name="package" [size]="18" style="margin-right: 8px;"></app-icon> Theo dõi đơn hàng
+        </a>
+        <a routerLink="/products" class="success-box__btn">
+          <app-icon name="shopping-bag" [size]="18" style="margin-right: 8px;"></app-icon> Tiếp tục mua sắm
+        </a>
+      </div>
+    </div>
     } @else {
-      <h1 class="checkout-page__title">📝 Đặt hàng</h1>
+    <h1 class="checkout-page__title">
+      <app-icon name="file-text" [size]="32" style="margin-right: 12px; color: #fff;"></app-icon> Đặt hàng
+    </h1>
 
-      @if (items().length === 0) {
-        <div class="success-box">
-          <p class="success-box__desc">Giỏ hàng trống. <a routerLink="/products">Mua sắm ngay</a></p>
+    @if (items().length === 0) {
+    <div class="success-box">
+      <p class="success-box__desc">Giỏ hàng trống. <a routerLink="/products">Mua sắm ngay</a></p>
+    </div>
+    } @else {
+    <div class="checkout-layout">
+      <!-- Form -->
+      <div class="checkout-form">
+        <h3 class="form-title">Thông tin giao hàng</h3>
+
+        @if (error()) {
+        <div class="error-msg">{{ error() }}</div>
+        }
+
+        <div class="form-group">
+          <label class="form-label">Họ và tên người nhận *</label>
+          <input type="text" class="form-input" [(ngModel)]="form.receiverName" placeholder="Nguyễn Văn A" />
         </div>
-      } @else {
-        <div class="checkout-layout">
-          <!-- Form -->
-          <div class="checkout-form">
-            <h3 class="form-title">Thông tin giao hàng</h3>
 
-            @if (error()) {
-              <div class="error-msg">{{ error() }}</div>
-            }
+        <div class="form-group">
+          <label class="form-label">Số điện thoại *</label>
+          <input type="tel" class="form-input" [(ngModel)]="form.receiverPhone" placeholder="0901234567" />
+        </div>
 
-            <div class="form-group">
-              <label class="form-label">Họ và tên người nhận *</label>
-              <input type="text" class="form-input" [(ngModel)]="form.receiverName" placeholder="Nguyễn Văn A" />
-            </div>
+        <div class="form-group">
+          <label class="form-label">Địa chỉ giao hàng *</label>
+          <input type="text" class="form-input" [(ngModel)]="form.receiverAddress"
+            placeholder="298 Cầu Diễn, P. Minh Khai, Q. Bắc Từ Liêm, Hà Nội" />
+        </div>
 
-            <div class="form-group">
-              <label class="form-label">Số điện thoại *</label>
-              <input type="tel" class="form-input" [(ngModel)]="form.receiverPhone" placeholder="0901234567" />
-            </div>
+        <div class="form-group">
+          <label class="form-label">Ghi chú đơn hàng</label>
+          <textarea class="form-input form-textarea" [(ngModel)]="form.note"
+            placeholder="Giao giờ hành chính, gọi trước khi giao..." rows="3"></textarea>
+        </div>
 
-            <div class="form-group">
-              <label class="form-label">Địa chỉ giao hàng *</label>
-              <input type="text" class="form-input" [(ngModel)]="form.receiverAddress" placeholder="298 Cầu Diễn, P. Minh Khai, Q. Bắc Từ Liêm, Hà Nội" />
-            </div>
+        <div class="payment-option active">
+          <app-icon name="banknote" [size]="28" style="color: var(--kv-primary);"></app-icon>
+          <div>
+            <strong>Thanh toán khi nhận hàng (COD)</strong>
+            <p>Thanh toán bằng tiền mặt khi nhận được hàng</p>
+          </div>
+        </div>
 
-            <div class="form-group">
-              <label class="form-label">Ghi chú đơn hàng</label>
-              <textarea class="form-input form-textarea" [(ngModel)]="form.note" placeholder="Giao giờ hành chính, gọi trước khi giao..." rows="3"></textarea>
-            </div>
-
-            <div class="payment-option active">
-              <span>💵</span>
-              <div>
-                <strong>Thanh toán khi nhận hàng (COD)</strong>
-                <p>Thanh toán bằng tiền mặt khi nhận được hàng</p>
-              </div>
-            </div>
-
-            <h3 class="form-title" style="margin-top: 1.5rem;">🎟️ Voucher</h3>
-            <div class="voucher-list">
-              @if (userVouchers().length === 0) {
-                <p class="voucher-empty">Bạn chưa có voucher nào.</p>
-              } @else {
-                @for (uv of userVouchers(); track uv.id) {
-                  <div class="voucher-item"
-                    [class.active]="selectedVoucher()?.id === uv.id"
-                    [class.disabled]="voucherDisabledReason(uv) !== null"
-                    (click)="selectVoucher(uv)">
-                    <div class="voucher-item__info">
-                      <span class="voucher-item__code">{{ uv.voucher.code }}</span>
-                      <span class="voucher-item__desc">
-                        Giảm {{ uv.voucher.discountType === 'FIXED' ? formatPrice(uv.voucher.discountValue) : uv.voucher.discountValue + '%' }}
-                      </span>
-                      <span class="voucher-item__min">Đơn tối thiểu: {{ formatPrice(uv.voucher.minOrderValue) }}</span>
-                      @if (voucherDisabledReason(uv); as reason) {
-                        <span class="voucher-item__reason">{{ reason }}</span>
-                      }
-                    </div>
-                    @if (selectedVoucher()?.id === uv.id) {
-                      <span class="voucher-item__check">✅</span>
-                    }
-                  </div>
-                }
+        <h3 class="form-title" style="margin-top: 1.5rem; display: flex; align-items: center; gap: 10px;">
+          <app-icon name="ticket" [size]="24" style="color: #fff;"></app-icon> Voucher
+        </h3>
+        <div class="voucher-list">
+          @if (userVouchers().length === 0) {
+          <p class="voucher-empty">Bạn chưa có voucher nào.</p>
+          } @else {
+          @for (uv of userVouchers(); track uv.id) {
+          <div class="voucher-item" [class.active]="selectedVoucher()?.id === uv.id"
+            [class.disabled]="voucherDisabledReason(uv) !== null" (click)="selectVoucher(uv)">
+            <div class="voucher-item__info">
+              <span class="voucher-item__code">{{ uv.voucher.code }}</span>
+              <span class="voucher-item__desc">
+                Giảm {{ uv.voucher.discountType === 'FIXED' ? formatPrice(uv.voucher.discountValue) :
+                uv.voucher.discountValue + '%' }}
+              </span>
+              <span class="voucher-item__min">Đơn tối thiểu: {{ formatPrice(uv.voucher.minOrderValue) }}</span>
+              @if (voucherDisabledReason(uv); as reason) {
+              <span class="voucher-item__reason">{{ reason }}</span>
               }
             </div>
+            @if (selectedVoucher()?.id === uv.id) {
+            <span class="voucher-item__check">
+              <app-icon name="check" [size]="24"></app-icon>
+            </span>
+            }
           </div>
-
-          <!-- Order Summary -->
-          <div class="order-summary">
-            <h3 class="summary-title">Đơn hàng của bạn</h3>
-
-            @for (item of items(); track item.productId) {
-              <div class="summary-item">
-                <img [src]="item.product?.image" class="summary-item__img" />
-                <div class="summary-item__info">
-                  <span class="summary-item__name">{{ item.product?.name }}</span>
-                  <span class="summary-item__qty">x{{ item.quantity }}</span>
-                </div>
-                <span class="summary-item__price">{{ formatPrice((item.product?.price || 0) * item.quantity) }}</span>
-              </div>
-            }
-
-            <hr class="summary-divider" />
-            <div class="summary-row"><span>Tạm tính</span><span>{{ formatPrice(totalPrice()) }}</span></div>
-            @if (selectedVoucher() && discountAmount() > 0) {
-              <div class="summary-row summary-row--discount">
-                <span>Voucher giảm giá</span>
-                <span>-{{ formatPrice(discountAmount()) }}</span>
-              </div>
-            }
-            @if (selectedVoucher() && previewDiscount() !== null && discountAmount() === 0) {
-              <div class="voucher-inline-warning">Voucher không áp dụng được với đơn hiện tại (kiểm tra điều kiện hoặc thử lại).</div>
-            }
-            <div class="summary-row"><span>Phí vận chuyển</span><span class="free">Miễn phí</span></div>
-            <hr class="summary-divider" />
-            <div class="summary-row summary-row--total"><span>Tổng cộng</span><span>{{ formatPrice(finalTotalPrice()) }}</span></div>
-
-            <button class="place-order-btn" (click)="placeOrder()" [disabled]="loading()">
-              {{ loading() ? 'Đang xử lý...' : '⚡ Đặt hàng' }}
-            </button>
-          </div>
+          }
+          }
         </div>
-      }
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h3 class="summary-title">Đơn hàng của bạn</h3>
+
+        @for (item of items(); track item.productId) {
+        <div class="summary-item">
+          <img [src]="item.product?.image" class="summary-item__img" />
+          <div class="summary-item__info">
+            <span class="summary-item__name">{{ item.product?.name }}</span>
+            <span class="summary-item__qty">x{{ item.quantity }}</span>
+          </div>
+          <span class="summary-item__price">{{ formatPrice((item.product?.price || 0) * item.quantity) }}</span>
+        </div>
+        }
+
+        <hr class="summary-divider" />
+        <div class="summary-row"><span>Tạm tính</span><span>{{ formatPrice(totalPrice()) }}</span></div>
+        @if (selectedVoucher() && discountAmount() > 0) {
+        <div class="summary-row summary-row--discount">
+          <span>Voucher giảm giá</span>
+          <span>-{{ formatPrice(discountAmount()) }}</span>
+        </div>
+        }
+        @if (selectedVoucher() && previewDiscount() !== null && discountAmount() === 0) {
+        <div class="voucher-inline-warning">Voucher không áp dụng được với đơn hiện tại (kiểm tra điều kiện hoặc thử
+          lại).</div>
+        }
+        <div class="summary-row"><span>Phí vận chuyển</span><span class="free">Miễn phí</span></div>
+        <hr class="summary-divider" />
+        <div class="summary-row summary-row--total"><span>Tổng cộng</span><span>{{ formatPrice(finalTotalPrice())
+            }}</span></div>
+
+        <button class="place-order-btn" (click)="placeOrder()" [disabled]="loading()">
+          @if (loading()) {
+          Đang xử lý...
+          } @else {
+          <app-icon name="bolt" [size]="20" style="margin-right: 8px;"></app-icon> Đặt hàng
+          }
+        </button>
+      </div>
+    </div>
+    }
     }
   </div>
 </div>
