@@ -14,24 +14,16 @@
 
   <section class="metric-grid">
     @for (metric of dashboardMetrics(); track metric.key) {
-      <app-base-card class="metric-card" [class]="'metric-card metric-card--' + metric.tone" [compact]="true" [flat]="true">
-        <p class="metric-card__label">{{ metric.label }}</p>
-
-        <div class="metric-card__headline">
-          <strong class="metric-card__value">{{ metric.value < 10 ? '0' + metric.value : metric.value }}</strong>
-
-          @if (metric.badge) {
-            <span class="metric-card__badge">{{ metric.badge }}</span>
-          } @else {
-            <span class="metric-card__trend" [class.metric-card__trend--up]="metric.trend >= 0" [class.metric-card__trend--down]="metric.trend < 0">
-              {{ metric.trend >= 0 ? '+' : '' }}{{ metric.trend }}{{ metric.suffix }}
-            </span>
-          }
-        </div>
-
-        <div class="metric-card__bar" role="presentation">
-          <span [style.width.%]="metric.progress"></span>
-        </div>
+      <app-base-card [compact]="true" [flat]="true">
+        <article class="metric">
+          <div class="metric__icon-box" [class]="'color-' + metric.key">
+            <app-icon [name]="metric.icon" size="26"></app-icon>
+          </div>
+          <div class="metric__content">
+            <span class="metric__label">{{ metric.label }}</span>
+            <strong class="metric__value">{{ metric.value < 10 ? '0' + metric.value : metric.value }}</strong>
+          </div>
+        </article>
       </app-base-card>
     }
   </section>

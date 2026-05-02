@@ -20,6 +20,7 @@ interface DashboardMetric {
   trend: number;
   suffix: string;
   progress: number;
+  icon: string;
   badge?: string;
 }
 
@@ -68,7 +69,8 @@ export class StaffDashboardComponent implements OnInit {
         tone: 'info',
         trend: this.trendValue(stats.created, stats.processing),
         suffix: '/ca',
-        progress: this.toPercent(stats.created, flowTotal)
+        progress: this.toPercent(stats.created, flowTotal),
+        icon: 'shopping-cart'
       },
       {
         key: 'processing',
@@ -77,7 +79,8 @@ export class StaffDashboardComponent implements OnInit {
         tone: 'warning',
         trend: this.trendValue(stats.processing, stats.created),
         suffix: '%',
-        progress: this.toPercent(stats.processing, flowTotal)
+        progress: this.toPercent(stats.processing, flowTotal),
+        icon: 'clock'
       },
       {
         key: 'lowStock',
@@ -87,6 +90,7 @@ export class StaffDashboardComponent implements OnInit {
         trend: this.trendValue(lowStockCount, 4),
         suffix: '',
         progress: this.toPercent(lowStockCount, 10),
+        icon: 'alert-triangle',
         badge: lowStockCount > 0 ? 'CRITICAL' : 'ỔN ĐỊNH'
       },
       {
@@ -96,7 +100,8 @@ export class StaffDashboardComponent implements OnInit {
         tone: 'accent',
         trend: this.trendValue(stats.shipping, stats.processing),
         suffix: '%',
-        progress: this.toPercent(stats.shipping, flowTotal)
+        progress: this.toPercent(stats.shipping, flowTotal),
+        icon: 'truck'
       }
     ];
   });

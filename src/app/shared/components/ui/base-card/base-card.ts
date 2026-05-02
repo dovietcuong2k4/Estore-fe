@@ -46,7 +46,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     .ui-card__title { margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
     .ui-card__subtitle { margin: 8px 0 0; color: var(--kv-text-muted); font-size: 0.95rem; line-height: 1.5; }
     .ui-card__body { padding: 24px; }
-    .ui-card--compact .ui-card__body { padding: 16px; }
+    .ui-card--compact .ui-card__body { padding: 12px; }
     .ui-card--flat { box-shadow: inset 0 0 0 1px rgba(94, 108, 138, 0.2); }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -48,5 +48,6 @@ export class HeaderComponent {
       search: this.searchQuery()
     }
   });
+  this.searchQuery.set('');
 }
 }

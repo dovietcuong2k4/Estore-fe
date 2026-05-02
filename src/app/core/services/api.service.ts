@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private readonly BASE_URL = 'http://172.16.1.120:9090/api';
+  private readonly BASE_URL = 'http://localhost:9090/api';
   private readonly TOKEN_KEY = 'estore_token';
 
   constructor(private http: HttpClient) {}
