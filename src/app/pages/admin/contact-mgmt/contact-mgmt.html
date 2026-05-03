@@ -1,0 +1,33 @@
+<section class="admin-page contact-page">
+  <header class="admin-page__header">
+    <div>
+      <h1 class="admin-page__title">Quản lý phản hồi</h1>
+      <p class="admin-page__subtitle">Xem và quản lý các yêu cầu liên hệ, phản hồi từ khách hàng.</p>
+    </div>
+  </header>
+
+  <app-filter-bar title="Bộ lọc" subtitle="Tìm kiếm theo tên, email, tiêu đề hoặc nội dung.">
+    <div filter-fields>
+      <app-base-input
+        label="Tìm kiếm"
+        placeholder="Tìm kiếm..."
+        [value]="searchTerm()"
+        (valueChange)="searchTerm.set($event)">
+      </app-base-input>
+    </div>
+    <div filter-actions>
+      <app-base-tabs
+        [tabs]="statusTabs"
+        [activeValue]="statusFilter()"
+        (activeValueChange)="onStatusFilterChanged($event)">
+      </app-base-tabs>
+    </div>
+  </app-filter-bar>
+
+  <app-base-table title="Danh sách phản hồi" subtitle="Hiển thị {{ filteredCount() }} mục.">
+    <app-contact-table
+      [contacts]="filteredContacts()"
+      (reply)="onReply($event)">
+    </app-contact-table>
+  </app-base-table>
+</section>

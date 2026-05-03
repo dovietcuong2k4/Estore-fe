@@ -1,0 +1,41 @@
+<div class="table-responsive">
+  <table class="admin-table contact-table">
+    <thead>
+      <tr>
+        <th>Ngày</th>
+        <th>Khách hàng</th>
+        <th>Tiêu đề</th>
+        <th>Trạng thái</th>
+        <th>Người phản hồi</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (contact of contacts(); track contact.id) {
+        <tr>
+          <td>{{ contact.contactDate | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <div class="contact-info">
+              <span class="contact-name">{{ contact.name }}</span>
+              <span class="contact-email">{{ contact.email }}</span>
+            </div>
+          </td>
+          <td>{{ contact.subject }}</td>
+          <td>
+            <app-base-badge [tone]="getStatusTone(contact)">{{ getStatusLabel(contact) }}</app-base-badge>
+          </td>
+          <td>{{ contact.responderName || '-' }}</td>
+          <td>
+            <div class="table-actions">
+              <app-base-button variant="ghost" (clicked)="reply.emit(contact)">Xem / Phản hồi</app-base-button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="empty-cell">Không tìm thấy thông tin liên hệ nào.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

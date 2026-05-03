@@ -1,0 +1,19 @@
+.contact-info {
+  display: flex;
+  flex-direction: column;
+
+  .contact-name {
+    font-weight: 600;
+    color: var(--color-gray-900);
+  }
+
+  .contact-email {
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+  }
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+}

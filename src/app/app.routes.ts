@@ -71,6 +71,7 @@ export const routes: Routes = [
       { path: 'orders', loadComponent: () => import('./pages/admin/order-mgmt/order-mgmt').then(m => m.OrderMgmtComponent), title: 'Quản lý đơn hàng - Quản trị' },
       { path: 'users', loadComponent: () => import('./pages/admin/user-mgmt/user-mgmt').then(m => m.UserMgmtComponent), title: 'Quản lý người dùng - Quản trị' },
       { path: 'vouchers', loadComponent: () => import('./pages/admin/voucher-mgmt/voucher-mgmt').then(m => m.VoucherMgmtComponent), title: 'Quản lý voucher - Quản trị' },
+      { path: 'contacts', loadComponent: () => import('./pages/admin/contact-mgmt/contact-mgmt').then(m => m.ContactMgmtComponent), title: 'Quản lý phản hồi - Quản trị' },
       { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.ProfilePageComponent), title: 'Thông tin cá nhân - Quản trị' }
     ]
   },

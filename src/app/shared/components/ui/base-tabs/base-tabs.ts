@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-type TabOption = {
+export type TabOption = {
   label: string;
   value: string;
 };
