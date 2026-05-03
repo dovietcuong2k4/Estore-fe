@@ -25,25 +25,46 @@
           }
         </div>
 
-        <app-base-input
-          label="Đường dẫn logo"
-          placeholder="https://..."
-          [disabled]="isSaving"
-          [value]="localData.imageUrl"
-          (valueChange)="setImageUrl($event)">
-        </app-base-input>
+        <div class="brand-modal__field">
+          <label class="brand-modal__label">Logo thương hiệu</label>
+          <div class="brand-modal__upload-group">
+            <label for="brand-upload" class="brand-modal__upload-btn" [class.disabled]="isSaving || isUploading">
+              <i class="fas fa-cloud-upload-alt"></i>
+              {{ isUploading ? 'Đang tải...' : (selectedFile ? 'Đã chọn ảnh' : 'Tải ảnh lên') }}
+            </label>
+            <input 
+              id="brand-upload" 
+              type="file" 
+              (change)="onFileSelected($event)" 
+              accept="image/*" 
+              [disabled]="isSaving || isUploading"
+              hidden />
+            
+            <span class="brand-modal__divider">hoặc</span>
+
+            <app-base-input
+              placeholder="Nhập link ảnh (https://...)"
+              [disabled]="isSaving"
+              [value]="localData.imageUrl"
+              (valueChange)="setImageUrl($event)">
+            </app-base-input>
+          </div>
+        </div>
 
         @if (localData.imageUrl) {
           <div class="brand-modal__preview">
             <img [src]="localData.imageUrl" [alt]="localData.name || 'Ảnh xem trước hãng'" (error)="onImageError()" />
+            @if (selectedFile) {
+              <div class="brand-modal__preview-badge">{{ isUploading ? 'Đang tải lên' : 'Sẵn sàng tải lên' }}</div>
+            }
           </div>
         }
       </div>
 
       <footer class="modal-shell__footer">
-        <app-base-button variant="ghost" type="button" [disabled]="isSaving" (clicked)="onCancel()">Hủy</app-base-button>
-        <app-base-button type="button" [disabled]="isSaving" (clicked)="onSubmit()">
-          {{ isSaving ? 'Đang lưu...' : 'Lưu lại' }}
+        <app-base-button variant="ghost" type="button" [disabled]="isSaving || isUploading" (clicked)="onCancel()">Hủy</app-base-button>
+        <app-base-button type="button" [disabled]="isSaving || isUploading" (clicked)="onSubmit()">
+          {{ isUploading ? 'Đang tải ảnh...' : (isSaving ? 'Đang lưu...' : 'Lưu lại') }}
         </app-base-button>
       </footer>
     </section>
