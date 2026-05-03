@@ -52,7 +52,7 @@
         </div>
         <div class="admin-user__info">
           <div class="admin-user__name">{{ auth.user()?.fullName }}</div>
-          <div class="admin-user__role">{{ auth.user()?.roles?.[0]?.name }}</div>
+          <div class="admin-user__role">Quản trị viên</div>
         </div>
       </div>
       <button (click)="auth.logout()" class="btn-store">

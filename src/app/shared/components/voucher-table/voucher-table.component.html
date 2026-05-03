@@ -27,7 +27,7 @@
           <td>
             <app-base-badge [tone]="getStatusTone(voucher)">{{ getStatusLabel(voucher) }}</app-base-badge>
           </td>
-          <td class="text-right">
+          <td>
             <div class="table-actions">
               @if (canEdit()) {
                 <app-base-button variant="ghost" (clicked)="edit.emit(voucher)">Sửa</app-base-button>
