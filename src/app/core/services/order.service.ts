@@ -1,8 +1,10 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import {
+  CreateOrderResponse,
   CreateOrderRequest,
   Order,
   OrderResponse,
+  VnpayPaymentResultResponse,
   mapOrderResponseToOrder
 } from '../models/order.model';
 import { BaseResultDTO } from '../models/user.model';
@@ -31,22 +33,36 @@ export class OrderService {
   readonly allOrders = computed(() => this.ordersSignal());
   readonly shipperOrders = computed(() => this.ordersSignal());
 
-  async createOrder(request: CreateOrderRequest): Promise<{ success: boolean; message: string; orderId?: number; }> {
+  async createOrder(request: CreateOrderRequest): Promise<{ success: boolean; message: string; orderId?: number; paymentUrl?: string; paymentMethod?: string; paymentStatus?: string; }> {
     try {
       const res = await firstValueFrom(
-        this.api.post<BaseResultDTO<any>>('/orders', request)
+        this.api.post<BaseResultDTO<CreateOrderResponse>>('/orders', request)
       );
       if (res.success) {
         await this.loadMyOrders();
         return { 
           success: res.success, 
           message: res.message,
-          orderId: res.data?.id
+          orderId: res.data?.id,
+          paymentUrl: res.data?.paymentUrl,
+          paymentMethod: res.data?.paymentMethod,
+          paymentStatus: res.data?.paymentStatus
         };
       }
       return { success: false, message: res.message };
     } catch (err: any) {
       return { success: false, message: err?.error?.message || 'Tạo đơn hàng thất bại' };
+    }
+  }
+
+  async verifyVnpayReturn(params: Record<string, string>): Promise<{ success: boolean; message: string; data?: VnpayPaymentResultResponse }> {
+    try {
+      const res = await firstValueFrom(
+        this.api.get<BaseResultDTO<VnpayPaymentResultResponse>>('/payments/vnpay/return', params)
+      );
+      return { success: res.success, message: res.message, data: res.data };
+    } catch (err: any) {
+      return { success: false, message: err?.error?.message || 'Xac minh thanh toan VNPAY that bai' };
     }
   }
 

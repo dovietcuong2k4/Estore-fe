@@ -64,11 +64,25 @@
             placeholder="Giao giờ hành chính, gọi trước khi giao..." rows="3"></textarea>
         </div>
 
-        <div class="payment-option active">
+        <div class="payment-options">
+          <div class="payment-option"
+            [class.active]="paymentMethod() === 'COD'"
+            (click)="selectPaymentMethod('COD')">
           <app-icon name="banknote" [size]="28" style="color: var(--kv-primary);"></app-icon>
           <div>
             <strong>Thanh toán khi nhận hàng (COD)</strong>
             <p>Thanh toán bằng tiền mặt khi nhận được hàng</p>
+          </div>
+        </div>
+
+          <div class="payment-option"
+            [class.active]="paymentMethod() === 'VNPAY'"
+            (click)="selectPaymentMethod('VNPAY')">
+            <app-icon name="credit-card" [size]="28" style="color: var(--kv-primary);"></app-icon>
+            <div>
+              <strong>Thanh toán qua VNPAY</strong>
+              <p>Chuyển sang cổng thanh toán VNPAY sandbox sau khi đặt hàng</p>
+            </div>
           </div>
         </div>
 
@@ -140,7 +154,8 @@
           @if (loading()) {
           Đang xử lý...
           } @else {
-          <app-icon name="bolt" [size]="20" style="margin-right: 8px;"></app-icon> Đặt hàng
+          <app-icon name="bolt" [size]="20" style="margin-right: 8px;"></app-icon>
+          {{ paymentMethod() === 'VNPAY' ? 'Thanh toán qua VNPAY' : 'Đặt hàng' }}
           }
         </button>
       </div>

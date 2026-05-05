@@ -1,0 +1,110 @@
+.payment-result-page {
+  min-height: calc(100vh - 160px);
+  display: grid;
+  place-items: center;
+  padding: clamp(2rem, 6vw, 5rem) 1rem;
+}
+
+.payment-result {
+  width: min(720px, 100%);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+  background: rgba(20, 31, 56, 0.72);
+  border-radius: var(--kv-radius-lg);
+  box-shadow: inset 0 0 0 1px rgba(64, 72, 93, 0.28), 0 32px 70px rgba(0, 0, 0, 0.45);
+
+  h1 {
+    margin: 1rem 0 0.75rem;
+    color: var(--kv-text);
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 800;
+  }
+
+  p {
+    color: var(--kv-text-muted);
+    line-height: 1.6;
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 92px;
+    height: 40px;
+    padding: 0 1rem;
+    border-radius: var(--kv-radius-full);
+    color: #ffd6d6;
+    background: rgba(215, 56, 59, 0.16);
+    box-shadow: inset 0 0 0 1px rgba(215, 56, 59, 0.28);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+
+  &__status--success {
+    color: #003f43;
+    background: var(--kv-primary);
+    box-shadow: 0 12px 28px rgba(0, 238, 252, 0.24);
+  }
+
+  &__meta {
+    margin: 2rem 0;
+    display: grid;
+    gap: 0.75rem;
+    text-align: left;
+  }
+
+  &__meta div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--kv-radius-md);
+    background: rgba(143, 245, 255, 0.04);
+  }
+
+  &__meta span {
+    color: var(--kv-text-muted);
+  }
+
+  &__meta strong {
+    color: var(--kv-text);
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__btn {
+    padding: 0.85rem 1.5rem;
+    border-radius: var(--kv-radius-full);
+    color: var(--kv-text);
+    text-decoration: none;
+    font-weight: 800;
+    background: rgba(143, 245, 255, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(143, 245, 255, 0.1);
+  }
+
+  &__btn--primary {
+    color: #003f43;
+    background: linear-gradient(135deg, var(--kv-primary) 0%, var(--kv-primary-container) 100%);
+  }
+
+  &__spinner {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    border: 4px solid rgba(143, 245, 255, 0.18);
+    border-top-color: var(--kv-primary);
+    animation: spin 0.9s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -11,6 +11,9 @@ export type OrderStatus =
   | 'DELIVERY_FAILED'
   | 'CANCELLED';
 
+export type PaymentMethod = 'COD' | 'VNPAY';
+export type PaymentStatus = 'UNPAID' | 'PENDING' | 'PAID' | 'FAILED';
+
 export interface OrderItem {
   id: number;
   orderId: number;
@@ -33,6 +36,14 @@ export interface Order {
   shippingDate?: string;
   receivedDate?: string;
   status: OrderStatus;
+  paymentMethod?: PaymentMethod;
+  paymentStatus?: PaymentStatus;
+  paymentTransactionNo?: string;
+  paymentBankCode?: string;
+  paymentResponseCode?: string;
+  paymentTransactionStatus?: string;
+  paymentPayDate?: string;
+  paymentCompletedAt?: string;
   items: OrderItem[];
   totalPrice?: number;
   discountAmount?: number;
@@ -51,7 +62,28 @@ export interface CreateOrderRequest {
   receiverAddress: string;
   note?: string;
   userVoucherId?: number;
+  paymentMethod?: PaymentMethod;
+  bankCode?: string;
   items?: CartItemRequest[];
+}
+
+export interface CreateOrderResponse {
+  id: number;
+  paymentMethod?: PaymentMethod;
+  paymentStatus?: PaymentStatus;
+  paymentUrl?: string;
+}
+
+export interface VnpayPaymentResultResponse {
+  orderId: number;
+  paid: boolean;
+  message: string;
+  responseCode?: string;
+  transactionStatus?: string;
+  transactionNo?: string;
+  bankCode?: string;
+  payDate?: string;
+  amount?: number;
 }
 
 // --- BE Response Types ---
@@ -85,6 +117,14 @@ export interface OrderResponse {
   shippingDate: string | null;
   receivedDate: string | null;
   status: string;
+  paymentMethod?: string;
+  paymentStatus?: string;
+  paymentTransactionNo?: string;
+  paymentBankCode?: string;
+  paymentResponseCode?: string;
+  paymentTransactionStatus?: string;
+  paymentPayDate?: string;
+  paymentCompletedAt?: string;
   totalPrice?: number;
   discountAmount?: number;
   orderItems: OrderItemResponse[];
@@ -144,6 +184,14 @@ export function mapOrderResponseToOrder(res: OrderResponse): Order {
     shippingDate: res.shippingDate ?? undefined,
     receivedDate: res.receivedDate ?? undefined,
     status: res.status as OrderStatus,
+    paymentMethod: res.paymentMethod as PaymentMethod | undefined,
+    paymentStatus: res.paymentStatus as PaymentStatus | undefined,
+    paymentTransactionNo: res.paymentTransactionNo,
+    paymentBankCode: res.paymentBankCode,
+    paymentResponseCode: res.paymentResponseCode,
+    paymentTransactionStatus: res.paymentTransactionStatus,
+    paymentPayDate: res.paymentPayDate,
+    paymentCompletedAt: res.paymentCompletedAt,
     items,
     totalPrice,
     discountAmount: res.discountAmount ?? 0,

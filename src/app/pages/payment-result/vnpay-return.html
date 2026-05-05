@@ -1,0 +1,30 @@
+<div class="payment-result-page">
+  <section class="payment-result">
+    @if (loading()) {
+      <div class="payment-result__spinner"></div>
+      <h1>Dang xac minh thanh toan</h1>
+      <p>{{ message() }}</p>
+    } @else {
+      <div class="payment-result__status" [class.payment-result__status--success]="paid()">
+        {{ paid() ? 'PAID' : 'FAILED' }}
+      </div>
+      <h1>{{ paid() ? 'Thanh toan VNPAY thanh cong' : 'Thanh toan VNPAY khong thanh cong' }}</h1>
+      <p>{{ message() }}</p>
+
+      @if (result()) {
+        <div class="payment-result__meta">
+          <div><span>Ma don hang</span><strong>#{{ result()?.orderId }}</strong></div>
+          <div><span>So tien</span><strong>{{ formatPrice(result()?.amount) }}</strong></div>
+          <div><span>Ma giao dich</span><strong>{{ result()?.transactionNo || '-' }}</strong></div>
+          <div><span>Ngan hang</span><strong>{{ result()?.bankCode || '-' }}</strong></div>
+          <div><span>Ma phan hoi</span><strong>{{ result()?.responseCode || '-' }}</strong></div>
+        </div>
+      }
+
+      <div class="payment-result__actions">
+        <a routerLink="/orders" class="payment-result__btn payment-result__btn--primary">Xem don hang</a>
+        <a routerLink="/products" class="payment-result__btn">Tiep tuc mua sam</a>
+      </div>
+    }
+  </section>
+</div>

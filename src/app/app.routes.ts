@@ -32,6 +32,11 @@ export const routes: Routes = [
         title: 'Đặt hàng - E-Store'
       },
       {
+        path: 'payment/vnpay-return',
+        loadComponent: () => import('./pages/payment-result/vnpay-return').then(m => m.VnpayReturnComponent),
+        title: 'VNPAY - E-Store'
+      },
+      {
         path: 'orders',
         loadComponent: () => import('./pages/orders/orders').then(m => m.OrdersComponent),
         title: 'Đơn hàng - E-Store'

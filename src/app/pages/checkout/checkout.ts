@@ -5,7 +5,7 @@ import { CartService } from '../../core/services/cart.service';
 import { OrderService } from '../../core/services/order.service';
 import { AuthService } from '../../core/services/auth.service';
 import { VoucherService } from '../../core/services/voucher.service';
-import { CreateOrderRequest } from '../../core/models/order.model';
+import { CreateOrderRequest, PaymentMethod } from '../../core/models/order.model';
 import { UserVoucher } from '../../core/models/voucher.model';
 import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 
@@ -36,6 +36,7 @@ export class CheckoutComponent {
 
   userVouchers = signal<UserVoucher[]>([]);
   selectedVoucher = signal<UserVoucher | null>(null);
+  paymentMethod = signal<PaymentMethod>('COD');
   /** Server-validated discount for the current selection (aligned with checkout preview API). */
   previewDiscount = signal<number | null>(null);
 
@@ -125,6 +126,10 @@ export class CheckoutComponent {
     }
   }
 
+  selectPaymentMethod(method: PaymentMethod) {
+    this.paymentMethod.set(method);
+  }
+
   formatPrice(price: number): string {
     return new Intl.NumberFormat('vi-VN').format(price) + '₫';
   }
@@ -150,6 +155,7 @@ export class CheckoutComponent {
       receiverAddress: this.form.receiverAddress,
       note: this.form.note,
       userVoucherId: this.selectedVoucher()?.id,
+      paymentMethod: this.paymentMethod(),
       items: this.items().map((item: any) => ({
         productId: item.productId,
         quantity: item.quantity
@@ -164,6 +170,11 @@ export class CheckoutComponent {
     this.loading.set(false);
 
     if (result.success) {
+      if (result.paymentMethod === 'VNPAY' && result.paymentUrl) {
+        window.location.href = result.paymentUrl;
+        return;
+      }
+
       this.success.set(true);
       this.successBoxData.set({ id: result.orderId! });
       await this.cart.clearCart();
