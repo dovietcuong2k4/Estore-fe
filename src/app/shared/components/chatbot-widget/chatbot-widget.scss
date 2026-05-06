@@ -1,0 +1,320 @@
+.chatbot {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+  pointer-events: none;
+
+  &__launcher,
+  &__panel {
+    pointer-events: auto;
+  }
+
+  &__launcher {
+    width: 58px;
+    height: 58px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #003f43;
+    background: linear-gradient(135deg, var(--kv-primary), var(--kv-primary-container));
+    border-radius: var(--kv-radius-full);
+    box-shadow: 0 18px 38px rgba(0, 238, 252, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+
+    &:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+  }
+
+  &__panel {
+    width: min(390px, calc(100vw - 32px));
+    height: min(620px, calc(100vh - 112px));
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: rgba(9, 19, 40, 0.96);
+    border-radius: var(--kv-radius-lg);
+    box-shadow: 0 26px 72px rgba(0, 0, 0, 0.48), inset 0 0 0 1px rgba(143, 245, 255, 0.18);
+    backdrop-filter: blur(28px);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px;
+    background: rgba(20, 31, 56, 0.86);
+    box-shadow: inset 0 -1px 0 rgba(64, 72, 93, 0.45);
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 10px;
+
+    h2 {
+      margin: 0;
+      font-size: 0.98rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 2px 0 0;
+      color: var(--kv-text-muted);
+      font-size: 0.76rem;
+      line-height: 1.3;
+    }
+  }
+
+  &__avatar,
+  &__icon-btn,
+  &__send {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+  }
+
+  &__avatar {
+    width: 36px;
+    height: 36px;
+    color: #003f43;
+    background: var(--kv-primary);
+    border-radius: var(--kv-radius-full);
+  }
+
+  &__icon-btn {
+    width: 36px;
+    height: 36px;
+    color: var(--kv-text);
+    background: rgba(143, 245, 255, 0.08);
+    border-radius: var(--kv-radius-full);
+
+    &:hover {
+      background: rgba(143, 245, 255, 0.16);
+    }
+  }
+
+  &__messages {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 18px 16px;
+  }
+
+  &__message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+
+    &--user {
+      align-items: flex-end;
+
+      .chatbot__bubble {
+        color: #003f43;
+        background: var(--kv-primary);
+        border-bottom-right-radius: 6px;
+      }
+    }
+  }
+
+  &__bubble {
+    max-width: 86%;
+    padding: 10px 12px;
+    color: var(--kv-text);
+    background: rgba(20, 31, 56, 0.82);
+    border-radius: 16px;
+    border-bottom-left-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(64, 72, 93, 0.32);
+    font-size: 0.88rem;
+    line-height: 1.45;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+
+  &__bubble--typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 58px;
+
+    span {
+      width: 6px;
+      height: 6px;
+      background: var(--kv-primary);
+      border-radius: 50%;
+      animation: chatbotTyping 1s infinite ease-in-out;
+
+      &:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+    }
+  }
+
+  &__products {
+    width: 100%;
+    display: grid;
+    gap: 8px;
+  }
+
+  &__product {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 10px;
+    width: min(100%, 330px);
+    padding: 8px;
+    color: inherit;
+    background: rgba(15, 25, 48, 0.88);
+    border-radius: var(--kv-radius-md);
+    box-shadow: inset 0 0 0 1px rgba(143, 245, 255, 0.14);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: inset 0 0 0 1px rgba(143, 245, 255, 0.36);
+    }
+  }
+
+  &__product-image {
+    width: 58px;
+    height: 58px;
+    object-fit: cover;
+    background: #000;
+    border-radius: 10px;
+  }
+
+  &__product-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__product-brand {
+    color: var(--kv-secondary);
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__product-name {
+    color: var(--kv-text);
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.28;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__product-meta {
+    display: flex;
+    gap: 6px;
+    color: var(--kv-text-muted);
+    font-size: 0.68rem;
+    line-height: 1.2;
+    overflow: hidden;
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &__product-price {
+    color: var(--kv-primary);
+    font-size: 0.84rem;
+    font-weight: 800;
+  }
+
+  &__quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 16px 12px;
+
+    button {
+      min-height: 34px;
+      padding: 0 10px;
+      color: var(--kv-text);
+      background: rgba(143, 245, 255, 0.08);
+      border-radius: var(--kv-radius-full);
+      box-shadow: inset 0 0 0 1px rgba(143, 245, 255, 0.18);
+      font-size: 0.75rem;
+
+      &:hover {
+        background: rgba(143, 245, 255, 0.14);
+      }
+    }
+  }
+
+  &__form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(20, 31, 56, 0.86);
+    box-shadow: inset 0 1px 0 rgba(64, 72, 93, 0.45);
+
+    input {
+      min-height: 44px;
+      border-radius: var(--kv-radius-full);
+      font-size: 0.86rem;
+    }
+  }
+
+  &__send {
+    width: 44px;
+    height: 44px;
+    color: #003f43;
+    background: var(--kv-primary);
+    border-radius: var(--kv-radius-full);
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+  }
+}
+
+@keyframes chatbotTyping {
+  0%, 80%, 100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@media (max-width: 640px) {
+  .chatbot {
+    right: 16px;
+    bottom: 16px;
+
+    &__panel {
+      width: calc(100vw - 32px);
+      height: min(560px, calc(100vh - 96px));
+    }
+  }
+}

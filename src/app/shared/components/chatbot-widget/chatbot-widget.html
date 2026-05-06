@@ -1,0 +1,96 @@
+<div class="chatbot" [class.chatbot--open]="isOpen()">
+  @if (isOpen()) {
+    <section class="chatbot__panel" aria-label="Chatbot tư vấn sản phẩm">
+      <header class="chatbot__header">
+        <div class="chatbot__title">
+          <span class="chatbot__avatar">
+            <app-icon name="bolt" size="18"></app-icon>
+          </span>
+          <div>
+            <h2>AI tư vấn</h2>
+            <p>Gợi ý sản phẩm theo nhu cầu</p>
+          </div>
+        </div>
+        <button class="chatbot__icon-btn" type="button" aria-label="Đóng chatbot" (click)="close()">
+          <app-icon name="close" size="18"></app-icon>
+        </button>
+      </header>
+
+      <div #messageList class="chatbot__messages">
+        @for (message of messages(); track message.id) {
+          <article class="chatbot__message" [class.chatbot__message--user]="message.role === 'user'">
+            <div class="chatbot__bubble">{{ message.content }}</div>
+
+            @if (message.products?.length) {
+              <div class="chatbot__products">
+                @for (product of message.products; track product.id) {
+                  <a class="chatbot__product" [routerLink]="['/products', product.id]" (click)="close()">
+                    <img
+                      class="chatbot__product-image"
+                      [src]="product.thumbnailUrl || 'https://via.placeholder.com/120x120?text=E-Store'"
+                      [alt]="product.name"
+                      loading="lazy"
+                    />
+                    <span class="chatbot__product-info">
+                      <span class="chatbot__product-brand">{{ product.brandName || product.categoryName }}</span>
+                      <span class="chatbot__product-name">{{ product.name }}</span>
+                      <span class="chatbot__product-meta">
+                        @if (product.cpu) { <span>{{ product.cpu }}</span> }
+                        @if (product.ram) { <span>{{ product.ram }}</span> }
+                      </span>
+                      <span class="chatbot__product-price">{{ formatPrice(product.price) }}</span>
+                    </span>
+                  </a>
+                }
+              </div>
+            }
+          </article>
+        }
+
+        @if (loading()) {
+          <article class="chatbot__message">
+            <div class="chatbot__bubble chatbot__bubble--typing">
+              <span></span><span></span><span></span>
+            </div>
+          </article>
+        }
+      </div>
+
+      @if (messages().length <= 1) {
+        <div class="chatbot__quick">
+          @for (prompt of quickPrompts; track prompt) {
+            <button type="button" (click)="sendMessage(prompt)">{{ prompt }}</button>
+          }
+        </div>
+      }
+
+      <form class="chatbot__form" (submit)="$event.preventDefault(); sendMessage()">
+        <input
+          type="text"
+          autocomplete="off"
+          placeholder="Nhập nhu cầu, ngân sách..."
+          [value]="input()"
+          [disabled]="loading()"
+          (input)="input.set($any($event.target).value)"
+        />
+        <button class="chatbot__send" type="submit" [disabled]="loading() || !input().trim()" aria-label="Gửi tin nhắn">
+          <app-icon name="send" size="18"></app-icon>
+        </button>
+      </form>
+    </section>
+  }
+
+  <button
+    class="chatbot__launcher"
+    type="button"
+    aria-label="Mở chatbot tư vấn"
+    [attr.aria-expanded]="isOpen()"
+    (click)="toggle()"
+  >
+    @if (isOpen()) {
+      <app-icon name="close" size="24"></app-icon>
+    } @else {
+      <app-icon name="message-circle" size="24"></app-icon>
+    }
+  </button>
+</div>

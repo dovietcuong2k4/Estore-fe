@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private readonly BASE_URL = 'http://localhost:9090/api';
+  private readonly BASE_URL = `${environment.apiUrl}/api`;
   private readonly TOKEN_KEY = 'estore_token';
 
   constructor(private http: HttpClient) {}
