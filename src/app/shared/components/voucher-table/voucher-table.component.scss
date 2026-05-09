@@ -40,11 +40,12 @@
 }
 
 .voucher-dates {
-  display: grid;
+  display: flex;
   gap: 4px;
   color: var(--kv-text-muted);
   font-size: 0.86rem;
-  justify-content: center;
+ align-items: center;
+ justify-content: center;
 }
 
 .table-actions {
