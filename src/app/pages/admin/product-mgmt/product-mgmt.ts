@@ -12,11 +12,12 @@ import { BaseButtonComponent } from '../../../shared/components/ui/base-button/b
 import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
 import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
 import { BaseBadgeComponent } from '../../../shared/components/ui/base-badge/base-badge';
+import { ConfirmModalComponent } from '../../../shared/components/ui/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-product-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent, BaseBadgeComponent],
+  imports: [CommonModule, FormsModule, ProductModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent, BaseBadgeComponent, ConfirmModalComponent],
   templateUrl: './product-mgmt.html',
   styleUrls: ['../dashboard/dashboard.scss', './product-mgmt.scss']
 })
@@ -29,6 +30,9 @@ export class ProductMgmtComponent {
   selectedProduct: any = null;
   categories: Category[] = [];
   brands: Brand[] = [];
+
+  isDeleteModalOpen = false;
+  productIdToDelete: number | null = null;
 
   constructor(
     private productApi: ProductApiService,
@@ -130,10 +134,21 @@ export class ProductMgmtComponent {
   }
 
   deleteProduct(id: number) {
-    if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-      this.productApi.deleteProduct(id).subscribe(() => {
+    this.productIdToDelete = id;
+    this.isDeleteModalOpen = true;
+  }
+
+  confirmDelete() {
+    if (this.productIdToDelete) {
+      this.productApi.deleteProduct(this.productIdToDelete).subscribe(() => {
         this.loadProducts();
+        this.closeDeleteModal();
       });
     }
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+    this.productIdToDelete = null;
   }
 }

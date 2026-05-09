@@ -8,11 +8,12 @@ import { BaseTableComponent } from '../../../shared/components/ui/base-table/bas
 import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
 import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
 import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
+import { ConfirmModalComponent } from '../../../shared/components/ui/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-brand-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule, BrandModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent],
+  imports: [CommonModule, FormsModule, BrandModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent, ConfirmModalComponent],
   templateUrl: './brand-mgmt.html',
   styleUrls: ['../dashboard/dashboard.scss', './brand-mgmt.scss']
 })
@@ -22,6 +23,8 @@ export class BrandMgmtComponent {
   isModalOpen = false;
   isSaving = false;
   selectedBrand: any = null;
+  isDeleteModalOpen = false;
+  brandIdToDelete: number | null = null;
 
   constructor(
     private productApi: ProductApiService,
@@ -76,15 +79,29 @@ export class BrandMgmtComponent {
   }
 
   delete(id: number) {
-    if (confirm('Bạn có chắc chắn muốn xóa hãng sản xuất này?')) {
-      this.productApi.deleteBrand(id).subscribe({
+    this.brandIdToDelete = id;
+    this.isDeleteModalOpen = true;
+  }
+
+  confirmDelete() {
+    if (this.brandIdToDelete) {
+      this.productApi.deleteBrand(this.brandIdToDelete).subscribe({
         next: () => {
           this.toastService.success('Đã xóa thành công');
           this.load();
+          this.closeDeleteModal();
         },
-        error: () => this.toastService.error('Không thể xóa hãng này')
+        error: () => {
+          this.toastService.error('Không thể xóa hãng này');
+          this.closeDeleteModal();
+        }
       });
     }
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+    this.brandIdToDelete = null;
   }
 
   get filteredBrands(): any[] {

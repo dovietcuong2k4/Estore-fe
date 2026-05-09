@@ -14,6 +14,7 @@ import { BaseTableComponent } from '../../../shared/components/ui/base-table/bas
 import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
 import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
 import { BaseTabsComponent } from '../../../shared/components/ui/base-tabs/base-tabs';
+import { ConfirmModalComponent } from '../../../shared/components/ui/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-voucher-mgmt',
@@ -27,7 +28,8 @@ import { BaseTabsComponent } from '../../../shared/components/ui/base-tabs/base-
     BaseTableComponent,
     FilterBarComponent,
     BaseInputComponent,
-    BaseTabsComponent
+    BaseTabsComponent,
+    ConfirmModalComponent
   ],
   templateUrl: './voucher-mgmt.html',
   styleUrls: ['../dashboard/dashboard.scss', './voucher-mgmt.scss'],
@@ -80,6 +82,9 @@ export class VoucherMgmtComponent {
   isAssignModalOpen = false;
   isAssigningUsers = false;
   selectedVoucherForAssign: Voucher | null = null;
+
+  isDeleteModalOpen = signal(false);
+  voucherToDelete = signal<Voucher | null>(null);
 
   constructor() {
     void this.loadVouchers();
@@ -192,24 +197,34 @@ export class VoucherMgmtComponent {
     }
   }
 
-  async onDelete(voucher: Voucher): Promise<void> {
+  onDelete(voucher: Voucher): void {
     if (!this.canEditVouchers()) {
       return;
     }
 
-    const confirmed = window.confirm(`Bạn có chắc muốn xóa voucher ${voucher.code} không?`);
-    if (!confirmed) {
-      return;
-    }
+    this.voucherToDelete.set(voucher);
+    this.isDeleteModalOpen.set(true);
+  }
+
+  async confirmDelete() {
+    const voucher = this.voucherToDelete();
+    if (!voucher) return;
 
     const res = await this.voucherService.deleteVoucherTemplate(voucher.id);
     if (res.success) {
       this.toast.success(res.message);
       await this.loadVouchers();
+      this.closeDeleteModal();
       return;
     }
 
     this.toast.error(res.message);
+    this.closeDeleteModal();
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalOpen.set(false);
+    this.voucherToDelete.set(null);
   }
 
   onStatusFilterChanged(value: string): void {

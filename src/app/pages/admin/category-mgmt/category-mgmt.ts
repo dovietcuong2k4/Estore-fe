@@ -8,11 +8,12 @@ import { BaseTableComponent } from '../../../shared/components/ui/base-table/bas
 import { BaseButtonComponent } from '../../../shared/components/ui/base-button/base-button';
 import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
 import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
+import { ConfirmModalComponent } from '../../../shared/components/ui/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-category-mgmt',
   standalone: true,
-  imports: [CommonModule, FormsModule, CategoryModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent],
+  imports: [CommonModule, FormsModule, CategoryModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent, ConfirmModalComponent],
   templateUrl: './category-mgmt.html',
   styleUrls: ['../dashboard/dashboard.scss', './category-mgmt.scss']
 })
@@ -22,6 +23,8 @@ export class CategoryMgmtComponent {
   isModalOpen = false;
   isSaving = false;
   selectedCategory: any = null;
+  isDeleteModalOpen = false;
+  categoryIdToDelete: number | null = null;
 
   constructor(
     private productApi: ProductApiService,
@@ -78,17 +81,29 @@ export class CategoryMgmtComponent {
   }
 
   delete(id: number) {
-    if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-      this.productApi.deleteCategory(id).subscribe({
+    this.categoryIdToDelete = id;
+    this.isDeleteModalOpen = true;
+  }
+
+  confirmDelete() {
+    if (this.categoryIdToDelete) {
+      this.productApi.deleteCategory(this.categoryIdToDelete).subscribe({
         next: () => {
           this.toastService.success('Đã xóa thành công');
           this.load();
+          this.closeDeleteModal();
         },
         error: () => {
           this.toastService.error('Không thể xóa danh mục này');
+          this.closeDeleteModal();
         }
       });
     }
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+    this.categoryIdToDelete = null;
   }
 
   get filteredCategories(): any[] {

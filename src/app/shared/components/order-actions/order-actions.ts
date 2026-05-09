@@ -21,12 +21,12 @@ export interface OrderActionEvent {
 }
 
 import { BaseButtonComponent } from '../ui/base-button/base-button';
-import { BaseModalComponent } from '../ui/base-modal/base-modal';
+import { ConfirmModalComponent } from '../ui/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-order-actions',
   standalone: true,
-  imports: [CommonModule, FormsModule, BaseButtonComponent, BaseModalComponent],
+  imports: [CommonModule, FormsModule, BaseButtonComponent, ConfirmModalComponent],
   templateUrl: './order-actions.html',
   styleUrl: './order-actions.scss'
 })

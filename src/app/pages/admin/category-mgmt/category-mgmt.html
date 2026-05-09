@@ -60,3 +60,12 @@
   (save)="save($event)" 
   (cancel)="closeModal()">
 </app-category-modal>
+
+<app-confirm-modal
+  [isOpen]="isDeleteModalOpen"
+  title="Xóa danh mục"
+  message="Bạn có chắc chắn muốn xóa danh mục này? Hành động này không thể hoàn tác."
+  [confirmVariant]="'danger'"
+  (confirm)="confirmDelete()"
+  (cancel)="closeDeleteModal()"
+></app-confirm-modal>
