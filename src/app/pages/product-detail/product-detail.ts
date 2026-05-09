@@ -174,7 +174,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   get stars(): { type: 'full' | 'half' | 'empty' }[] {
-    const r = this.product?.rating ?? 0;
+    const r = this.reviewSummary()?.averageRating ?? this.product?.rating ?? 0;
     const full = Math.floor(r);
     const half = r % 1 >= 0.5 ? 1 : 0;
     const empty = 5 - full - half;

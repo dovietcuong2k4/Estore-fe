@@ -163,15 +163,17 @@
   &__stars {
     display: flex;
     gap: 1px;
-    color: var(--kv-primary);
+    color: var(--kv-star);
 
     .star--full {
-      fill: var(--kv-primary);
+      fill: var(--kv-star);
+      filter: drop-shadow(0 0 4px rgba(255, 184, 0, 0.3));
     }
     
     .star--empty {
       color: var(--kv-text-muted);
       opacity: 0.3;
+      fill: none;
     }
   }
 

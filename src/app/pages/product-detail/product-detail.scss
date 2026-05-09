@@ -152,15 +152,17 @@
     .stars { 
       display: flex;
       gap: 2px;
-      color: var(--kv-primary);
+      color: var(--kv-star);
 
       .star--full {
-        fill: var(--kv-primary);
+        fill: var(--kv-star);
+        filter: drop-shadow(0 0 6px rgba(255, 184, 0, 0.4));
       }
       
       .star--empty {
         color: var(--kv-text-muted);
         opacity: 0.3;
+        fill: none;
       }
     }
     .reviews, .sold { color: var(--kv-text-muted); font-size: 0.95rem; font-weight: 600; }
@@ -482,10 +484,10 @@
     }
     
     .avg-stars { 
-      color: var(--kv-primary); 
+      color: var(--kv-star); 
       font-size: 1.75rem; 
       letter-spacing: 2px;
-      filter: drop-shadow(0 0 8px rgba(143, 245, 255, 0.4));
+      filter: drop-shadow(0 0 12px rgba(255, 184, 0, 0.45));
     }
     
     .total-count { 
@@ -553,9 +555,9 @@
         &:hover { transform: scale(1.25) rotate(5deg); } 
         
         .star--full {
-          color: var(--kv-primary);
-          fill: var(--kv-primary);
-          filter: drop-shadow(0 0 10px rgba(143, 245, 255, 0.5));
+          color: var(--kv-star);
+          fill: var(--kv-star);
+          filter: drop-shadow(0 0 10px rgba(255, 184, 0, 0.5));
         }
 
         .star--empty {
@@ -738,9 +740,9 @@
       margin-bottom: 1.25rem; 
       
       .star--full { 
-        color: var(--kv-primary); 
-        fill: var(--kv-primary);
-        filter: drop-shadow(0 0 5px rgba(143, 245, 255, 0.5));
+        color: var(--kv-star); 
+        fill: var(--kv-star);
+        filter: drop-shadow(0 0 5px rgba(255, 184, 0, 0.5));
       } 
 
       .star--empty {

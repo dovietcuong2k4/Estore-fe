@@ -54,7 +54,7 @@
               ></app-icon>
             }
           </div>
-          <span class="reviews">{{ product.reviewCount }} đánh giá</span>
+          <span class="reviews">{{ reviewSummary()?.totalReviews ?? product.reviewCount ?? 0 }} đánh giá</span>
           <span class="sold">| Đã bán {{ product.soldQuantity }}</span>
         </div>
 
