@@ -790,3 +790,10 @@
     }
   }
 }
+
+
+.product-info__image-main {
+  img {
+    object-fit: cover;
+  }
+}
