@@ -19,7 +19,9 @@
       <div #messageList class="chatbot__messages">
         @for (message of messages(); track message.id) {
           <article class="chatbot__message" [class.chatbot__message--user]="message.role === 'user'">
-            <div class="chatbot__bubble">{{ message.content }}</div>
+            <div class="chatbot__bubble">
+              <markdown [data]="message.content"></markdown>
+            </div>
 
             @if (message.products?.length) {
               <div class="chatbot__products">

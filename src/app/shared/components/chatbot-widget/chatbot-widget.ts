@@ -3,6 +3,8 @@ import { RouterLink } from '@angular/router';
 import { ChatbotHistoryMessage, ChatbotProductSuggestion } from '../../../core/models/chatbot.model';
 import { ChatbotService } from '../../../core/services/chatbot.service';
 import { IconComponent } from '../ui/icon/icon.component';
+import { MarkdownComponent } from 'ngx-markdown';
+
 
 interface ChatMessage {
   id: number;
@@ -14,7 +16,8 @@ interface ChatMessage {
 @Component({
   selector: 'app-chatbot-widget',
   standalone: true,
-  imports: [RouterLink, IconComponent],
+  imports: [RouterLink, IconComponent, MarkdownComponent],
+
   templateUrl: './chatbot-widget.html',
   styleUrl: './chatbot-widget.scss'
 })
