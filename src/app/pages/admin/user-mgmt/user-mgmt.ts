@@ -8,11 +8,12 @@ import { BaseButtonComponent } from '../../../shared/components/ui/base-button/b
 import { FilterBarComponent } from '../../../shared/components/ui/filter-bar/filter-bar';
 import { BaseInputComponent } from '../../../shared/components/ui/base-input/base-input';
 import { BaseBadgeComponent } from '../../../shared/components/ui/base-badge/base-badge';
+import { ConfirmModalComponent } from '../../../shared/components/ui/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-user-mgmt',
   standalone: true,
-  imports: [CommonModule, UserModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent, BaseBadgeComponent],
+  imports: [CommonModule, UserModalComponent, BaseTableComponent, BaseButtonComponent, FilterBarComponent, BaseInputComponent, BaseBadgeComponent, ConfirmModalComponent],
   templateUrl: './user-mgmt.html',
   styleUrls: ['./user-mgmt.scss', '../dashboard/dashboard.scss', '../category-mgmt/category-mgmt.scss']
 })
@@ -21,6 +22,8 @@ export class UserMgmtComponent {
   searchTerm = '';
   isModalOpen = false;
   selectedUser: User | null = null;
+  isDeleteModalOpen = false;
+  userToDelete: User | null = null;
 
   constructor(
     private userApi: UserApiService,
@@ -61,14 +64,28 @@ export class UserMgmtComponent {
   }
 
   deleteUser(user: User): void {
-    if (!confirm(`Bạn có chắc chắn muốn xóa người dùng "${user.fullName}"?`)) {
-      return;
-    }
+    this.userToDelete = user;
+    this.isDeleteModalOpen = true;
+  }
 
-    this.userApi.deleteUser(user.id).subscribe({
-      next: () => this.loadUsers(),
-      error: err => alert(err?.error?.message || 'Không thể xóa người dùng')
-    });
+  confirmDelete() {
+    if (this.userToDelete) {
+      this.userApi.deleteUser(this.userToDelete.id).subscribe({
+        next: () => {
+          this.loadUsers();
+          this.closeDeleteModal();
+        },
+        error: err => {
+          alert(err?.error?.message || 'Không thể xóa người dùng');
+          this.closeDeleteModal();
+        }
+      });
+    }
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+    this.userToDelete = null;
   }
 
   get filteredUsers(): User[] {

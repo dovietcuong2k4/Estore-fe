@@ -62,3 +62,12 @@
   (save)="save($event)"
   (cancel)="closeModal()">
 </app-brand-modal>
+
+<app-confirm-modal
+  [isOpen]="isDeleteModalOpen"
+  title="Xóa hãng sản xuất"
+  message="Bạn có chắc chắn muốn xóa hãng sản xuất này? Hành động này không thể hoàn tác."
+  [confirmVariant]="'danger'"
+  (confirm)="confirmDelete()"
+  (cancel)="closeDeleteModal()"
+></app-confirm-modal>

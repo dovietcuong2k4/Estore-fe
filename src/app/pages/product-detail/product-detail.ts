@@ -36,6 +36,7 @@ export class ProductDetailComponent implements OnInit {
   isEditing = signal(false);
   reviewLoading = signal(false);
   submittingReview = signal(false);
+  hoveredRating = signal(0);
 
   // AI Review Summary state
   aiSummary = signal<ReviewAiSummaryResponse | null>(null);
@@ -187,6 +188,17 @@ export class ProductDetailComponent implements OnInit {
     this.isEditing.set(false);
   }
 
+  getRatingLabel(rating: number): string {
+    const labels: Record<number, string> = {
+      1: 'Rất tệ',
+      2: 'Tệ',
+      3: 'Bình thường',
+      4: 'Tốt',
+      5: 'Rất tốt'
+    };
+    return labels[rating] || '';
+  }
+
   onPageChange(page: number) {
     this.loadReviews(page);
   }
@@ -200,9 +212,13 @@ export class ProductDetailComponent implements OnInit {
   }
 
   get stars(): { type: 'full' | 'half' | 'empty' }[] {
-    const r = this.product?.rating ?? 0;
-    const full = Math.floor(r);
-    const half = r % 1 >= 0.5 ? 1 : 0;
+    const r = this.reviewSummary()?.averageRating ?? this.product?.rating ?? 0;
+    return this.getRatingStars(r);
+  }
+
+  getRatingStars(rating: number): { type: 'full' | 'half' | 'empty' }[] {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5 ? 1 : 0;
     const empty = 5 - full - half;
     
     return [

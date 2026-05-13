@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
   template: `
     @if (open()) {
       <div class="ui-modal__backdrop" (click)="close.emit()">
-        <section class="ui-modal" [class.ui-modal--lg]="size() === 'lg'" [class.ui-modal--xl]="size() === 'xl'" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+        <section class="ui-modal" [class.ui-modal--sm]="size() === 'sm'" [class.ui-modal--lg]="size() === 'lg'" [class.ui-modal--xl]="size() === 'xl'" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
           <header class="ui-modal__header">
             <div>
               @if (eyebrow()) {
@@ -36,8 +36,11 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
   styles: [`
     :host { display: contents; }
     .ui-modal__backdrop {
-      position: fixed;
-      inset: 0;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
       z-index: 1000;
       display: grid;
       place-items: center;
@@ -54,6 +57,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       overflow: hidden;
       animation: modalRise 0.22s ease-out;
     }
+    .ui-modal--sm { width: min(100%, 480px); }
     .ui-modal--lg { width: min(100%, 880px); }
     .ui-modal--xl { width: min(100%, 1060px); }
     .ui-modal__header {
@@ -63,6 +67,9 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       padding: 32px 32px 24px;
       border-bottom: 1px solid rgba(94, 108, 138, 0.15);
     }
+    .ui-modal--sm .ui-modal__header {
+      padding: 24px 24px 16px;
+    }
     .ui-modal__eyebrow {
       margin: 0 0 0.45rem;
       color: var(--kv-secondary);
@@ -70,6 +77,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.12em;
+      text-align: left;
     }
     .ui-modal__title {
       margin: 0;
@@ -98,12 +106,16 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
     }
     .ui-modal__close:hover { background: rgba(255, 255, 255, 0.08); }
     .ui-modal__body { padding: 32px; }
+    .ui-modal--sm .ui-modal__body { padding: 24px; }
     .ui-modal__footer {
       display: flex;
       justify-content: flex-end;
       gap: 12px;
       padding: 24px 32px 32px;
       border-top: 1px solid rgba(94, 108, 138, 0.15);
+    }
+    .ui-modal--sm .ui-modal__footer {
+      padding: 16px 24px 24px;
     }
     @keyframes modalFade {
       from { opacity: 0; }
@@ -121,7 +133,7 @@ export class BaseModalComponent {
   readonly title = input('');
   readonly subtitle = input('');
   readonly eyebrow = input('');
-  readonly size = input<'md' | 'lg' | 'xl'>('md');
+  readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
   readonly showFooter = input(true);
 
   readonly close = output<void>();

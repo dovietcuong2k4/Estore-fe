@@ -74,4 +74,13 @@
     (closed)="closeModal()"
     (saved)="onUserSaved()">
   </app-user-modal>
+
+  <app-confirm-modal
+    [isOpen]="isDeleteModalOpen"
+    title="Xóa người dùng"
+    message="Bạn có chắc chắn muốn xóa người dùng {{ userToDelete?.fullName }}? Hành động này không thể hoàn tác."
+    [confirmVariant]="'danger'"
+    (confirm)="confirmDelete()"
+    (cancel)="closeDeleteModal()"
+  ></app-confirm-modal>
 </section>

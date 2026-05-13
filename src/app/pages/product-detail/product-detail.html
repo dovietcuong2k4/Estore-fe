@@ -50,11 +50,13 @@
               <app-icon 
                 [name]="star.type === 'half' ? 'star-half' : 'star'" 
                 size="16" 
+                [fill]="star.type === 'empty' ? 'none' : 'currentColor'"
+                [strokeWidth]="star.type === 'empty' ? 2 : 2.5"
                 [className]="star.type === 'empty' ? 'star--empty' : 'star--full'"
               ></app-icon>
             }
           </div>
-          <span class="reviews">{{ product.reviewCount }} đánh giá</span>
+          <span class="reviews">{{ reviewSummary()?.totalReviews ?? product.reviewCount ?? 0 }} đánh giá</span>
           <span class="sold">| Đã bán {{ product.soldQuantity }}</span>
         </div>
 
@@ -156,11 +158,24 @@
             <!-- Review Summary -->
             <div class="reviews-summary" *ngIf="reviewSummary() as summary">
               <div class="reviews-summary__avg">
-                <span class="avg-score">{{ summary.averageRating || 0 }}</span>
-                <div class="avg-stars">
-                   <app-icon name="star" size="20" className="star--full"></app-icon>
+                <div class="avg-main">
+                  <span class="avg-score">{{ summary.averageRating || 0 }}</span>
+                  <div class="avg-stars">
+                    @for (star of getRatingStars(summary.averageRating || 0); track $index) {
+                      <app-icon 
+                        [name]="star.type === 'half' ? 'star-half' : 'star'" 
+                        size="18" 
+                        [fill]="star.type === 'empty' ? 'none' : 'currentColor'"
+                        [strokeWidth]="star.type === 'empty' ? 1.5 : 2.5"
+                        [className]="star.type === 'empty' ? 'star--empty' : 'star--full'"
+                      ></app-icon>
+                    }
+                  </div>
                 </div>
-                <span class="total-count">{{ summary.totalReviews }} đánh giá</span>
+                <div class="avg-meta">
+                  <span class="total-count">{{ summary.totalReviews }} nhận xét</span>
+                  <span class="verified-msg">Tất cả đánh giá đều từ người mua hàng</span>
+                </div>
               </div>
               <div class="reviews-summary__bars">
                 <!-- Simple bar representation would go here if we had data, for now just text or empty -->
@@ -228,12 +243,16 @@
                   <div class="star-picker">
                     <span *ngFor="let s of [1,2,3,4,5]" 
                           class="star" 
-                          [class.active]="reviewForm().rating >= s"
-                          (click)="setRating(s)">
-                      <app-icon name="star" size="24" [className]="reviewForm().rating >= s ? 'star--full' : 'star--empty'"></app-icon>
+                          (click)="setRating(s)"
+                          (mouseenter)="hoveredRating.set(s)"
+                          (mouseleave)="hoveredRating.set(0)">
+                      <app-icon name="star" size="32" 
+                                [fill]="(hoveredRating() || reviewForm().rating) >= s ? 'currentColor' : 'none'"
+                                [strokeWidth]="(hoveredRating() || reviewForm().rating) >= s ? 2.5 : 2"
+                                [className]="(hoveredRating() || reviewForm().rating) >= s ? 'star--full' : 'star--empty'"></app-icon>
                     </span>
-                    <span class="rating-text" *ngIf="reviewForm().rating > 0">
-                      {{ reviewForm().rating === 1 ? 'Rất tệ' : reviewForm().rating === 2 ? 'Tệ' : reviewForm().rating === 3 ? 'Bình thường' : reviewForm().rating === 4 ? 'Tốt' : 'Rất tốt' }}
+                    <span class="rating-text" *ngIf="(hoveredRating() || reviewForm().rating) > 0">
+                      {{ getRatingLabel(hoveredRating() || reviewForm().rating) }}
                     </span>
                   </div>
 
@@ -279,10 +298,18 @@
                     </div>
                   </div>
                   <div class="review-item__rating">
-                    <app-icon *ngFor="let s of [1,2,3,4,5]" 
-                              name="star" 
-                              size="14" 
-                              [className]="r.rating >= s ? 'star--full' : 'star--empty'"></app-icon>
+                    <div class="stars">
+                      @for (star of getRatingStars(r.rating); track $index) {
+                        <app-icon 
+                          [name]="star.type === 'half' ? 'star-half' : 'star'" 
+                          size="14" 
+                          [fill]="star.type === 'empty' ? 'none' : 'currentColor'"
+                          [strokeWidth]="star.type === 'empty' ? 2 : 2.5"
+                          [className]="star.type === 'empty' ? 'star--empty' : 'star--full'"
+                        ></app-icon>
+                      }
+                    </div>
+                    <span class="rating-label">{{ getRatingLabel(r.rating) }}</span>
                   </div>
                   <div class="review-item__content">
                     <p>{{ r.comment }}</p>

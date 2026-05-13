@@ -24,11 +24,15 @@
   <span class="text-gray-400 italic text-sm">Chỉ xem</span>
 </ng-template>
 
-<app-base-modal
-  [open]="!!modalAction()"
+<app-confirm-modal
+  [isOpen]="!!modalAction()"
   [title]="modalTitle(modalAction())"
-  [subtitle]="modalMessage(modalAction())"
-  (close)="closeModal()">
+  [message]="modalMessage(modalAction())"
+  [confirmText]="modalAction() === 'cancel' ? 'Xác nhận hủy' : 'Xác nhận'"
+  [confirmVariant]="modalAction() === 'cancel' || modalAction() === 'fail' ? 'danger' : 'primary'"
+  [confirmDisabled]="modalAction() === 'assign-shipper' && !selectedShipperId()"
+  (confirm)="submitAction()"
+  (cancel)="closeModal()">
   
   <div modal-body *ngIf="modalAction() === 'assign-shipper'">
     <div class="shipper-selection">
@@ -44,13 +48,4 @@
       </select>
     </div>
   </div>
-
-  <div modal-footer>
-    <app-base-button variant="ghost" (clicked)="closeModal()">Đóng</app-base-button>
-    <app-base-button 
-      [disabled]="modalAction() === 'assign-shipper' && !selectedShipperId()"
-      (clicked)="submitAction()">
-      Xác nhận
-    </app-base-button>
-  </div>
-</app-base-modal>
+</app-confirm-modal>

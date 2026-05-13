@@ -39,6 +39,8 @@
           <app-icon 
             [name]="star.type === 'half' ? 'star-half' : 'star'" 
             size="14" 
+            [fill]="star.type === 'empty' ? 'none' : 'currentColor'"
+            [strokeWidth]="star.type === 'empty' ? 2 : 2.5"
             [className]="star.type === 'empty' ? 'star--empty' : 'star--full'"
           ></app-icon>
         }

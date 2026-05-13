@@ -61,3 +61,12 @@
   (cancel)="closeAssignModal()"
   (confirm)="onAssignToUsers($event)">
 </app-assign-voucher-modal>
+
+<app-confirm-modal
+  [isOpen]="isDeleteModalOpen()"
+  title="Xóa voucher"
+  message="Bạn có chắc chắn muốn xóa voucher {{ voucherToDelete()?.code }}? Hành động này không thể hoàn tác."
+  [confirmVariant]="'danger'"
+  (confirm)="confirmDelete()"
+  (cancel)="closeDeleteModal()"
+></app-confirm-modal>
