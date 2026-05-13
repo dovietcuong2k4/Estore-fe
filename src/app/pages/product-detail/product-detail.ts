@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
-import { Product, ReviewSummaryResponse, ReviewEligibilityResponse } from '../../core/models/product.model';
+import { Product, ReviewSummaryResponse, ReviewEligibilityResponse, ReviewAiSummaryResponse } from '../../core/models/product.model';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card';
+import { ProductRecommendationsComponent } from '../../shared/components/product-recommendations/product-recommendations.component';
 import { ProductApiService } from '../../core/services/product-api.service';
 import { ReviewService } from '../../core/services/review.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -16,7 +17,7 @@ import { catchError } from 'rxjs/operators';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, CommonModule, FormsModule, IconComponent],
+  imports: [RouterLink, ProductCardComponent, ProductRecommendationsComponent, CommonModule, FormsModule, IconComponent],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss'
 })
@@ -35,6 +36,11 @@ export class ProductDetailComponent implements OnInit {
   isEditing = signal(false);
   reviewLoading = signal(false);
   submittingReview = signal(false);
+
+  // AI Review Summary state
+  aiSummary = signal<ReviewAiSummaryResponse | null>(null);
+  aiLoading = signal(false);
+  aiError = signal<string | null>(null);
 
   constructor(
     private route: ActivatedRoute,
@@ -78,8 +84,28 @@ export class ProductDetailComponent implements OnInit {
           this.loadEligibility(id);
         }
 
+        // Load AI Review Summary asynchronously
+        this.loadAiReviewSummary(id);
+
         this.cdr.detectChanges();
       });
+    });
+  }
+
+  loadAiReviewSummary(productId: number) {
+    this.aiLoading.set(true);
+    this.aiError.set(null);
+    this.productApi.getReviewAiSummary(productId).subscribe({
+      next: (res) => {
+        this.aiSummary.set(res);
+        this.aiLoading.set(false);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.aiError.set('Không thể tải AI tóm tắt lúc này.');
+        this.aiLoading.set(false);
+        this.cdr.detectChanges();
+      }
     });
   }
 

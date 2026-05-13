@@ -27,9 +27,16 @@
         [value]="searchQuery()"
         (input)="searchQuery.set($any($event.target).value)"
       />
-      <a class="header__search-btn" type="submit">
+      <select
+        class="header__search-mode"
+        [value]="searchMode()"
+        (change)="searchMode.set($any($event.target).value)">
+        <option value="ai">AI Search</option>
+        <option value="keyword">Keyword</option>
+      </select>
+      <button class="header__search-btn" type="submit">
         <app-icon name="search" size="18"></app-icon>
-      </a>
+      </button>
     </form>
 
     <!-- Actions -->

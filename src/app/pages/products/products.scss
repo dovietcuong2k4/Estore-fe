@@ -293,6 +293,10 @@
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
   }
+
+  &--error {
+    background: rgba(57, 23, 34, 0.72);
+  }
 }
 
 .loading {

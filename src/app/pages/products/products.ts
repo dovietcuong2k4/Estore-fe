@@ -1,4 +1,4 @@
-import { Component, signal, computed, OnInit, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
+import { Component, signal, computed, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card';
@@ -17,11 +17,15 @@ import { ProductApiService } from '../../core/services/product-api.service';
 export class ProductsComponent implements OnInit {
   @ViewChild('searchInput') searchInput!: ElementRef;
   allProducts = signal<Product[]>([]);
+  catalogProducts = signal<Product[]>([]);
   loading = signal(true);
+  searchLoading = signal(false);
+  searchError = signal<string | null>(null);
   categories: Category[] = [];
   brands: Brand[] = [];
 
   searchQuery = signal('');
+  searchMode = signal<'ai' | 'keyword'>('ai');
   selectedCategory = signal<number | null>(null);
   selectedBrand = signal<number | null>(null);
   sortBy = signal<string>('popular');
@@ -45,6 +49,8 @@ export class ProductsComponent implements OnInit {
     if (brandId) products = products.filter(p => p.brandId === brandId);
 
     switch (this.sortBy()) {
+      case 'relevance':
+        break;
       case 'popular': products.sort((a, b) => b.soldQuantity - a.soldQuantity); break;
       case 'newest': products.sort((a, b) => b.id - a.id); break;
       case 'price-asc': products.sort((a, b) => a.price - b.price); break;
@@ -71,40 +77,46 @@ export class ProductsComponent implements OnInit {
   constructor(
     private mockData: MockDataService,
     private route: ActivatedRoute,
-    private productApi: ProductApiService,
-    private cdr: ChangeDetectorRef
+    private productApi: ProductApiService
   ) {
     this.categories = mockData.categories;
     this.brands = mockData.brands;
   }
 
   ngOnInit() {
-    this.productApi.getProducts('', 0, 500).subscribe(products => {
-      this.allProducts.set(products);
-      this.categories = this.categories.map(cat => ({
-        ...cat,
-        productCount: products.filter(p => p.categoryId === cat.id).length
-      }));
-      this.loading.set(false);
-    });
+    this.loadCatalog();
 
     this.route.queryParams.subscribe(params => {
       if (params['category']) this.selectedCategory.set(+params['category']);
       if (params['brand']) this.selectedBrand.set(+params['brand']);
       if (params['search']) this.searchQuery.set(params['search']);
+      if (params['mode']) this.searchMode.set(params['mode'] === 'keyword' ? 'keyword' : 'ai');
       if (params['sort']) this.sortBy.set(params['sort']);
       this.currentPage.set(1);
+
+      if (params['search']) {
+        this.sortBy.set('relevance');
+        this.loadSearchResults();
+      }
     });
   }
 
   setCategory(id: number | null) {
     this.selectedCategory.set(id);
     this.currentPage.set(1);
+
+    if (this.searchQuery().trim()) {
+      this.loadSearchResults();
+    }
   }
 
   setBrand(id: number | null) {
     this.selectedBrand.set(id);
     this.currentPage.set(1);
+
+    if (this.searchQuery().trim()) {
+      this.loadSearchResults();
+    }
   }
 
   setSort(sort: string) {
@@ -125,6 +137,8 @@ export class ProductsComponent implements OnInit {
     this.selectedBrand.set(null);
     this.sortBy.set('popular');
     this.currentPage.set(1);
+    this.searchError.set(null);
+    this.loadCatalog();
   }
 
   getCategoryName(id: number | null): string {
@@ -140,13 +154,70 @@ export class ProductsComponent implements OnInit {
   ngAfterViewInit() {
     this.route.queryParams.subscribe(params => {
       if ('search' in params) {
-        const search = params['search'] ?? '';
-
-        this.searchQuery.set(search);
-
         setTimeout(() => {
           this.searchInput?.nativeElement.focus();
         }, 0);
+      }
+    });
+  }
+
+  onSearchQueryChange(value: string) {
+    this.searchQuery.set(value);
+    this.currentPage.set(1);
+  }
+
+  retrySearch() {
+    this.loadSearchResults();
+  }
+
+  private loadCatalog() {
+    this.loading.set(true);
+    this.productApi.getProducts('', 0, 500).subscribe({
+      next: products => {
+        this.catalogProducts.set(products);
+        if (!this.searchQuery().trim()) {
+          this.allProducts.set(products);
+        }
+        this.categories = this.categories.map(cat => ({
+          ...cat,
+          productCount: products.filter(p => p.categoryId === cat.id).length
+        }));
+        this.loading.set(false);
+      },
+      error: () => {
+        if (!this.searchQuery().trim()) {
+          this.searchError.set('Không thể tải danh sách sản phẩm.');
+        }
+        this.loading.set(false);
+      }
+    });
+  }
+
+  private loadSearchResults() {
+    const query = this.searchQuery().trim();
+    if (!query) {
+      this.allProducts.set(this.catalogProducts());
+      this.searchLoading.set(false);
+      return;
+    }
+
+    this.searchLoading.set(true);
+    this.searchError.set(null);
+    this.productApi.searchProducts({
+      query,
+      mode: this.searchMode(),
+      categoryId: this.selectedCategory(),
+      brandId: this.selectedBrand(),
+      page: 0,
+      size: 500
+    }).subscribe({
+      next: products => {
+        this.allProducts.set(products);
+        this.searchLoading.set(false);
+      },
+      error: () => {
+        this.searchError.set('AI search thất bại và keyword fallback cũng không khả dụng.');
+        this.searchLoading.set(false);
       }
     });
   }

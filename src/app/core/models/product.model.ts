@@ -34,6 +34,7 @@ export interface Product {
   images?: ProductImage[];
   rating?: number;
   reviewCount?: number;
+  semanticScore?: number | null;
 }
 
 export interface ProductImage {
@@ -61,6 +62,15 @@ export interface ReviewSummaryResponse {
   totalReviews: number;
   reviews: PageResponse<ReviewResponse>;
   currentUserReview: ReviewResponse | null;
+}
+
+export interface ReviewAiSummaryResponse {
+  productId: number;
+  pros: string[];
+  cons: string[];
+  summary: string;
+  reviewCount: number;
+  lastGeneratedAt: string;
 }
 
 export interface PageResponse<T> {

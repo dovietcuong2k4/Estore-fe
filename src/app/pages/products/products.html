@@ -10,7 +10,7 @@
           placeholder="Tên sản phẩm, CPU..."
           class="sidebar__search"
           [ngModel]="searchQuery()"
-          (ngModelChange)="searchQuery.set($event); currentPage.set(1)"
+          (ngModelChange)="onSearchQueryChange($event)"
         />
       </div>
 
@@ -58,6 +58,9 @@
         </div>
         <div class="toolbar__sort">
           <span class="toolbar__sort-label">Sắp xếp:</span>
+          @if (searchQuery().trim()) {
+            <button class="toolbar__sort-btn" [class.active]="sortBy() === 'relevance'" (click)="setSort('relevance')">Liên quan</button>
+          }
           <button class="toolbar__sort-btn" [class.active]="sortBy() === 'popular'" (click)="setSort('popular')">Phổ biến</button>
           <button class="toolbar__sort-btn" [class.active]="sortBy() === 'newest'" (click)="setSort('newest')">Mới nhất</button>
           <button class="toolbar__sort-btn" [class.active]="sortBy() === 'price-asc'" (click)="setSort('price-asc')">Giá <app-icon name="arrow-up" size="12"></app-icon></button>
@@ -66,10 +69,17 @@
         </div>
       </div>
 
-      @if (loading()) {
+      @if (loading() || searchLoading()) {
         <div class="loading">
           <div class="loading__spinner"></div>
-          <p>Đang tải sản phẩm...</p>
+          <p>{{ searchLoading() ? 'Đang tìm kiếm bằng AI...' : 'Đang tải sản phẩm...' }}</p>
+        </div>
+      } @else if (searchError()) {
+        <div class="empty empty--error">
+          <span class="empty__icon"><app-icon name="alert-triangle" size="48"></app-icon></span>
+          <h3 class="empty__title">Không thể tìm kiếm</h3>
+          <p class="empty__desc">{{ searchError() }}</p>
+          <button class="empty__btn" (click)="retrySearch()">Thử lại</button>
         </div>
       } @else if (paginatedProducts().length > 0) {
         <div class="grid">

@@ -15,6 +15,7 @@ export class HeaderComponent {
   mobileMenuOpen = signal(false);
   userMenuOpen = signal(false);
   searchQuery = signal('');
+  searchMode = signal<'ai' | 'keyword'>('ai');
 
   readonly cartCount = computed(() => this.cartService.totalItems());
   readonly isLoggedIn = computed(() => this.auth.isLoggedIn());
@@ -41,13 +42,12 @@ export class HeaderComponent {
   }
 
   onSearch(event: Event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  this.router.navigate(['/products'], {
-    queryParams: {
-      search: this.searchQuery()
-    }
-  });
-  this.searchQuery.set('');
-}
+    const search = this.searchQuery().trim();
+    this.router.navigate(['/products'], {
+      queryParams: search ? { search, mode: this.searchMode() } : {}
+    });
+    this.searchQuery.set('');
+  }
 }

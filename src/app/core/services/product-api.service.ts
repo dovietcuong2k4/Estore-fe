@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { BaseResultDTO } from '../models/user.model';
 import { Product } from '../models/product.model';
 import { ApiService } from './api.service';
@@ -33,11 +33,28 @@ interface ProductResponse {
   stockQuantity?: number;
   rating?: number;
   reviewCount?: number;
+  semanticScore?: number | null;
 }
 
 interface PageResponse<T> {
   content: T[];
   totalElements: number;
+  totalPages?: number;
+  number?: number;
+  size?: number;
+}
+
+export interface ProductSearchOptions {
+  query: string;
+  mode?: 'ai' | 'keyword';
+  categoryId?: number | null;
+  brandId?: number | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  minRating?: number | null;
+  inStockOnly?: boolean;
+  page?: number;
+  size?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -57,6 +74,25 @@ export class ProductApiService {
       .pipe(map(res => (res.data?.content ?? []).map(item => this.mapProduct(item))));
   }
 
+  searchProducts(options: ProductSearchOptions): Observable<Product[]> {
+    const query = options.query.trim();
+    if (!query) {
+      return this.getProducts('', options.page ?? 0, options.size ?? 200);
+    }
+
+    if (options.mode === 'keyword') {
+      return this.keywordSearch(query, options.page ?? 0, options.size ?? 200);
+    }
+
+    const aiParams = this.buildAiSearchParams(options);
+    return this.api
+      .get<BaseResultDTO<PageResponse<ProductResponse>>>('/products/ai-search', aiParams)
+      .pipe(
+        map(res => (res.data?.content ?? []).map(item => this.mapProduct(item))),
+        catchError(() => this.keywordSearch(query, options.page ?? 0, options.size ?? 200))
+      );
+  }
+
   getProductById(id: number): Observable<Product | null> {
     return this.api
       .get<BaseResultDTO<ProductResponse>>(`/products/detail/${id}`)
@@ -65,6 +101,11 @@ export class ProductApiService {
 
   createProduct(data: any): Observable<any> {
     return this.api.post<BaseResultDTO<ProductResponse>>('/products/create', data);
+  }
+
+  getReviewAiSummary(id: number): Observable<any> {
+    return this.api.get<BaseResultDTO<any>>(`/products/${id}/review-summary`)
+      .pipe(map(res => res.data));
   }
 
   updateProduct(id: number, data: any): Observable<any> {
@@ -107,6 +148,33 @@ export class ProductApiService {
     return this.api.delete<any>(`/brands/${id}`);
   }
 
+  private keywordSearch(keyword: string, page: number, size: number): Observable<Product[]> {
+    return this.api
+      .get<BaseResultDTO<PageResponse<ProductResponse>>>('/products', {
+        keyword,
+        page,
+        size
+      })
+      .pipe(map(res => (res.data?.content ?? []).map(item => this.mapProduct(item))));
+  }
+
+  private buildAiSearchParams(options: ProductSearchOptions): Record<string, string | number> {
+    const params: Record<string, string | number> = {
+      q: options.query.trim(),
+      page: options.page ?? 0,
+      size: options.size ?? 200
+    };
+
+    if (options.categoryId != null) params['categoryId'] = options.categoryId;
+    if (options.brandId != null) params['brandId'] = options.brandId;
+    if (options.minPrice != null) params['minPrice'] = options.minPrice;
+    if (options.maxPrice != null) params['maxPrice'] = options.maxPrice;
+    if (options.minRating != null) params['minRating'] = options.minRating;
+    if (options.inStockOnly != null) params['inStockOnly'] = options.inStockOnly ? 'true' : 'false';
+
+    return params;
+  }
+
   private mapProduct(item: ProductResponse): Product {
     const image = this.pickImage(item.images);
     const categoryId = this.mapCategoryId(item.categoryName);
@@ -140,7 +208,8 @@ export class ProductApiService {
       soldQuantity: item.soldQuantity ?? 0,
       stockQuantity: item.stockQuantity ?? 0,
       rating: item.rating ?? 0,
-      reviewCount: item.reviewCount ?? 0
+      reviewCount: item.reviewCount ?? 0,
+      semanticScore: item.semanticScore ?? null
     };
   }
 

@@ -167,6 +167,54 @@
               </div>
             </div>
 
+            <!-- AI Review Summary -->
+            <div class="ai-summary-section">
+              <div class="ai-summary-header">
+                <h3><app-icon name="cpu" size="24" className="text-primary"></app-icon> AI Tóm tắt đánh giá</h3>
+                <span class="badge" *ngIf="aiSummary()?.reviewCount">Dựa trên {{ aiSummary()?.reviewCount }} đánh giá</span>
+              </div>
+              
+              <div *ngIf="aiLoading()" class="ai-loading">
+                <div class="spinner"></div>
+                <p>AI đang tổng hợp dữ liệu...</p>
+              </div>
+
+              <div *ngIf="aiError()" class="ai-error">
+                <app-icon name="alert-circle" size="20"></app-icon>
+                <p>{{ aiError() }}</p>
+              </div>
+
+              <div *ngIf="!aiLoading() && !aiError() && aiSummary()" class="ai-content">
+                <div class="ai-summary-text">
+                  <p><strong>Tổng quan:</strong> {{ aiSummary()?.summary }}</p>
+                </div>
+
+                <div class="ai-pros-cons" *ngIf="aiSummary()?.pros?.length || aiSummary()?.cons?.length">
+                  <div class="ai-pros" *ngIf="aiSummary()?.pros?.length">
+                    <h4>Ưu điểm</h4>
+                    <ul>
+                      <li *ngFor="let pro of aiSummary()?.pros">
+                        <app-icon name="check-circle" size="16" className="text-success"></app-icon>
+                        <span>{{ pro }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="ai-cons" *ngIf="aiSummary()?.cons?.length">
+                    <h4>Nhược điểm</h4>
+                    <ul>
+                      <li *ngFor="let con of aiSummary()?.cons">
+                        <app-icon name="minus-circle" size="16" className="text-error"></app-icon>
+                        <span>{{ con }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="ai-meta" *ngIf="aiSummary()?.lastGeneratedAt">
+                  <small>Cập nhật lần cuối: {{ aiSummary()?.lastGeneratedAt | date:'dd/MM/yyyy HH:mm' }}</small>
+                </div>
+              </div>
+            </div>
+
             <!-- Write Review / Eligibility -->
             <div class="review-compose" id="review-form">
               <ng-container *ngIf="authService.isLoggedIn(); else loginPrompt">
@@ -257,6 +305,11 @@
         }
       </div>
     </div>
+
+    <!-- AI Product Recommendations -->
+    @if (product) {
+      <app-product-recommendations [productId]="product.id" />
+    }
 
     <!-- Related Products -->
     @if (relatedProducts.length > 0) {
