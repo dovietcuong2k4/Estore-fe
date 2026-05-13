@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
 import { BaseResultDTO } from '../models/user.model';
-import { Product } from '../models/product.model';
+import { Product, ReviewAiSummaryResponse } from '../models/product.model';
+
 import { ApiService } from './api.service';
 import { MockDataService } from './mock-data.service';
 
@@ -103,10 +104,11 @@ export class ProductApiService {
     return this.api.post<BaseResultDTO<ProductResponse>>('/products/create', data);
   }
 
-  getReviewAiSummary(id: number): Observable<any> {
-    return this.api.get<BaseResultDTO<any>>(`/products/${id}/review-summary`)
-      .pipe(map(res => res.data));
+  getReviewAiSummary(id: number): Observable<ReviewAiSummaryResponse> {
+    return this.api.get<BaseResultDTO<ReviewAiSummaryResponse>>(`/products/${id}/review-summary`)
+      .pipe(map(res => res.data as ReviewAiSummaryResponse));
   }
+
 
   updateProduct(id: number, data: any): Observable<any> {
     return this.api.put<BaseResultDTO<ProductResponse>>(`/products/update/${id}`, data);

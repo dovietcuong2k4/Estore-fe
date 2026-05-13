@@ -206,7 +206,7 @@
 
                 <div class="ai-pros-cons" *ngIf="aiSummary()?.pros?.length || aiSummary()?.cons?.length">
                   <div class="ai-pros" *ngIf="aiSummary()?.pros?.length">
-                    <h4>Ưu điểm</h4>
+                    <h4><app-icon name="trending-up" size="18" className="text-success" style="margin-right: 8px; vertical-align: middle;"></app-icon> Ưu điểm</h4>
                     <ul>
                       <li *ngFor="let pro of aiSummary()?.pros">
                         <app-icon name="check-circle" size="16" className="text-success"></app-icon>
@@ -215,10 +215,10 @@
                     </ul>
                   </div>
                   <div class="ai-cons" *ngIf="aiSummary()?.cons?.length">
-                    <h4>Nhược điểm</h4>
+                    <h4><app-icon name="trending-down" size="18" className="text-white" style="margin-right: 8px; vertical-align: middle;"></app-icon> Nhược điểm</h4>
                     <ul>
                       <li *ngFor="let con of aiSummary()?.cons">
-                        <app-icon name="minus-circle" size="16" className="text-error"></app-icon>
+                        <app-icon name="minus-circle" size="16" className="text-white"></app-icon>
                         <span>{{ con }}</span>
                       </li>
                     </ul>
@@ -227,7 +227,39 @@
                 <div class="ai-meta" *ngIf="aiSummary()?.lastGeneratedAt">
                   <small>Cập nhật lần cuối: {{ aiSummary()?.lastGeneratedAt | date:'dd/MM/yyyy HH:mm' }}</small>
                 </div>
+
+                <!-- External Summary (Internet) -->
+                <div class="ai-external-summary" *ngIf="aiSummary()?.externalSummary">
+                  <div class="ai-external-header">
+                    <h4>
+                      <app-icon name="sparkles" size="14" className="text-primary" style="margin-left: 4px;"></app-icon>
+                      {{ aiSummary()?.externalSummaryLabel || 'Tổng hợp từ Internet' }}
+                    </h4>
+                  </div>
+                  <div class="ai-external-content">
+                    <p>
+                      <app-icon name="search" size="16" className="text-muted" style="margin-right: 8px; vertical-align: text-bottom; opacity: 0.7;"></app-icon>
+                      {{ aiSummary()?.externalSummary }}
+                    </p>
+                  </div>
+                  <div class="ai-external-sources" *ngIf="aiSummary()?.externalSources?.length">
+                    <div class="sources-label-wrapper" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                      <app-icon name="file-text" size="14" className="text-muted"></app-icon>
+                      <span class="sources-label" style="margin-bottom: 0;">Nguồn tham khảo:</span>
+                    </div>
+                    <div class="sources-list">
+                      <a *ngFor="let source of aiSummary()?.externalSources" 
+                         [href]="source.url" 
+                         target="_blank" 
+                         class="source-link">
+                        <app-icon name="external-link" size="14" className="text-white"></app-icon>
+                        {{ source.website || source.title }}
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
+
             </div>
 
             <!-- Write Review / Eligibility -->

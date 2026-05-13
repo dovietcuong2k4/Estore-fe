@@ -71,7 +71,18 @@ export interface ReviewAiSummaryResponse {
   summary: string;
   reviewCount: number;
   lastGeneratedAt: string;
+  externalSummaryLabel?: string;
+  externalSummary?: string;
+  externalSources?: ReviewAiSummarySourceResponse[];
+  externalSummaryGeneratedAt?: string;
 }
+
+export interface ReviewAiSummarySourceResponse {
+  title: string;
+  url: string;
+  website: string;
+}
+
 
 export interface PageResponse<T> {
   content: T[];
