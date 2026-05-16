@@ -2,28 +2,28 @@
   <section class="payment-result">
     @if (loading()) {
       <div class="payment-result__spinner"></div>
-      <h1>Dang xac minh thanh toan</h1>
+      <h1>Đang xác minh thanh toán</h1>
       <p>{{ message() }}</p>
     } @else {
       <div class="payment-result__status" [class.payment-result__status--success]="paid()">
-        {{ paid() ? 'PAID' : 'FAILED' }}
+        {{ paid() ? 'THÀNH CÔNG' : 'THẤT BẠI' }}
       </div>
-      <h1>{{ paid() ? 'Thanh toan VNPAY thanh cong' : 'Thanh toan VNPAY khong thanh cong' }}</h1>
+      <h1>{{ paid() ? 'Thanh toán VNPAY thành công' : 'Thanh toán VNPAY thất bại' }}</h1>
       <p>{{ message() }}</p>
 
       @if (result()) {
         <div class="payment-result__meta">
-          <div><span>Ma don hang</span><strong>#{{ result()?.orderId }}</strong></div>
-          <div><span>So tien</span><strong>{{ formatPrice(result()?.amount) }}</strong></div>
-          <div><span>Ma giao dich</span><strong>{{ result()?.transactionNo || '-' }}</strong></div>
-          <div><span>Ngan hang</span><strong>{{ result()?.bankCode || '-' }}</strong></div>
-          <div><span>Ma phan hoi</span><strong>{{ result()?.responseCode || '-' }}</strong></div>
+          <div><span>Mã đơn hàng</span><strong>#{{ result()?.orderId }}</strong></div>
+          <div><span>Số tiền</span><strong>{{ formatPrice(result()?.amount) }}</strong></div>
+          <div><span>Mã giao dịch</span><strong>{{ result()?.transactionNo || '-' }}</strong></div>
+          <div><span>Ngân hàng</span><strong>{{ result()?.bankCode || '-' }}</strong></div>
+          <div><span>Mã phản hồi</span><strong>{{ result()?.responseCode || '-' }}</strong></div>
         </div>
       }
 
       <div class="payment-result__actions">
-        <a routerLink="/orders" class="payment-result__btn payment-result__btn--primary">Xem don hang</a>
-        <a routerLink="/products" class="payment-result__btn">Tiep tuc mua sam</a>
+        <a routerLink="/orders" class="payment-result__btn payment-result__btn--primary">Xem đơn hàng</a>
+        <a routerLink="/products" class="payment-result__btn">Tiếp tục mua sắm</a>
       </div>
     }
   </section>

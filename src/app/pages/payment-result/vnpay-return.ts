@@ -18,7 +18,7 @@ export class VnpayReturnComponent implements OnInit {
   private cart = inject(CartService);
 
   readonly loading = signal(true);
-  readonly message = signal('Dang xac minh thanh toan VNPAY...');
+  readonly message = signal('Đang xác minh thanh toán VNPAY...');
   readonly result = signal<VnpayPaymentResultResponse | null>(null);
 
   readonly paid = computed(() => this.result()?.paid === true);
@@ -36,7 +36,7 @@ export class VnpayReturnComponent implements OnInit {
     this.loading.set(false);
 
     if (!response.success || !response.data) {
-      this.message.set(response.message || 'Xac minh thanh toan VNPAY that bai');
+      this.message.set(response.message || 'Xác minh thanh toán VNPAY thất bại');
       return;
     }
 
